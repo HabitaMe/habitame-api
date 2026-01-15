@@ -1,0 +1,55 @@
+package com.habitame.api.auth.controller;
+
+import com.habitame.api.auth.dto.AuthResponse;
+import com.habitame.api.auth.dto.LoginRequest;
+import com.habitame.api.auth.dto.RefreshRequest;
+import com.habitame.api.auth.dto.RegisterRequest;
+import com.habitame.api.auth.service.AuthService;
+import com.habitame.api.common.mapper.UserMapper;
+import com.habitame.api.user.dto.UserResponse;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/auth")
+@RequiredArgsConstructor
+public class AuthController {
+
+    private final AuthService authService;
+
+    /**
+     *
+     * @param request
+     * @return
+     */
+    @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserResponse register(@Valid @RequestBody RegisterRequest request) {
+        return UserMapper.toResponse(authService.register(request));
+    }
+
+    /**
+     *
+     * @param request
+     * @return
+     */
+    @PostMapping("/login")
+    public AuthResponse login(@RequestBody LoginRequest request) {
+        return authService.login(request);
+    }
+
+    @PostMapping("/refresh")
+    public AuthResponse refresh(@Valid @RequestBody RefreshRequest request) {
+        return authService.refresh(request);
+    }
+
+    @PostMapping("/logout")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void logout(@Valid @RequestBody RefreshRequest request) {
+        authService.logout(request);
+    }
+
+}
+
