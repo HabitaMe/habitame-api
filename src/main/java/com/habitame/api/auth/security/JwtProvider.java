@@ -41,10 +41,10 @@ public class JwtProvider {
                 .compact();
     }
 
-    // Genera un JWT de refresh (puede tener otra duración)
+    // Genera un JWT de refresh
     public String generateRefreshToken(String subject) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + expirationMillis * 24); // ej: 24 horas
+        Date expiryDate = new Date(now.getTime() + expirationMillis * 24); // 24 horas
         return Jwts.builder()
                 .setSubject(subject)
                 .setIssuedAt(now)

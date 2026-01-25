@@ -72,7 +72,7 @@ public class AuthService {
         AuthResponse response = new AuthResponse();
         response.setAccessToken(accessToken);
         response.setRefreshToken(refreshTokenEntity.getToken());
-        response.setExpiresIn(3600); // 1 hora (puedes usar jwt.expiration si lo quieres dinámico)
+        response.setExpiresIn(3600); // 1 hora
         response.setUser(UserMapper.toResponse(userEntity));
 
         return response;
