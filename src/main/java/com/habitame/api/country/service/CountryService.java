@@ -70,7 +70,6 @@ public class CountryService {
         CountryEntity countryEntity = findEntityById(countryId);
         countryEntity.setName(countryRequest.getName());
         countryEntity.setIsoCode(countryRequest.getIsoCode());
-        countryEntity.setUpdatedAt(LocalDateTime.now());
         countryRepository.save(countryEntity);
         return CountryMapper.toResponse(countryEntity);
     }

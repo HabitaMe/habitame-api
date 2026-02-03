@@ -42,4 +42,15 @@ public class ProvinceEntity implements Serializable {
 
     @OneToMany(mappedBy = "provinceEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CityEntity> cities;
+
+    @PrePersist
+    protected void onCreate(){
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate(){
+        this.updatedAt = LocalDateTime.now();
+    }
 }

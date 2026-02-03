@@ -42,4 +42,15 @@ public class CityEntity implements Serializable {
 
     @OneToMany(mappedBy = "cityEntity", cascade = CascadeType.ALL)
     private List<PropertyEntity> properties;
+
+    @PrePersist
+    protected void onCreate(){
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate(){
+        this.updatedAt = LocalDateTime.now();
+    }
 }
