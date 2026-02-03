@@ -1,23 +1,83 @@
 package com.habitame.api.country.service;
 
+import com.habitame.api.common.exception.DuplicateResourceException;
+import com.habitame.api.common.exception.ResourceNotFoundException;
+import com.habitame.api.common.mapper.CountryMapper;
+import com.habitame.api.common.mapper.ProvinceMapper;
+import com.habitame.api.common.wrapper.PageResponse;
+import com.habitame.api.country.dto.CountryRequest;
+import com.habitame.api.country.dto.CountryResponse;
 import com.habitame.api.country.entity.CountryEntity;
 import com.habitame.api.country.repository.CountryRepository;
+import com.habitame.api.province.dto.ProvinceResponse;
+import com.habitame.api.province.entity.ProvinceEntity;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CountryService {
 
     private final CountryRepository countryRepository;
 
-    public List<CountryEntity> findAll() {
-        return countryRepository.findAll();
+    public PageResponse<CountryResponse> findAll(Pageable pageable) {
+        Page<CountryEntity> page = countryRepository.findAll(pageable);
+
+        List<CountryResponse> content = page
+                .map(CountryMapper::toResponse)
+                .getContent();
+
+        return new PageResponse<>(
+                content,
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages()
+        );
     }
 
-    public CountryEntity findById(Long id) {
-        return countryRepository.findById(id).orElse(null);
+    public CountryResponse findById(Integer id){
+        return CountryMapper.toResponse(findEntityById(id));
+    }
+
+    public CountryEntity findEntityById(Integer id) {
+        return countryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Country not found: " + id));
+    }
+
+    @Transactional
+    public CountryResponse addCountry(@Valid CountryRequest countryRequest) {
+        if (countryRepository.existsByName(countryRequest.getName())){
+            throw new DuplicateResourceException("Country already exists: " + countryRequest.getName());
+        }
+
+        CountryEntity countryEntity = CountryMapper.toEntity(countryRequest);
+
+        CountryEntity countryEntitySaved = countryRepository.save(countryEntity);
+
+        return CountryMapper.toResponse(countryEntitySaved);
+    }
+
+    @Transactional
+    public CountryResponse updateCountry(Integer countryId, CountryRequest countryRequest) {
+        CountryEntity countryEntity = findEntityById(countryId);
+        countryEntity.setName(countryRequest.getName());
+        countryEntity.setIsoCode(countryRequest.getIsoCode());
+        countryEntity.setUpdatedAt(LocalDateTime.now());
+        countryRepository.save(countryEntity);
+        return CountryMapper.toResponse(countryEntity);
+    }
+
+    @Transactional
+    public void deleteCountry(Integer countryId) {
+        CountryEntity countryEntity = findEntityById(countryId);
+        countryRepository.delete(countryEntity);
     }
 }
