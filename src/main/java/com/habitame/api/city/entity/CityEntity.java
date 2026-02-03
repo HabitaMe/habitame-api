@@ -40,7 +40,7 @@ public class CityEntity implements Serializable {
     @JoinColumn(name = "province_id", nullable = false)
     private ProvinceEntity provinceEntity;
 
-    @OneToMany(mappedBy = "cityEntity", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cityEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PropertyEntity> properties;
 
     @PrePersist

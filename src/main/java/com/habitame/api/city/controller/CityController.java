@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -31,6 +32,7 @@ public class CityController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> addCity(@Valid @RequestBody CityRequest cityRequest) {
         CityResponse cityResponse = cityService.addCity(cityRequest);
         URI location = URI.create("api/cities/" + cityResponse.getId());
@@ -38,11 +40,13 @@ public class CityController {
     }
 
     @PutMapping("/{cityId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CityResponse> updateCity(@PathVariable Integer cityId, @Valid @RequestBody CityRequest cityRequest) {
         return ResponseEntity.ok(cityService.updateCity(cityId, cityRequest));
     }
 
     @DeleteMapping("/{cityId}")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCity(@PathVariable Integer cityId) {
         cityService.deleteCity(cityId);
