@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -42,6 +43,7 @@ public class CountryController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> addCountry(@Valid @RequestBody CountryRequest countryRequest){
         CountryResponse countryResponse = countryService.addCountry(countryRequest);
         URI location = URI.create("/api/countries/" + countryResponse.getId());
@@ -49,11 +51,13 @@ public class CountryController {
     }
 
     @PutMapping("/{countryId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CountryResponse> updateCountry(@PathVariable Integer countryId, @Valid @RequestBody CountryRequest countryRequest){
         return ResponseEntity.ok(countryService.updateCountry(countryId, countryRequest));
     }
 
     @DeleteMapping("/{countryId}")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCountry(@PathVariable Integer countryId){
         countryService.deleteCountry(countryId);
