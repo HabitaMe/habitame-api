@@ -1,5 +1,6 @@
 package com.habitame.api.province.entity;
 
+import com.habitame.api.city.entity.CityEntity;
 import com.habitame.api.country.entity.CountryEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,9 +10,11 @@ import lombok.NoArgsConstructor;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
-@Table(name = "provinces")
+@Table(name = "provinces",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"country_id", "name"}))
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,19 +25,21 @@ public class ProvinceEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Integer id;
 
-    @Column(name = "name", nullable = false)
+    @Column(nullable = false)
     private String name;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "country_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "country_id", nullable = false)
     private CountryEntity countryEntity;
+
+    @OneToMany(mappedBy = "provinceEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CityEntity> cities;
 }
