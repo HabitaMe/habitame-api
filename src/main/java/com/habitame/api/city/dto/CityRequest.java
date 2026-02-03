@@ -5,10 +5,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class CityResponse {
+public class CityRequest {
     @NotBlank
     String name;
 
     @NotNull
-    Integer id;
+    Integer provinceId;
 }

@@ -1,11 +1,16 @@
 package com.habitame.api.city.repository;
 
 import com.habitame.api.city.entity.CityEntity;
-import com.habitame.api.province.entity.ProvinceEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
 public interface CityRepository extends JpaRepository<CityEntity, Integer> {
-    List<CityEntity> findByProvinceEntity_Id(Integer provinceEntityId);
+    Page<CityEntity> findByProvinceEntity_Id(Integer provinceEntityId, Pageable pageable);
+
+    Page<CityEntity> findAll(Pageable pageable);
+
+    boolean existsByProvinceEntity_IdAndName(Integer provinceId, String name);
 }

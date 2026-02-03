@@ -1,35 +1,103 @@
 package com.habitame.api.city.service;
 
+import com.habitame.api.city.dto.CityRequest;
 import com.habitame.api.city.dto.CityResponse;
 import com.habitame.api.city.entity.CityEntity;
 import com.habitame.api.city.repository.CityRepository;
+import com.habitame.api.common.exception.DuplicateResourceException;
+import com.habitame.api.common.exception.ResourceNotFoundException;
 import com.habitame.api.common.mapper.CityMapper;
+import com.habitame.api.common.wrapper.PageResponse;
+import com.habitame.api.province.entity.ProvinceEntity;
 import com.habitame.api.province.service.ProvinceService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CityService {
 
     private final CityRepository cityRepository;
+    private final ProvinceService provinceService;
 
-    public List<CityEntity> findAll() {
-        return cityRepository.findAll();
-    }
+    public PageResponse<CityResponse> findAll(Pageable pageable) {
+        Page<CityEntity> page = cityRepository.findAll(pageable);
 
-    public CityEntity findById(Integer cityId) {
-        return cityRepository.findById(cityId)
-                .orElse(null);
-    }
-
-    public List<CityResponse> findByProvince(Integer provinceId) {
-        return cityRepository.findByProvinceEntity_Id(provinceId)
-                .stream()
+        List<CityResponse> content = page
                 .map(CityMapper::toResponse)
-                .toList();
+                .getContent();
+
+        return new PageResponse<>(
+                content,
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages()
+        );
+    }
+
+    public CityEntity findEntityById(Integer cityId) {
+        return cityRepository.findById(cityId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("City not found: " + cityId));
+    }
+
+    public CityResponse findById(Integer id) {
+        return CityMapper.toResponse(findEntityById(id));
+    }
+
+    public PageResponse<CityResponse> findByProvince(Integer provinceId, Pageable pageable) {
+        Page<CityEntity> page = cityRepository.findByProvinceEntity_Id(provinceId, pageable);
+
+        List<CityResponse> content = page
+                .map(CityMapper::toResponse)
+                .getContent();
+
+        return new PageResponse<>(
+                content,
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages()
+        );
+    }
+
+    @Transactional
+    public CityResponse addCity(CityRequest cityRequest) {
+        if (cityRepository.existsByProvinceEntity_IdAndName(
+                cityRequest.getProvinceId(),
+                cityRequest.getName()
+        )){
+            throw new DuplicateResourceException("City already exists");
+        }
+
+        ProvinceEntity provinceEntity = provinceService.findEntityById(cityRequest.getProvinceId());
+
+        CityEntity cityEntity = CityMapper.toEntity(cityRequest, provinceEntity);
+
+        CityEntity savedCityEntity = cityRepository.save(cityEntity);
+
+        return CityMapper.toResponse(savedCityEntity);
+    }
+
+    @Transactional
+    public CityResponse updateCity(Integer id, CityRequest cityRequest) {
+        CityEntity cityEntity = findEntityById(id);
+        cityEntity.setName(cityRequest.getName());
+        if (cityRequest.getProvinceId() != null) {
+            cityEntity.setProvinceEntity(provinceService.findEntityById(cityRequest.getProvinceId()));
+        }
+        return CityMapper.toResponse(cityRepository.save(cityEntity));
+    }
+
+    @Transactional
+    public void deleteCity(Integer id) {
+        cityRepository.delete(findEntityById(id));
     }
 }

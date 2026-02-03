@@ -1,37 +1,50 @@
 package com.habitame.api.city.controller;
 
+import com.habitame.api.city.dto.CityRequest;
 import com.habitame.api.city.dto.CityResponse;
-import com.habitame.api.city.entity.CityEntity;
 import com.habitame.api.city.service.CityService;
-import com.habitame.api.common.mapper.CityMapper;
+import com.habitame.api.common.wrapper.PageResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.net.URI;
 
 @RestController
-@RequestMapping("/api/city")
+@RequestMapping("/api/cities")
 @RequiredArgsConstructor
 public class CityController {
 
     private final CityService cityService;
 
     @GetMapping
-    public List<CityEntity> findAll(){
-        return cityService.findAll();
+    public ResponseEntity<PageResponse<CityResponse>> findAll(Pageable pageable) {
+        return ResponseEntity.ok(cityService.findAll(pageable));
     }
 
-    @GetMapping("/{id}")
-    public CityEntity findById(@PathVariable Integer id){
-        return cityService.findById(id);
+    @GetMapping("/{cityId}")
+    public ResponseEntity<CityResponse> findById(@PathVariable Integer cityId) {
+        return ResponseEntity.ok(cityService.findById(cityId));
     }
 
-    @GetMapping("/province/{provinceId}")
-    public List<CityResponse> findByProvince(@PathVariable Integer provinceId){
-        return cityService.findByProvince(provinceId);
+    @PostMapping
+    public ResponseEntity<Void> addCity(@Valid @RequestBody CityRequest cityRequest) {
+        CityResponse cityResponse = cityService.addCity(cityRequest);
+        URI location = URI.create("api/cities/" + cityResponse.getId());
+        return ResponseEntity.created(location).build();
+    }
+
+    @PutMapping("/{cityId}")
+    public ResponseEntity<CityResponse> updateCity(@PathVariable Integer cityId, @Valid @RequestBody CityRequest cityRequest) {
+        return ResponseEntity.ok(cityService.updateCity(cityId, cityRequest));
+    }
+
+    @DeleteMapping("/{cityId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCity(@PathVariable Integer cityId) {
+        cityService.deleteCity(cityId);
     }
 }
