@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -39,6 +40,7 @@ public class ProvinceController {
     }
 
     @PostMapping()
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> addProvince(@Valid @RequestBody ProvinceRequest provinceRequest) {
         ProvinceResponse provinceResponse = provinceService.addProvince(provinceRequest);
         URI location = URI.create("/api/provinces/" + provinceResponse.getId());
@@ -46,11 +48,13 @@ public class ProvinceController {
     }
 
     @PutMapping("/{provinceId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProvinceResponse> updateProvince(@PathVariable Integer provinceId, @Valid @RequestBody ProvinceRequest provinceRequest) {
         return ResponseEntity.ok(provinceService.updateProvince(provinceId, provinceRequest));
     }
 
     @DeleteMapping("/{provinceId}")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteProvince(@PathVariable Integer provinceId) {
         provinceService.deleteProvince(provinceId);
