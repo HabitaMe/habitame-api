@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    // 404
+    // 404 - Not Found
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFound(
             ResourceNotFoundException ex,
@@ -23,12 +23,13 @@ public class GlobalExceptionHandler {
 
         return buildError(
                 HttpStatus.NOT_FOUND,
-                ApiError.valueOf(ex.getMessage()),
+                ApiError.RESOURCE_NOT_FOUND, // Enum fijo
+                ex.getMessage(),             // Mensaje dinámico ("Property not found: 4")
                 request.getRequestURI()
         );
     }
 
-    // 409
+    // 409 - Conflict
     @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<ErrorResponse> handleDuplicate(
             DuplicateResourceException ex,
@@ -36,12 +37,13 @@ public class GlobalExceptionHandler {
 
         return buildError(
                 HttpStatus.CONFLICT,
-                ApiError.valueOf(ex.getMessage()),
+                ApiError.DUPLICATE_RESOURCE, // Asegúrate de tener este Enum o usa uno genérico
+                ex.getMessage(),
                 request.getRequestURI()
         );
     }
 
-    // errores de validación DTO
+    // 400 - Validation Errors
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(
             MethodArgumentNotValidException ex,
@@ -56,12 +58,13 @@ public class GlobalExceptionHandler {
 
         return buildError(
                 HttpStatus.BAD_REQUEST,
-                ApiError.valueOf(message),
+                ApiError.VALIDATION_ERROR, // Asegúrate de tener este Enum
+                message,
                 request.getRequestURI()
         );
     }
 
-    // fallback
+    // 500 - Fallback / Generic
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(
             Exception ex,
@@ -72,20 +75,23 @@ public class GlobalExceptionHandler {
         return buildError(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 ApiError.UNEXPECTED_ERROR,
+                "An unexpected error occurred", // Mensaje genérico por seguridad
                 request.getRequestURI()
         );
     }
 
+    // MÉTODO HELPER CORREGIDO
     private ResponseEntity<ErrorResponse> buildError(
             HttpStatus status,
-            ApiError message,
+            ApiError errorType,   // La categoría del error (Enum)
+            String detailMessage, // La descripción específica (String)
             String path){
 
         ErrorResponse error = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(status.value())
-                .error(ApiError.valueOf(status.name()))
-                .message(String.valueOf(message))
+                .error(errorType) // Usamos el nombre del Enum (ej. "RESOURCE_NOT_FOUND")
+                .message(detailMessage)  // Usamos el mensaje de texto real
                 .path(path)
                 .build();
 
