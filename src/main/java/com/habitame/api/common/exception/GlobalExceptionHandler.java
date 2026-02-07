@@ -23,8 +23,8 @@ public class GlobalExceptionHandler {
 
         return buildError(
                 HttpStatus.NOT_FOUND,
-                ApiError.RESOURCE_NOT_FOUND, // Enum fijo
-                ex.getMessage(),             // Mensaje dinámico ("Property not found: 4")
+                ApiError.RESOURCE_NOT_FOUND,
+                ex.getMessage(),
                 request.getRequestURI()
         );
     }
@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
 
         return buildError(
                 HttpStatus.CONFLICT,
-                ApiError.DUPLICATE_RESOURCE, // Asegúrate de tener este Enum o usa uno genérico
+                ApiError.DUPLICATE_RESOURCE,
                 ex.getMessage(),
                 request.getRequestURI()
         );
@@ -58,7 +58,7 @@ public class GlobalExceptionHandler {
 
         return buildError(
                 HttpStatus.BAD_REQUEST,
-                ApiError.VALIDATION_ERROR, // Asegúrate de tener este Enum
+                ApiError.VALIDATION_ERROR,
                 message,
                 request.getRequestURI()
         );
@@ -75,23 +75,22 @@ public class GlobalExceptionHandler {
         return buildError(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 ApiError.UNEXPECTED_ERROR,
-                "An unexpected error occurred", // Mensaje genérico por seguridad
+                "An unexpected error occurred",
                 request.getRequestURI()
         );
     }
 
-    // MÉTODO HELPER CORREGIDO
     private ResponseEntity<ErrorResponse> buildError(
             HttpStatus status,
-            ApiError errorType,   // La categoría del error (Enum)
-            String detailMessage, // La descripción específica (String)
+            ApiError errorType,
+            String detailMessage,
             String path){
 
         ErrorResponse error = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(status.value())
-                .error(errorType) // Usamos el nombre del Enum (ej. "RESOURCE_NOT_FOUND")
-                .message(detailMessage)  // Usamos el mensaje de texto real
+                .error(errorType)
+                .message(detailMessage)
                 .path(path)
                 .build();
 
