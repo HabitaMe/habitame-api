@@ -1,17 +1,26 @@
 package com.habitame.api.property.entity;
 
+import com.habitame.api.amenities.entity.AmenityEntity;
+import com.habitame.api.auth.security.SecurityUtils;
 import com.habitame.api.city.entity.CityEntity;
 import com.habitame.api.propertyImage.entity.PropertyImageEntity;
+import com.habitame.api.propertyReview.entity.PropertyReviewEntity;
 import com.habitame.api.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "properties")
@@ -40,16 +49,17 @@ public class PropertyEntity implements Serializable {
 
     private Integer floor = 1;
 
-    @Column(name = "area_m2")
-    private Double areaM2;
+    @Column(name = "area_m2", precision = 8, scale = 2)
+    private BigDecimal areaM2;
 
     @Column(name = "bathrooms_total")
-    private int bathroomsTotal;
+    private Integer bathroomsTotal;
 
     @Column(name = "owner_in_house")
     private boolean ownerInHouse = false;
 
-    private String status = "in_review";
+    @Enumerated(EnumType.STRING)
+    private PropertyStatus status = PropertyStatus.in_review;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -57,8 +67,9 @@ public class PropertyEntity implements Serializable {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Column(name = "updated_by")
-    private Integer updatedBy;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "updated_by")
+    private UserEntity updatedBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
@@ -68,7 +79,28 @@ public class PropertyEntity implements Serializable {
     @JoinColumn(name = "city_id", nullable = false)
     private CityEntity cityEntity;
 
-    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PropertyImageEntity> images;
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<PropertyImageEntity> images = new ArrayList<>();
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "property_amenities",
+            joinColumns = @JoinColumn(name = "property_id"),
+            inverseJoinColumns = @JoinColumn(name = "amenity_id")
+    )
+    private List<AmenityEntity> propertyAmenities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PropertyReviewEntity> reviews = new ArrayList<>();
+
+    @PrePersist
+    protected void onCreate(){
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate(){
+        this.updatedAt = LocalDateTime.now();
+    }
 }
