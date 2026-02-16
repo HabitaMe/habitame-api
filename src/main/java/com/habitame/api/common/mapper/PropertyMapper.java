@@ -5,6 +5,7 @@ import com.habitame.api.property.dto.*;
 import com.habitame.api.property.entity.PropertyEntity;
 import com.habitame.api.propertyImage.entity.PropertyImageEntity;
 import com.habitame.api.user.entity.UserEntity;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -91,6 +92,19 @@ public class PropertyMapper {
         propertyEntity.setFloor(propertyOwnerRequest.getFloor());
         propertyEntity.setOwnerInHouse(propertyOwnerRequest.isOwnerInHouse());
         propertyEntity.setOwner(owner);
+        return propertyEntity;
+    }
+
+    public static PropertyEntity updateProperty(PropertyEntity propertyEntity, @Valid PropertyOwnerRequest propertyOwnerRequest, CityEntity entityById) {
+        propertyEntity.setTitle(propertyOwnerRequest.getTitle());
+        propertyEntity.setDescription(propertyOwnerRequest.getDescription());
+        propertyEntity.setType(propertyOwnerRequest.getType());
+        propertyEntity.setAddress(propertyOwnerRequest.getAddress());
+        propertyEntity.setAreaM2(propertyOwnerRequest.getAreaM2());
+        propertyEntity.setBathroomsTotal(propertyOwnerRequest.getBathroomsTotal());
+        propertyEntity.setFloor(propertyOwnerRequest.getFloor());
+        propertyEntity.setOwnerInHouse(propertyOwnerRequest.isOwnerInHouse());
+        propertyEntity.setCityEntity(entityById);
         return propertyEntity;
     }
 }

@@ -6,8 +6,10 @@ import com.habitame.api.property.dto.PropertyOwnerRequest;
 import com.habitame.api.property.dto.PropertyOwnerResponse;
 import com.habitame.api.property.entity.PropertyEntity;
 import com.habitame.api.property.service.PropertyService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -34,9 +36,20 @@ public class OwnerPropertyController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addOwnerProperty(@RequestBody PropertyOwnerRequest propertyOwnerRequest){
+    public ResponseEntity<Void> addOwnerProperty(@RequestBody @Valid PropertyOwnerRequest propertyOwnerRequest){
         PropertyOwnerResponse propertyOwnerResponse = propertyService.addOwnerProperty(propertyOwnerRequest);
         URI location = URI.create("api/owner/properties/" + propertyOwnerResponse.getId());
         return ResponseEntity.created(location).build();
+    }
+
+    @PutMapping("/{idProperty}")
+    public ResponseEntity<PropertyOwnerDetailResponse> updateOwnerProperty(@PathVariable Integer idProperty, @RequestBody @Valid PropertyOwnerRequest propertyOwnerRequest){
+        return ResponseEntity.ok(propertyService.updateOwnerProperty(idProperty, propertyOwnerRequest));
+    }
+
+    @DeleteMapping("/{idProperty}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteOwnerProperty(@PathVariable Integer idProperty){
+        propertyService.deleteOwnerProperty(idProperty);
     }
 }

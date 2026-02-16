@@ -10,10 +10,12 @@ import com.habitame.api.property.entity.PropertyEntity;
 import com.habitame.api.property.entity.PropertyStatus;
 import com.habitame.api.property.repository.PropertyListProjection;
 import com.habitame.api.property.repository.PropertyRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.catalina.security.SecurityUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -77,5 +79,17 @@ public class PropertyService {
         PropertyEntity propertyEntity = PropertyMapper.ownerToEntity(propertyOwnerRequest, SecurityUtils.getCurrentUser(), cityService.findEntityById(propertyOwnerRequest.getCityId()));
         propertyRepository.save(propertyEntity);
         return PropertyMapper.toOwnerResponse(propertyEntity);
+    }
+
+    public PropertyOwnerDetailResponse updateOwnerProperty(Integer propertyId, @Valid PropertyOwnerRequest propertyOwnerRequest) {
+        PropertyEntity propertyEntity = propertyRepository.findByIdAndOwnerId(SecurityUtils.getCurrentUserId(), propertyId).orElseThrow(() -> new ResourceNotFoundException("Property not found: " + propertyId));
+        PropertyEntity propertyToUpdate = PropertyMapper.updateProperty(propertyEntity, propertyOwnerRequest, cityService.findEntityById(propertyOwnerRequest.getCityId()));
+        propertyRepository.save(propertyToUpdate);
+        return PropertyMapper.toOwnerDetailResponse(propertyToUpdate);
+    }
+
+    public void deleteOwnerProperty(Integer idProperty) {
+        PropertyEntity propertyEntity = propertyRepository.findByIdAndOwnerId(SecurityUtils.getCurrentUserId(), idProperty).orElseThrow(() -> new ResourceNotFoundException("Property not found: " + idProperty));
+        propertyRepository.delete(propertyEntity);
     }
 }
