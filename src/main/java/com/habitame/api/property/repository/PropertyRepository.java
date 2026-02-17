@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface PropertyRepository extends JpaRepository<PropertyEntity, Long> {
+public interface PropertyRepository extends JpaRepository<PropertyEntity, Integer> {
 
     @Query("""
         SELECT p FROM PropertyEntity p

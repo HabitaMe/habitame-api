@@ -39,10 +39,12 @@ public class PropertyReviewEntity implements Serializable {
     @JoinColumn(name = "admin_id", nullable = false)
     private UserEntity admin;
 
+    private LocalDateTime createdAt;
+
     private LocalDateTime reviewedAt;
 
     @PrePersist
     protected void onCreate() {
-        reviewedAt = LocalDateTime.now();
+        createdAt = LocalDateTime.now();
     }
 }

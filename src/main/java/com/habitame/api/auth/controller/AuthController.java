@@ -19,22 +19,12 @@ public class AuthController {
 
     private final AuthService authService;
 
-    /**
-     *
-     * @param request
-     * @return
-     */
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponse register(@Valid @RequestBody RegisterRequest request) {
         return UserMapper.toResponse(authService.register(request));
     }
 
-    /**
-     *
-     * @param request
-     * @return
-     */
     @PostMapping("/login")
     public AuthResponse login(@RequestBody LoginRequest request) {
         return authService.login(request);

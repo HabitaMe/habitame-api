@@ -3,6 +3,7 @@ package com.habitame.api.propertyImage.entity;
 import com.habitame.api.property.entity.PropertyEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "property_images")
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class PropertyImageEntity implements Serializable {

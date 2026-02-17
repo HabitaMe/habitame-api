@@ -10,6 +10,7 @@ import com.habitame.api.property.entity.PropertyEntity;
 import com.habitame.api.property.entity.PropertyStatus;
 import com.habitame.api.property.repository.PropertyListProjection;
 import com.habitame.api.property.repository.PropertyRepository;
+import com.habitame.api.propertyReview.service.PropertyReviewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.catalina.security.SecurityUtil;
@@ -25,6 +26,7 @@ import java.util.List;
 public class PropertyService {
     private final PropertyRepository propertyRepository;
     private final CityService cityService;
+    private final PropertyReviewService propertyReviewService;
 
     public PageResponse<PropertyPublicResponse> findPublicProperties(Pageable pageable) {
 
@@ -48,6 +50,10 @@ public class PropertyService {
                 .orElseThrow(() -> new ResourceNotFoundException("Property not found: " + propertyId));
         propertyFound.getPropertyAmenities().size();
         return PropertyMapper.toPublicDetailResponse(propertyFound);
+    }
+
+    public PropertyEntity findEntityById(Integer propertyId) {
+        return propertyRepository.findById(propertyId).orElseThrow(() -> new ResourceNotFoundException("Property not found: " + propertyId));
     }
 
     public PageResponse<PropertyOwnerResponse> findAllByOwner(Pageable pageable){
@@ -75,15 +81,28 @@ public class PropertyService {
         return PropertyMapper.toOwnerDetailResponse(propertyEntity);
     }
 
+    public PropertyEntity findMyPropertyEntityById(Integer idProperty) {
+        Integer ownerId = SecurityUtils.getCurrentUserId();
+
+        return propertyRepository.findByIdAndOwnerId(ownerId, idProperty).orElseThrow(() -> new ResourceNotFoundException("Property not found: " + idProperty));
+    }
+
     public PropertyOwnerResponse addOwnerProperty(PropertyOwnerRequest propertyOwnerRequest) {
         PropertyEntity propertyEntity = PropertyMapper.ownerToEntity(propertyOwnerRequest, SecurityUtils.getCurrentUser(), cityService.findEntityById(propertyOwnerRequest.getCityId()));
         propertyRepository.save(propertyEntity);
+        propertyReviewService.addReview(propertyEntity);
         return PropertyMapper.toOwnerResponse(propertyEntity);
     }
 
     public PropertyOwnerDetailResponse updateOwnerProperty(Integer propertyId, @Valid PropertyOwnerRequest propertyOwnerRequest) {
         PropertyEntity propertyEntity = propertyRepository.findByIdAndOwnerId(SecurityUtils.getCurrentUserId(), propertyId).orElseThrow(() -> new ResourceNotFoundException("Property not found: " + propertyId));
         PropertyEntity propertyToUpdate = PropertyMapper.updateProperty(propertyEntity, propertyOwnerRequest, cityService.findEntityById(propertyOwnerRequest.getCityId()));
+        if(!propertyEntity.getTitle().equals(propertyOwnerRequest.getTitle()) ||
+            !propertyEntity.getDescription().equals(propertyOwnerRequest.getDescription()) ||
+            !propertyEntity.getAddress().equals(propertyOwnerRequest.getAddress())) {
+            propertyToUpdate.setStatus(PropertyStatus.in_review);
+            propertyReviewService.addReview(propertyEntity);
+        }
         propertyRepository.save(propertyToUpdate);
         return PropertyMapper.toOwnerDetailResponse(propertyToUpdate);
     }

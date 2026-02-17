@@ -6,6 +6,8 @@ import com.habitame.api.property.dto.PropertyOwnerRequest;
 import com.habitame.api.property.dto.PropertyOwnerResponse;
 import com.habitame.api.property.entity.PropertyEntity;
 import com.habitame.api.property.service.PropertyService;
+import com.habitame.api.propertyImage.dto.PropertyImageResponse;
+import com.habitame.api.propertyImage.service.PropertyImageService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -13,9 +15,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/owner/properties")
@@ -24,6 +29,7 @@ import java.net.URI;
 public class OwnerPropertyController {
 
     private final PropertyService propertyService;
+    private final PropertyImageService propertyImageService;
 
     @GetMapping
     public ResponseEntity<PageResponse<PropertyOwnerResponse>> findMyProperties(Pageable pageable){
@@ -51,5 +57,21 @@ public class OwnerPropertyController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteOwnerProperty(@PathVariable Integer idProperty){
         propertyService.deleteOwnerProperty(idProperty);
+    }
+
+    @GetMapping("/{idProperty}/images")
+    public ResponseEntity<List<PropertyImageResponse>> findMyPropertyImages(@PathVariable Integer idProperty){
+        return ResponseEntity.ok(propertyImageService.findByPropertyId(idProperty));
+    }
+
+    @PostMapping("/{idProperty}/images")
+    public ResponseEntity<PropertyImageResponse> addPropertyImage(@PathVariable Integer idProperty, @RequestParam("file") MultipartFile file, @RequestParam("isMain") boolean isMain) throws IOException {
+        return ResponseEntity.ok(propertyImageService.upload(idProperty, file, isMain));
+    }
+
+    @DeleteMapping("images/{idImage}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletePropertyImage(@PathVariable Integer idImage) throws IOException {
+        propertyImageService.delete(idImage);
     }
 }
