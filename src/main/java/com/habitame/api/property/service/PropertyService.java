@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class PropertyService {
 
     public PageResponse<PropertyPublicResponse> findPublicProperties(Pageable pageable) {
 
-        Page<PropertyEntity> page = propertyRepository.findAllByStatus(PropertyStatus.active, pageable);
+        Page<PropertyEntity> page = propertyRepository.findAllByStatus(PropertyStatus.ACTIVE, pageable);
 
         List<PropertyPublicResponse> content = page
                 .map(PropertyMapper::toPublicResponse)
@@ -46,7 +47,7 @@ public class PropertyService {
     }
 
     public PropertyPublicDetailResponse findPublicPropertyById(Integer propertyId) {
-        PropertyEntity propertyFound = propertyRepository.findByIdAndStatus(propertyId, PropertyStatus.active)
+        PropertyEntity propertyFound = propertyRepository.findByIdAndStatus(propertyId, PropertyStatus.ACTIVE)
                 .orElseThrow(() -> new ResourceNotFoundException("Property not found: " + propertyId));
         propertyFound.getPropertyAmenities().size();
         return PropertyMapper.toPublicDetailResponse(propertyFound);
@@ -87,6 +88,7 @@ public class PropertyService {
         return propertyRepository.findByIdAndOwnerId(ownerId, idProperty).orElseThrow(() -> new ResourceNotFoundException("Property not found: " + idProperty));
     }
 
+    @Transactional
     public PropertyOwnerResponse addOwnerProperty(PropertyOwnerRequest request) {
         PropertyEntity propertyEntity = PropertyMapper.ownerToEntity(request, SecurityUtils.getCurrentUser(), cityService.findEntityById(request.getCityId()));
         propertyRepository.save(propertyEntity);
@@ -94,19 +96,21 @@ public class PropertyService {
         return PropertyMapper.toOwnerResponse(propertyEntity);
     }
 
+    @Transactional
     public PropertyOwnerDetailResponse updateOwnerProperty(Integer propertyId, @Valid PropertyOwnerRequest request) {
         PropertyEntity propertyEntity = propertyRepository.findByIdAndOwnerId(SecurityUtils.getCurrentUserId(), propertyId).orElseThrow(() -> new ResourceNotFoundException("Property not found: " + propertyId));
         PropertyEntity propertyToUpdate = PropertyMapper.updateProperty(propertyEntity, request, cityService.findEntityById(request.getCityId()));
         if(!propertyEntity.getTitle().equals(request.getTitle()) ||
             !propertyEntity.getDescription().equals(request.getDescription()) ||
             !propertyEntity.getAddress().equals(request.getAddress())) {
-            propertyToUpdate.setStatus(PropertyStatus.in_review);
+            propertyToUpdate.setStatus(PropertyStatus.IN_REVIEW);
             propertyReviewService.addReview(propertyEntity);
         }
         propertyRepository.save(propertyToUpdate);
         return PropertyMapper.toOwnerDetailResponse(propertyToUpdate);
     }
 
+    @Transactional
     public void deleteOwnerProperty(Integer idProperty) {
         PropertyEntity propertyEntity = propertyRepository.findByIdAndOwnerId(SecurityUtils.getCurrentUserId(), idProperty).orElseThrow(() -> new ResourceNotFoundException("Property not found: " + idProperty));
         propertyRepository.delete(propertyEntity);
