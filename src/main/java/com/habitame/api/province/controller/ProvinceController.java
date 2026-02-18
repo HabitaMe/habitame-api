@@ -41,16 +41,16 @@ public class ProvinceController {
 
     @PostMapping()
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> addProvince(@Valid @RequestBody ProvinceRequest provinceRequest) {
-        ProvinceResponse provinceResponse = provinceService.addProvince(provinceRequest);
+    public ResponseEntity<Void> addProvince(@Valid @RequestBody ProvinceRequest request) {
+        ProvinceResponse provinceResponse = provinceService.addProvince(request);
         URI location = URI.create("/api/provinces/" + provinceResponse.getId());
         return ResponseEntity.created(location).build();
     }
 
     @PutMapping("/{provinceId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ProvinceResponse> updateProvince(@PathVariable Integer provinceId, @Valid @RequestBody ProvinceRequest provinceRequest) {
-        return ResponseEntity.ok(provinceService.updateProvince(provinceId, provinceRequest));
+    public ResponseEntity<ProvinceResponse> updateProvince(@PathVariable Integer provinceId, @Valid @RequestBody ProvinceRequest request) {
+        return ResponseEntity.ok(provinceService.updateProvince(provinceId, request));
     }
 
     @DeleteMapping("/{provinceId}")

@@ -43,15 +43,15 @@ public class OwnerPropertyController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addOwnerProperty(@RequestBody @Valid PropertyOwnerRequest propertyOwnerRequest){
-        PropertyOwnerResponse propertyOwnerResponse = propertyService.addOwnerProperty(propertyOwnerRequest);
+    public ResponseEntity<Void> addOwnerProperty(@RequestBody @Valid PropertyOwnerRequest request){
+        PropertyOwnerResponse propertyOwnerResponse = propertyService.addOwnerProperty(request);
         URI location = URI.create("api/owner/properties/" + propertyOwnerResponse.getId());
         return ResponseEntity.created(location).build();
     }
 
     @PutMapping("/{idProperty}")
-    public ResponseEntity<PropertyOwnerDetailResponse> updateOwnerProperty(@PathVariable Integer idProperty, @RequestBody @Valid PropertyOwnerRequest propertyOwnerRequest){
-        return ResponseEntity.ok(propertyService.updateOwnerProperty(idProperty, propertyOwnerRequest));
+    public ResponseEntity<PropertyOwnerDetailResponse> updateOwnerProperty(@PathVariable Integer idProperty, @RequestBody @Valid PropertyOwnerRequest request){
+        return ResponseEntity.ok(propertyService.updateOwnerProperty(idProperty, request));
     }
 
     @DeleteMapping("/{idProperty}")

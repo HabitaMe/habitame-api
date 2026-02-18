@@ -13,9 +13,9 @@ public class ProvinceMapper {
         return dto;
     }
 
-    public static ProvinceEntity toEntity(ProvinceRequest provinceRequest, CountryEntity countryEntity) {
+    public static ProvinceEntity toEntity(ProvinceRequest request, CountryEntity countryEntity) {
         ProvinceEntity provinceEntity = new ProvinceEntity();
-        provinceEntity.setName(provinceRequest.getName());
+        provinceEntity.setName(request.getName());
         provinceEntity.setCountryEntity(countryEntity);
         return provinceEntity;
     }

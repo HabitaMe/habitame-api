@@ -87,19 +87,19 @@ public class PropertyService {
         return propertyRepository.findByIdAndOwnerId(ownerId, idProperty).orElseThrow(() -> new ResourceNotFoundException("Property not found: " + idProperty));
     }
 
-    public PropertyOwnerResponse addOwnerProperty(PropertyOwnerRequest propertyOwnerRequest) {
-        PropertyEntity propertyEntity = PropertyMapper.ownerToEntity(propertyOwnerRequest, SecurityUtils.getCurrentUser(), cityService.findEntityById(propertyOwnerRequest.getCityId()));
+    public PropertyOwnerResponse addOwnerProperty(PropertyOwnerRequest request) {
+        PropertyEntity propertyEntity = PropertyMapper.ownerToEntity(request, SecurityUtils.getCurrentUser(), cityService.findEntityById(request.getCityId()));
         propertyRepository.save(propertyEntity);
         propertyReviewService.addReview(propertyEntity);
         return PropertyMapper.toOwnerResponse(propertyEntity);
     }
 
-    public PropertyOwnerDetailResponse updateOwnerProperty(Integer propertyId, @Valid PropertyOwnerRequest propertyOwnerRequest) {
+    public PropertyOwnerDetailResponse updateOwnerProperty(Integer propertyId, @Valid PropertyOwnerRequest request) {
         PropertyEntity propertyEntity = propertyRepository.findByIdAndOwnerId(SecurityUtils.getCurrentUserId(), propertyId).orElseThrow(() -> new ResourceNotFoundException("Property not found: " + propertyId));
-        PropertyEntity propertyToUpdate = PropertyMapper.updateProperty(propertyEntity, propertyOwnerRequest, cityService.findEntityById(propertyOwnerRequest.getCityId()));
-        if(!propertyEntity.getTitle().equals(propertyOwnerRequest.getTitle()) ||
-            !propertyEntity.getDescription().equals(propertyOwnerRequest.getDescription()) ||
-            !propertyEntity.getAddress().equals(propertyOwnerRequest.getAddress())) {
+        PropertyEntity propertyToUpdate = PropertyMapper.updateProperty(propertyEntity, request, cityService.findEntityById(request.getCityId()));
+        if(!propertyEntity.getTitle().equals(request.getTitle()) ||
+            !propertyEntity.getDescription().equals(request.getDescription()) ||
+            !propertyEntity.getAddress().equals(request.getAddress())) {
             propertyToUpdate.setStatus(PropertyStatus.in_review);
             propertyReviewService.addReview(propertyEntity);
         }

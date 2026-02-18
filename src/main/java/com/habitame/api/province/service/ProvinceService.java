@@ -90,10 +90,10 @@ public class ProvinceService {
     }
 
     @Transactional
-    public ProvinceResponse updateProvince(Integer provinceId, ProvinceRequest provinceRequest) {
+    public ProvinceResponse updateProvince(Integer provinceId, ProvinceRequest request) {
         ProvinceEntity provinceEntity = findEntityById(provinceId);
-        provinceEntity.setName(provinceRequest.getName());
-        provinceEntity.setCountryEntity(countryService.findEntityById(provinceRequest.getCountryId()));
+        provinceEntity.setName(request.getName());
+        provinceEntity.setCountryEntity(countryService.findEntityById(request.getCountryId()));
         return ProvinceMapper.toResponse(provinceRepository.save(provinceEntity));
     }
 

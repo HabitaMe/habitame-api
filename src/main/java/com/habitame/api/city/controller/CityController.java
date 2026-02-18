@@ -33,16 +33,16 @@ public class CityController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> addCity(@Valid @RequestBody CityRequest cityRequest) {
-        CityResponse cityResponse = cityService.addCity(cityRequest);
+    public ResponseEntity<Void> addCity(@Valid @RequestBody CityRequest request) {
+        CityResponse cityResponse = cityService.addCity(request);
         URI location = URI.create("api/cities/" + cityResponse.getId());
         return ResponseEntity.created(location).build();
     }
 
     @PutMapping("/{cityId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CityResponse> updateCity(@PathVariable Integer cityId, @Valid @RequestBody CityRequest cityRequest) {
-        return ResponseEntity.ok(cityService.updateCity(cityId, cityRequest));
+    public ResponseEntity<CityResponse> updateCity(@PathVariable Integer cityId, @Valid @RequestBody CityRequest request) {
+        return ResponseEntity.ok(cityService.updateCity(cityId, request));
     }
 
     @DeleteMapping("/{cityId}")

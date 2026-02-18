@@ -44,16 +44,16 @@ public class CountryController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> addCountry(@Valid @RequestBody CountryRequest countryRequest){
-        CountryResponse countryResponse = countryService.addCountry(countryRequest);
+    public ResponseEntity<Void> addCountry(@Valid @RequestBody CountryRequest request){
+        CountryResponse countryResponse = countryService.addCountry(request);
         URI location = URI.create("/api/countries/" + countryResponse.getId());
         return ResponseEntity.created(location).build();
     }
 
     @PutMapping("/{countryId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CountryResponse> updateCountry(@PathVariable Integer countryId, @Valid @RequestBody CountryRequest countryRequest){
-        return ResponseEntity.ok(countryService.updateCountry(countryId, countryRequest));
+    public ResponseEntity<CountryResponse> updateCountry(@PathVariable Integer countryId, @Valid @RequestBody CountryRequest request){
+        return ResponseEntity.ok(countryService.updateCountry(countryId, request));
     }
 
     @DeleteMapping("/{countryId}")

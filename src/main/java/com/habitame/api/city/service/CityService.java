@@ -69,17 +69,17 @@ public class CityService {
     }
 
     @Transactional
-    public CityResponse addCity(CityRequest cityRequest) {
+    public CityResponse addCity(CityRequest request) {
         if (cityRepository.existsByProvinceEntity_IdAndName(
-                cityRequest.getProvinceId(),
-                cityRequest.getName()
+                request.getProvinceId(),
+                request.getName()
         )){
             throw new DuplicateResourceException("City already exists");
         }
 
-        ProvinceEntity provinceEntity = provinceService.findEntityById(cityRequest.getProvinceId());
+        ProvinceEntity provinceEntity = provinceService.findEntityById(request.getProvinceId());
 
-        CityEntity cityEntity = CityMapper.toEntity(cityRequest, provinceEntity);
+        CityEntity cityEntity = CityMapper.toEntity(request, provinceEntity);
 
         CityEntity savedCityEntity = cityRepository.save(cityEntity);
 
@@ -87,11 +87,11 @@ public class CityService {
     }
 
     @Transactional
-    public CityResponse updateCity(Integer id, CityRequest cityRequest) {
+    public CityResponse updateCity(Integer id, CityRequest request) {
         CityEntity cityEntity = findEntityById(id);
-        cityEntity.setName(cityRequest.getName());
-        if (cityRequest.getProvinceId() != null) {
-            cityEntity.setProvinceEntity(provinceService.findEntityById(cityRequest.getProvinceId()));
+        cityEntity.setName(request.getName());
+        if (request.getProvinceId() != null) {
+            cityEntity.setProvinceEntity(provinceService.findEntityById(request.getProvinceId()));
         }
         return CityMapper.toResponse(cityRepository.save(cityEntity));
     }

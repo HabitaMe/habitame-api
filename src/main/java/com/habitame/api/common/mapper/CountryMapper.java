@@ -14,10 +14,10 @@ public class CountryMapper {
         return response;
     }
 
-    public static CountryEntity toEntity(CountryRequest countryRequest) {
+    public static CountryEntity toEntity(CountryRequest request) {
         CountryEntity countryEntity = new CountryEntity();
-        countryEntity.setName(countryRequest.getName());
-        countryEntity.setIsoCode(countryRequest.getIsoCode());
+        countryEntity.setName(request.getName());
+        countryEntity.setIsoCode(request.getIsoCode());
         return countryEntity;
     }
 }

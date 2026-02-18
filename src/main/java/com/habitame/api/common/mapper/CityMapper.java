@@ -15,9 +15,9 @@ public class CityMapper {
         return dto;
     }
 
-    public static CityEntity toEntity(CityRequest cityRequest, ProvinceEntity provinceEntity) {
+    public static CityEntity toEntity(CityRequest request, ProvinceEntity provinceEntity) {
         CityEntity cityEntity = new CityEntity();
-        cityEntity.setName(cityRequest.getName());
+        cityEntity.setName(request.getName());
         cityEntity.setProvinceEntity(provinceEntity);
         return cityEntity;
     }
