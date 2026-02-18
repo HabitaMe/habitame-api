@@ -6,6 +6,7 @@ import com.habitame.api.property.dto.PropertyOwnerRequest;
 import com.habitame.api.property.dto.PropertyOwnerResponse;
 import com.habitame.api.property.entity.PropertyEntity;
 import com.habitame.api.property.service.PropertyService;
+import com.habitame.api.propertyImage.dto.PropertyImageRequest;
 import com.habitame.api.propertyImage.dto.PropertyImageResponse;
 import com.habitame.api.propertyImage.service.PropertyImageService;
 import jakarta.validation.Valid;
@@ -65,8 +66,8 @@ public class OwnerPropertyController {
     }
 
     @PostMapping("/{idProperty}/images")
-    public ResponseEntity<PropertyImageResponse> addPropertyImage(@PathVariable Integer idProperty, @RequestParam("file") MultipartFile file, @RequestParam("isMain") boolean isMain) throws IOException {
-        return ResponseEntity.ok(propertyImageService.upload(idProperty, file, isMain));
+    public ResponseEntity<PropertyImageResponse> addPropertyImage(@PathVariable Integer idProperty, PropertyImageRequest request) throws IOException {
+        return ResponseEntity.ok(propertyImageService.upload(idProperty, request));
     }
 
     @DeleteMapping("images/{idImage}")

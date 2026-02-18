@@ -8,6 +8,7 @@ import com.habitame.api.common.mapper.PropertyImageMapper;
 import com.habitame.api.media.service.ImageStorageService;
 import com.habitame.api.property.entity.PropertyEntity;
 import com.habitame.api.property.service.PropertyService;
+import com.habitame.api.propertyImage.dto.PropertyImageRequest;
 import com.habitame.api.propertyImage.dto.PropertyImageResponse;
 import com.habitame.api.propertyImage.entity.PropertyImageEntity;
 import com.habitame.api.propertyImage.repository.PropertyImageRepository;
@@ -30,7 +31,7 @@ public class PropertyImageService {
     private final PropertyService propertyService;
 
     @Transactional
-    public PropertyImageResponse upload(Integer propertyId, MultipartFile file, boolean isMain) throws IOException {
+    public PropertyImageResponse upload(Integer propertyId, PropertyImageRequest request) throws IOException {
         PropertyEntity propertyEntity = propertyService.findEntityById(propertyId);
 
         Integer currentUserId = SecurityUtils.getCurrentUserId();
@@ -39,24 +40,24 @@ public class PropertyImageService {
             throw new UnauthorizedException("No tienes permiso para añadir una imagen a esta propiedad");
         }
 
-        if (file.isEmpty() || !isImage(file)) {
+        if (request.getFile().isEmpty() || !isImage(request.getFile())) {
             throw new IllegalArgument("Archivo invalido: debe ser una imagen no vacia");
         }
 
-        if (!isMain && propertyImageRepository.countMainImages(propertyId) == 0) {
-            isMain = true;
+        if (!request.isMain() && propertyImageRepository.countMainImages(propertyId) == 0) {
+            request.setMain(true);
         }
 
-        if(isMain) {
+        if(request.isMain()) {
             propertyImageRepository.resetMainImage(propertyId);
         }
 
-        String url = imageStorageService.store(file, "properties");
+        String url = imageStorageService.store(request.getFile(), "properties");
 
         PropertyImageEntity propertyImageEntity = PropertyImageEntity.builder()
                 .property(propertyEntity)
                 .imageUrl(url)
-                .isMain(isMain)
+                .isMain(request.isMain())
                 .build();
 
         PropertyImageEntity saved = propertyImageRepository.save(propertyImageEntity);
