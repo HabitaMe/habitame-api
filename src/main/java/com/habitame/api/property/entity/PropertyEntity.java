@@ -59,7 +59,7 @@ public class PropertyEntity implements Serializable {
     private boolean ownerInHouse = false;
 
     @Enumerated(EnumType.STRING)
-    private PropertyStatus status = PropertyStatus.in_review;
+    private PropertyStatus status = PropertyStatus.IN_REVIEW;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
