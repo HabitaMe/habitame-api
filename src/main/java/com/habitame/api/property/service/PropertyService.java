@@ -115,4 +115,20 @@ public class PropertyService {
         PropertyEntity propertyEntity = propertyRepository.findByIdAndOwnerId(SecurityUtils.getCurrentUserId(), idProperty).orElseThrow(() -> new ResourceNotFoundException("Property not found: " + idProperty));
         propertyRepository.delete(propertyEntity);
     }
+
+    public PageResponse<PropertyAdminResponse> findAll(Pageable pageable) {
+        Page<PropertyEntity> page = propertyRepository.findAll(pageable);
+
+        List<PropertyAdminResponse> content = page
+                .map(PropertyMapper::toAdminResponse)
+                .getContent();
+
+        return new PageResponse<>(
+                content,
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages()
+        );
+    }
 }

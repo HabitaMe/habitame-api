@@ -1,12 +1,20 @@
 package com.habitame.api.common.mapper;
 
+import com.habitame.api.amenities.dto.AmenityResponse;
+import com.habitame.api.city.dto.CityResponse;
 import com.habitame.api.city.entity.CityEntity;
 import com.habitame.api.property.dto.*;
 import com.habitame.api.property.entity.PropertyEntity;
+import com.habitame.api.propertyImage.dto.PropertyImageResponse;
 import com.habitame.api.propertyImage.entity.PropertyImageEntity;
+import com.habitame.api.propertyReview.dto.PropertyReviewResponse;
+import com.habitame.api.user.dto.UserResponse;
 import com.habitame.api.user.entity.UserEntity;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 @RequiredArgsConstructor
 public class PropertyMapper {
@@ -106,5 +114,42 @@ public class PropertyMapper {
         propertyEntity.setOwnerInHouse(request.isOwnerInHouse());
         propertyEntity.setCityEntity(entityById);
         return propertyEntity;
+    }
+
+    public static PropertyAdminResponse toAdminResponse(PropertyEntity propertyEntity) {
+        PropertyAdminResponse response = new PropertyAdminResponse();
+        response.setId(propertyEntity.getId());
+        response.setTitle(propertyEntity.getTitle());
+        response.setOwner(UserMapper.toResponse(propertyEntity.getOwner()));
+        response.setMainImage(propertyEntity.getImages().stream()
+                .filter(PropertyImageEntity::getIsMain)
+                .map(PropertyImageEntity::getImageUrl)
+                .findFirst()
+                .orElse(null));
+        response.setStatus(propertyEntity.getStatus().toString());
+        return response;
+    }
+
+    public static PropertyAdminDetailResponse toAdminDetailResponse(PropertyEntity propertyEntity) {
+        PropertyAdminDetailResponse response = new PropertyAdminDetailResponse();
+        response.setId(propertyEntity.getId());
+        response.setTitle(propertyEntity.getTitle());
+        response.setDescription(propertyEntity.getDescription());
+        response.setType(propertyEntity.getType());
+        response.setAddress(propertyEntity.getAddress());
+        response.setFloor(propertyEntity.getFloor());
+        response.setAreaM2(propertyEntity.getAreaM2());
+        response.setBathroomsTotal(propertyEntity.getBathroomsTotal());
+        response.setOwnerInHouse(propertyEntity.isOwnerInHouse());
+        response.setStatus(propertyEntity.getStatus().toString());
+        response.setCreatedAt(propertyEntity.getCreatedAt().toString());
+        response.setUpdatedAt(propertyEntity.getUpdatedAt().toString());
+        response.setUpdatedBy(UserMapper.toResponse(propertyEntity.getUpdatedBy()));
+        response.setOwner(UserMapper.toResponse(propertyEntity.getOwner()));
+        response.setCity(CityMapper.toResponse(propertyEntity.getCityEntity()));
+        response.setImages(propertyEntity.getImages().stream().map(PropertyImageMapper::toResponse).toList());
+        response.setAmenities(propertyEntity.getPropertyAmenities().stream().map(AmenityMapper::toResponse).toList());
+        response.setReviews(List.of());
+        return response;
     }
 }
