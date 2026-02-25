@@ -4,6 +4,7 @@ import com.habitame.api.amenities.entity.AmenityEntity;
 import com.habitame.api.city.entity.CityEntity;
 import com.habitame.api.propertyImage.entity.PropertyImageEntity;
 import com.habitame.api.propertyReview.entity.PropertyReviewEntity;
+import com.habitame.api.room.entity.RoomEntity;
 import com.habitame.api.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -87,6 +88,9 @@ public class PropertyEntity implements Serializable {
 
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PropertyReviewEntity> reviews = new ArrayList<>();
+
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RoomEntity> rooms = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
