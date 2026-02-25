@@ -56,13 +56,12 @@ public class JwtProvider {
                     .setSigningKey(key)
                     .build()
                     .parseClaimsJws(token);
-            return true;
         } catch (ExpiredJwtException ex) {
-            System.out.println("Token expirado");
+            throw new RuntimeException("Token expirado");
         } catch (JwtException ex) {
-            System.out.println("Token inválido: " + ex.getMessage());
+            throw new RuntimeException("Token inválido: " + ex.getMessage());
         }
-        return false;
+        return true;
     }
 
     // Obtener subject (username/email) desde token
