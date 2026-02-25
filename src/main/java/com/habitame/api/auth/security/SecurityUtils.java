@@ -1,12 +1,12 @@
 package com.habitame.api.auth.security;
 
-import com.habitame.api.user.dto.UserResponse;
 import com.habitame.api.user.entity.UserEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class SecurityUtils {
-    private SecurityUtils() { }
+    private SecurityUtils() {
+    }
 
     public static Integer getCurrentUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

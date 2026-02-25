@@ -14,7 +14,6 @@ import com.habitame.api.propertyImage.entity.PropertyImageEntity;
 import com.habitame.api.propertyImage.repository.PropertyImageRepository;
 import com.habitame.api.user.entity.Role;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,7 +47,7 @@ public class PropertyImageService {
             request.setMain(true);
         }
 
-        if(request.isMain()) {
+        if (request.isMain()) {
             propertyImageRepository.resetMainImage(propertyId);
         }
 

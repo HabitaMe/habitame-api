@@ -8,5 +8,6 @@ import java.io.IOException;
 @Service
 public interface ImageStorageService {
     String store(MultipartFile file, String folder) throws IOException;
+
     void delete(String fileName) throws IOException;
 }

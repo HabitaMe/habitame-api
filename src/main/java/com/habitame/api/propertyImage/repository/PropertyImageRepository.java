@@ -1,6 +1,5 @@
 package com.habitame.api.propertyImage.repository;
 
-import com.habitame.api.propertyImage.dto.PropertyImageResponse;
 import com.habitame.api.propertyImage.entity.PropertyImageEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -13,10 +12,10 @@ public interface PropertyImageRepository extends JpaRepository<PropertyImageEnti
 
     @Modifying
     @Query("""
-       UPDATE PropertyImageEntity p
-       SET p.isMain = false
-       WHERE p.property.id = :propertyId
-       """)
+            UPDATE PropertyImageEntity p
+            SET p.isMain = false
+            WHERE p.property.id = :propertyId
+            """)
     void resetMainImage(@Param("propertyId") Integer propertyId);
 
     @Query("SELECT COUNT(p) FROM PropertyImageEntity p WHERE p.property.id = :propertyId AND p.isMain = true")

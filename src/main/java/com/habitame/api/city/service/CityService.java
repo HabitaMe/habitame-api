@@ -73,7 +73,7 @@ public class CityService {
         if (cityRepository.existsByProvinceEntity_IdAndName(
                 request.getProvinceId(),
                 request.getName()
-        )){
+        )) {
             throw new DuplicateResourceException("City already exists");
         }
 

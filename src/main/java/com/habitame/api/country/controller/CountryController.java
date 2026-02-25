@@ -3,10 +3,8 @@ package com.habitame.api.country.controller;
 import com.habitame.api.common.wrapper.PageResponse;
 import com.habitame.api.country.dto.CountryRequest;
 import com.habitame.api.country.dto.CountryResponse;
-import com.habitame.api.country.entity.CountryEntity;
 import com.habitame.api.country.service.CountryService;
 import com.habitame.api.province.dto.ProvinceResponse;
-import com.habitame.api.province.entity.ProvinceEntity;
 import com.habitame.api.province.service.ProvinceService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +15,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/countries")
@@ -28,23 +25,23 @@ public class CountryController {
     private final ProvinceService provinceService;
 
     @GetMapping
-    public ResponseEntity<PageResponse<CountryResponse>> findAll(Pageable pageable){
+    public ResponseEntity<PageResponse<CountryResponse>> findAll(Pageable pageable) {
         return ResponseEntity.ok(countryService.findAll(pageable));
     }
 
     @GetMapping("/{id}")
-    public CountryResponse findById(@PathVariable Integer id){
+    public CountryResponse findById(@PathVariable Integer id) {
         return countryService.findById(id);
     }
 
     @GetMapping("/{countryId}/provinces")
-    public ResponseEntity<PageResponse<ProvinceResponse>> findByCountryId(@PathVariable Integer countryId, Pageable pageable){
+    public ResponseEntity<PageResponse<ProvinceResponse>> findByCountryId(@PathVariable Integer countryId, Pageable pageable) {
         return ResponseEntity.ok(provinceService.findByCountry(countryId, pageable));
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> addCountry(@Valid @RequestBody CountryRequest request){
+    public ResponseEntity<Void> addCountry(@Valid @RequestBody CountryRequest request) {
         CountryResponse countryResponse = countryService.addCountry(request);
         URI location = URI.create("/api/countries/" + countryResponse.getId());
         return ResponseEntity.created(location).build();
@@ -52,14 +49,14 @@ public class CountryController {
 
     @PutMapping("/{countryId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CountryResponse> updateCountry(@PathVariable Integer countryId, @Valid @RequestBody CountryRequest request){
+    public ResponseEntity<CountryResponse> updateCountry(@PathVariable Integer countryId, @Valid @RequestBody CountryRequest request) {
         return ResponseEntity.ok(countryService.updateCountry(countryId, request));
     }
 
     @DeleteMapping("/{countryId}")
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCountry(@PathVariable Integer countryId){
+    public void deleteCountry(@PathVariable Integer countryId) {
         countryService.deleteCountry(countryId);
     }
 }

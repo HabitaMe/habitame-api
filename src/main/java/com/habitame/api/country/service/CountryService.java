@@ -3,14 +3,11 @@ package com.habitame.api.country.service;
 import com.habitame.api.common.exception.DuplicateResourceException;
 import com.habitame.api.common.exception.ResourceNotFoundException;
 import com.habitame.api.common.mapper.CountryMapper;
-import com.habitame.api.common.mapper.ProvinceMapper;
 import com.habitame.api.common.wrapper.PageResponse;
 import com.habitame.api.country.dto.CountryRequest;
 import com.habitame.api.country.dto.CountryResponse;
 import com.habitame.api.country.entity.CountryEntity;
 import com.habitame.api.country.repository.CountryRepository;
-import com.habitame.api.province.dto.ProvinceResponse;
-import com.habitame.api.province.entity.ProvinceEntity;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -44,7 +40,7 @@ public class CountryService {
         );
     }
 
-    public CountryResponse findById(Integer id){
+    public CountryResponse findById(Integer id) {
         return CountryMapper.toResponse(findEntityById(id));
     }
 
@@ -54,7 +50,7 @@ public class CountryService {
 
     @Transactional
     public CountryResponse addCountry(@Valid CountryRequest request) {
-        if (countryRepository.existsByName(request.getName())){
+        if (countryRepository.existsByName(request.getName())) {
             throw new DuplicateResourceException("Country already exists: " + request.getName());
         }
 

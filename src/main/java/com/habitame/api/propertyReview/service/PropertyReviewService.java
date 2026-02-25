@@ -14,7 +14,7 @@ public class PropertyReviewService {
     private final PropertyReviewRepository propertyReviewRepository;
 
     @Transactional
-    public void addReview(PropertyEntity propertyEntity){
+    public void addReview(PropertyEntity propertyEntity) {
         PropertyReviewEntity propertyReviewEntity = new PropertyReviewEntity();
         propertyReviewEntity.setProperty(propertyEntity);
         propertyReviewEntity.setStatus(ReviewStatus.PENDING);

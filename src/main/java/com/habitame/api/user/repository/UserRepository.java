@@ -10,15 +10,17 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 
     Optional<UserEntity> findByUsername(String username);
+
     Optional<UserEntity> findByEmail(String email);
 
     @Query("""
-        SELECT u FROM UserEntity u
-        WHERE u.username = :value OR u.email = :value
-    """)
+                SELECT u FROM UserEntity u
+                WHERE u.username = :value OR u.email = :value
+            """)
     Optional<UserEntity> findByUsernameOrEmail(@Param("value") String value);
 
     boolean existsByUsername(String username);
+
     boolean existsByEmail(String email);
 }
 

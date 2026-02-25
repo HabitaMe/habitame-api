@@ -2,7 +2,6 @@ package com.habitame.api.property.dto;
 
 import com.habitame.api.amenities.dto.AmenityResponse;
 import com.habitame.api.city.dto.CityResponse;
-import com.habitame.api.property.entity.PropertyEntity;
 import com.habitame.api.propertyImage.dto.PropertyImageResponse;
 import com.habitame.api.propertyReview.dto.PropertyReviewResponse;
 import com.habitame.api.user.dto.UserResponse;

@@ -1,7 +1,6 @@
 package com.habitame.api.property.entity;
 
 import com.habitame.api.amenities.entity.AmenityEntity;
-import com.habitame.api.auth.security.SecurityUtils;
 import com.habitame.api.city.entity.CityEntity;
 import com.habitame.api.propertyImage.entity.PropertyImageEntity;
 import com.habitame.api.propertyReview.entity.PropertyReviewEntity;
@@ -10,17 +9,13 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "properties")
@@ -94,13 +89,13 @@ public class PropertyEntity implements Serializable {
     private List<PropertyReviewEntity> reviews = new ArrayList<>();
 
     @PrePersist
-    protected void onCreate(){
+    protected void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
-    protected void onUpdate(){
+    protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 }

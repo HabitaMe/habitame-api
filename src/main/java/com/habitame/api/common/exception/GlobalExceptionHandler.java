@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFound(
             ResourceNotFoundException ex,
-            HttpServletRequest request){
+            HttpServletRequest request) {
 
         return buildError(
                 HttpStatus.NOT_FOUND,
@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<ErrorResponse> handleDuplicate(
             DuplicateResourceException ex,
-            HttpServletRequest request){
+            HttpServletRequest request) {
 
         return buildError(
                 HttpStatus.CONFLICT,
@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(
             MethodArgumentNotValidException ex,
-            HttpServletRequest request){
+            HttpServletRequest request) {
 
         String message = ex.getBindingResult()
                 .getFieldErrors()
@@ -68,7 +68,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(
             Exception ex,
-            HttpServletRequest request){
+            HttpServletRequest request) {
 
         log.error("Unhandled exception", ex);
 
@@ -84,7 +84,7 @@ public class GlobalExceptionHandler {
             HttpStatus status,
             ApiError errorType,
             String detailMessage,
-            String path){
+            String path) {
 
         ErrorResponse error = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())

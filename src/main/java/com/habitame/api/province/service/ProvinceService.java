@@ -1,10 +1,7 @@
 package com.habitame.api.province.service;
 
-import com.habitame.api.city.dto.CityResponse;
-import com.habitame.api.city.entity.CityEntity;
 import com.habitame.api.common.exception.DuplicateResourceException;
 import com.habitame.api.common.exception.ResourceNotFoundException;
-import com.habitame.api.common.mapper.CityMapper;
 import com.habitame.api.common.mapper.ProvinceMapper;
 import com.habitame.api.common.wrapper.PageResponse;
 import com.habitame.api.country.entity.CountryEntity;
@@ -55,7 +52,7 @@ public class ProvinceService {
                 );
     }
 
-    public PageResponse<ProvinceResponse> findByCountry (Integer countryId, Pageable pageable) {
+    public PageResponse<ProvinceResponse> findByCountry(Integer countryId, Pageable pageable) {
         Page<ProvinceEntity> page = provinceRepository.findByCountryEntity_Id(countryId, pageable);
 
         List<ProvinceResponse> content = page
