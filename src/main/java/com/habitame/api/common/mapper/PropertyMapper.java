@@ -1,19 +1,13 @@
 package com.habitame.api.common.mapper;
 
-import com.habitame.api.amenities.dto.AmenityResponse;
-import com.habitame.api.city.dto.CityResponse;
 import com.habitame.api.city.entity.CityEntity;
 import com.habitame.api.property.dto.*;
 import com.habitame.api.property.entity.PropertyEntity;
-import com.habitame.api.propertyImage.dto.PropertyImageResponse;
 import com.habitame.api.propertyImage.entity.PropertyImageEntity;
-import com.habitame.api.propertyReview.dto.PropertyReviewResponse;
-import com.habitame.api.user.dto.UserResponse;
 import com.habitame.api.user.entity.UserEntity;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -28,10 +22,10 @@ public class PropertyMapper {
         dto.setBathroomsTotal(propertyEntity.getBathroomsTotal());
         dto.setFloor(propertyEntity.getFloor());
         dto.setMainImage(propertyEntity.getImages().stream()
-                    .filter(PropertyImageEntity::getIsMain)
-                        .map(PropertyImageEntity::getImageUrl)
-                            .findFirst()
-                                .orElse(null));
+                .filter(PropertyImageEntity::getIsMain)
+                .map(PropertyImageEntity::getImageUrl)
+                .findFirst()
+                .orElse(null));
         return dto;
     }
 
@@ -103,6 +97,7 @@ public class PropertyMapper {
         return propertyEntity;
     }
 
+
     public static PropertyEntity updateProperty(PropertyEntity propertyEntity, @Valid PropertyOwnerRequest request, CityEntity entityById) {
         propertyEntity.setTitle(request.getTitle());
         propertyEntity.setDescription(request.getDescription());
@@ -144,12 +139,41 @@ public class PropertyMapper {
         response.setStatus(propertyEntity.getStatus().toString());
         response.setCreatedAt(propertyEntity.getCreatedAt().toString());
         response.setUpdatedAt(propertyEntity.getUpdatedAt().toString());
-        response.setUpdatedBy(UserMapper.toResponse(propertyEntity.getUpdatedBy()));
+        response.setUpdatedBy(propertyEntity.getUpdatedBy() == null ? null : UserMapper.toResponse(propertyEntity.getUpdatedBy()));
         response.setOwner(UserMapper.toResponse(propertyEntity.getOwner()));
         response.setCity(CityMapper.toResponse(propertyEntity.getCityEntity()));
         response.setImages(propertyEntity.getImages().stream().map(PropertyImageMapper::toResponse).toList());
         response.setAmenities(propertyEntity.getPropertyAmenities().stream().map(AmenityMapper::toResponse).toList());
         response.setReviews(List.of());
         return response;
+    }
+
+    public static PropertyEntity adminToEntity(PropertyAdminRequest request, UserEntity owner, CityEntity cityEntity) {
+        PropertyEntity propertyEntity = new PropertyEntity();
+        propertyEntity.setTitle(request.getTitle());
+        propertyEntity.setDescription(request.getDescription());
+        propertyEntity.setType(request.getType());
+        propertyEntity.setAddress(request.getAddress());
+        propertyEntity.setAreaM2(request.getAreaM2());
+        propertyEntity.setBathroomsTotal(request.getBathroomsTotal());
+        propertyEntity.setFloor(request.getFloor());
+        propertyEntity.setOwnerInHouse(request.isOwnerInHouse());
+        propertyEntity.setOwner(owner);
+        propertyEntity.setCityEntity(cityEntity);
+        return propertyEntity;
+    }
+
+    public static PropertyEntity updateAdminProperty(PropertyEntity propertyEntity, PropertyAdminRequest request, CityEntity entityById, UserEntity owner) {
+        propertyEntity.setTitle(request.getTitle());
+        propertyEntity.setDescription(request.getDescription());
+        propertyEntity.setType(request.getType());
+        propertyEntity.setAddress(request.getAddress());
+        propertyEntity.setAreaM2(request.getAreaM2());
+        propertyEntity.setBathroomsTotal(request.getBathroomsTotal());
+        propertyEntity.setFloor(request.getFloor());
+        propertyEntity.setOwnerInHouse(request.isOwnerInHouse());
+        propertyEntity.setCityEntity(entityById);
+        propertyEntity.setOwner(owner);
+        return propertyEntity;
     }
 }
