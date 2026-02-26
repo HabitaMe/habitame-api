@@ -26,14 +26,9 @@ public class AmenityController {
         return ResponseEntity.ok(amenityService.getAmenities());
     }
 
-    @GetMapping("/properties")
-    public ResponseEntity<List<AmenityResponse>> getPropertyAmenities(){
-        return ResponseEntity.ok(amenityService.getAmenitiesByScope(AmenityScope.PROPERTY));
-    }
-
-    @GetMapping("/rooms")
-    public ResponseEntity<List<AmenityResponse>> getRoomAmenities(){
-        return ResponseEntity.ok(amenityService.getAmenitiesByScope(AmenityScope.ROOM));
+    @GetMapping("/scope/{scope}")
+    public ResponseEntity<List<AmenityResponse>> getPropertyAmenities(@PathVariable AmenityScope scope){
+        return ResponseEntity.ok(amenityService.getAmenitiesByScope(scope));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
