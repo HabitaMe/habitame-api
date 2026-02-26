@@ -30,6 +30,11 @@ public class AmenityService {
                 .toList();
     }
 
+    public AmenityEntity getAmenityById(Integer amenityId) {
+        return amenityRepository.findById(amenityId)
+                .orElseThrow(() -> new RuntimeException("Amenity not found: " + amenityId));
+    }
+
     @Transactional
     public AmenityResponse addAmenity(AmenityRequest request) {
         return AmenityMapper.toResponse(amenityRepository.save(AmenityMapper.toEntity(request))) ;
