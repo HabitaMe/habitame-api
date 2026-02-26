@@ -4,6 +4,7 @@ import com.habitame.api.common.wrapper.PageResponse;
 import com.habitame.api.property.dto.PropertyAdminDetailResponse;
 import com.habitame.api.property.dto.PropertyAdminRequest;
 import com.habitame.api.property.dto.PropertyAdminResponse;
+import com.habitame.api.property.dto.PropertyOwnerResponse;
 import com.habitame.api.property.service.PropertyService;
 import com.habitame.api.propertyImage.dto.PropertyImageRequest;
 import com.habitame.api.propertyImage.dto.PropertyImageResponse;
@@ -73,5 +74,15 @@ public class AdminPropertyController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePropertyImage(@PathVariable Integer idImage) throws IOException {
         propertyImageService.delete(idImage);
+    }
+
+    @PostMapping("/{idProperty}/amenities")
+    public ResponseEntity<PropertyOwnerResponse> addAmenities(@PathVariable Integer idProperty, @RequestBody List<Integer> amenities) {
+        return ResponseEntity.ok(propertyService.addAmenities(idProperty, amenities));
+    }
+
+    @PostMapping("/{idProperty}/amenities/delete")
+    public ResponseEntity<PropertyOwnerResponse> removeAmenities(@PathVariable Integer idProperty, @RequestBody List<Integer> amenities) {
+        return ResponseEntity.ok(propertyService.removeAmenities(idProperty, amenities));
     }
 }
