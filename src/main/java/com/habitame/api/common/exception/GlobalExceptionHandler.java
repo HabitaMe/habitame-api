@@ -43,6 +43,20 @@ public class GlobalExceptionHandler {
         );
     }
 
+    // - Unhautorized
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicate(
+            UnauthorizedException ex,
+            HttpServletRequest request) {
+
+        return buildError(
+                HttpStatus.CONFLICT,
+                ApiError.UNHAUTORIZED_EXCEPTION,
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+    }
+
     // 400 - Validation Errors
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(
