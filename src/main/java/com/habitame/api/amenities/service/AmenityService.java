@@ -1,0 +1,45 @@
+package com.habitame.api.amenities.service;
+
+import com.habitame.api.amenities.dto.AmenityRequest;
+import com.habitame.api.amenities.dto.AmenityResponse;
+import com.habitame.api.amenities.entity.AmenityEntity;
+import com.habitame.api.amenities.entity.AmenityScope;
+import com.habitame.api.amenities.repository.AmenityRepository;
+import com.habitame.api.common.mapper.AmenityMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class AmenityService {
+
+    private final AmenityRepository amenityRepository;
+
+    public List<AmenityResponse> getAmenities() {
+        return amenityRepository.findAll().stream().map(AmenityMapper::toResponse).toList();
+    }
+
+    public List<AmenityResponse> getAmenitiesByScope(AmenityScope scope) {
+        return amenityRepository.findAllByScopeIn(List.of(scope, AmenityScope.BOTH))
+                .stream()
+                .map(AmenityMapper::toResponse)
+                .toList();
+    }
+
+    public AmenityResponse addAmenity(AmenityRequest request) {
+        return AmenityMapper.toResponse(amenityRepository.save(AmenityMapper.toEntity(request))) ;
+    }
+
+    public AmenityResponse updateAmenity(Integer amenityId, AmenityRequest request) {
+        AmenityEntity amenityEntity = amenityRepository.findById(amenityId).orElseThrow(() -> new RuntimeException("Amenity not found: " + amenityId));
+        AmenityEntity amenityUpdated = amenityRepository.save(AmenityMapper.toUpdate(amenityEntity, request));
+        return AmenityMapper.toResponse(amenityUpdated);
+    }
+
+    public void deleteAmenity(Integer amenityId) {
+        amenityRepository.deleteById(amenityId);
+    }
+}
