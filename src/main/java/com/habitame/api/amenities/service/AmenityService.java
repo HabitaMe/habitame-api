@@ -9,6 +9,7 @@ import com.habitame.api.common.mapper.AmenityMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -29,16 +30,19 @@ public class AmenityService {
                 .toList();
     }
 
+    @Transactional
     public AmenityResponse addAmenity(AmenityRequest request) {
         return AmenityMapper.toResponse(amenityRepository.save(AmenityMapper.toEntity(request))) ;
     }
 
+    @Transactional
     public AmenityResponse updateAmenity(Integer amenityId, AmenityRequest request) {
         AmenityEntity amenityEntity = amenityRepository.findById(amenityId).orElseThrow(() -> new RuntimeException("Amenity not found: " + amenityId));
         AmenityEntity amenityUpdated = amenityRepository.save(AmenityMapper.toUpdate(amenityEntity, request));
         return AmenityMapper.toResponse(amenityUpdated);
     }
 
+    @Transactional
     public void deleteAmenity(Integer amenityId) {
         amenityRepository.deleteById(amenityId);
     }
