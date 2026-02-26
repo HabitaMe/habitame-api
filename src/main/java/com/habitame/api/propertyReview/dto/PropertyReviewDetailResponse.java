@@ -6,8 +6,11 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class PropertyReviewResponse {
+public class PropertyReviewDetailResponse {
     private Integer id;
     private String status;
-    private Integer property;
+    private String comment;
+    private PropertyOwnerResponse property;
+    private String admin;
+    private LocalDateTime reviewedAt;
 }
