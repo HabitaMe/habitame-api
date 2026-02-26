@@ -1,5 +1,8 @@
 package com.habitame.api.property.service;
 
+import com.habitame.api.amenities.entity.AmenityEntity;
+import com.habitame.api.amenities.entity.AmenityScope;
+import com.habitame.api.amenities.service.AmenityService;
 import com.habitame.api.auth.security.SecurityUtils;
 import com.habitame.api.city.service.CityService;
 import com.habitame.api.common.exception.ResourceNotFoundException;
@@ -29,6 +32,7 @@ public class PropertyService {
     private final CityService cityService;
     private final PropertyReviewService propertyReviewService;
     private final UserService userService;
+    private final AmenityService amenityService;
 
     public PageResponse<PropertyPublicResponse> findPublicProperties(Pageable pageable) {
 
@@ -142,16 +146,46 @@ public class PropertyService {
         return PropertyMapper.toAdminDetailResponse(propertyEntity);
     }
 
+    @Transactional
     public PropertyAdminResponse addAdminProperty(PropertyAdminRequest request) {
         PropertyEntity propertyEntity = PropertyMapper.adminToEntity(request, userService.findById(request.getOwnerId()), cityService.findEntityById(request.getCityId()));
         return PropertyMapper.toAdminResponse(propertyRepository.save(propertyEntity));
     }
 
+    @Transactional
     public PropertyAdminDetailResponse updateAdminProperty(Integer idProperty, PropertyAdminRequest request) {
         PropertyEntity propertyEntity = propertyRepository.findById(idProperty).orElseThrow(() -> new ResourceNotFoundException("Property not found: " + idProperty));
         PropertyEntity propertyToUpdate = PropertyMapper.updateAdminProperty(propertyEntity, request, cityService.findEntityById(request.getCityId()), userService.findById(request.getOwnerId()));
         propertyToUpdate.setUpdatedBy(SecurityUtils.getCurrentUser());
         propertyRepository.save(propertyToUpdate);
         return PropertyMapper.toAdminDetailResponse(propertyToUpdate);
+    }
+
+    @Transactional
+    public PropertyOwnerResponse addAmenities(Integer idProperty, List<Integer> amenities) {
+        PropertyEntity propertyEntity = findEntityById(idProperty);
+
+        if (propertyEntity.getOwner() != SecurityUtils.getCurrentUser() && SecurityUtils.getCurrentUser().getRole() != Role.ADMIN) {
+            throw new UnauthorizedException("No tienes permiso para agregar amenidades a esta propiedad");
+        } else {
+            List<AmenityEntity> amenityEntities = amenities.stream().map(amenityService::getAmenityById).toList();
+            propertyEntity.getPropertyAmenities().addAll(amenityEntities);
+            propertyRepository.save(propertyEntity);
+        }
+
+        return PropertyMapper.toOwnerResponse(propertyEntity);
+    }
+
+    @Transactional
+    public PropertyOwnerResponse removeAmenities(Integer idProperty, List<Integer> amenities) {
+        PropertyEntity propertyEntity = findEntityById(idProperty);
+        if (propertyEntity.getOwner() != SecurityUtils.getCurrentUser() && SecurityUtils.getCurrentUser().getRole() != Role.ADMIN) {
+            throw new UnauthorizedException("No tienes permiso para eliminar amenidades a esta propiedad");
+        } else {
+            List<AmenityEntity> amenityEntities = amenities.stream().map(amenityService::getAmenityById).toList();
+            propertyEntity.getPropertyAmenities().removeAll(amenityEntities);
+            propertyRepository.save(propertyEntity);
+        }
+        return PropertyMapper.toOwnerResponse(propertyEntity);
     }
 }
