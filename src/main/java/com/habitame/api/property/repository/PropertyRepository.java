@@ -12,26 +12,31 @@ import java.util.Optional;
 
 public interface PropertyRepository extends JpaRepository<PropertyEntity, Integer> {
 
-    @Query("""
-                SELECT p FROM PropertyEntity p
-                LEFT JOIN FETCH p.images i
-                WHERE p.status = :status
-            """)
+    @Query(
+            value = "SELECT p FROM PropertyEntity p LEFT JOIN FETCH p.images WHERE p.status = :status",
+            countQuery = "SELECT COUNT(p) FROM PropertyEntity p WHERE p.status = :status"
+    )
     Page<PropertyEntity> findAllByStatus(@Param("status") PropertyStatus status, Pageable pageable);
 
     @Query("""
-                SELECT p FROM PropertyEntity p
-                LEFT JOIN FETCH p.images i
-                WHERE p.id = :propertyId AND p.status = :status
+            SELECT p FROM PropertyEntity p
+            LEFT JOIN FETCH p.images
+            WHERE p.id = :propertyId AND p.status = :status
             """)
-    Optional<PropertyEntity> findByIdAndStatus(Integer propertyId, PropertyStatus status);
+    Optional<PropertyEntity> findByIdAndStatus(@Param("propertyId") Integer propertyId,
+                                               @Param("status") PropertyStatus status);
 
-    Optional<Page<PropertyEntity>> findAllByOwnerId(Integer ownerId, Pageable pageable);
+    @Query(
+            value = "SELECT p FROM PropertyEntity p LEFT JOIN FETCH p.images WHERE p.owner.id = :ownerId",
+            countQuery = "SELECT COUNT(p) FROM PropertyEntity p WHERE p.owner.id = :ownerId"
+    )
+    Page<PropertyEntity> findAllByOwnerId(@Param("ownerId") Integer ownerId, Pageable pageable);
 
     @Query("""
-                SELECT p FROM PropertyEntity p
-                LEFT JOIN FETCH p.images i
-                WHERE p.id = :idProperty AND p.owner.id = :ownerId
+            SELECT p FROM PropertyEntity p
+            LEFT JOIN FETCH p.images
+            WHERE p.id = :propertyId AND p.owner.id = :ownerId
             """)
-    Optional<PropertyEntity> findByIdAndOwnerId(Integer ownerId, Integer idProperty);
+    Optional<PropertyEntity> findByIdAndOwnerId(@Param("ownerId") Integer ownerId,
+                                                @Param("propertyId") Integer propertyId);
 }

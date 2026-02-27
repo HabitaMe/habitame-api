@@ -7,6 +7,7 @@ import com.habitame.api.common.exception.UnauthorizedException;
 import com.habitame.api.common.mapper.PropertyImageMapper;
 import com.habitame.api.media.service.ImageStorageService;
 import com.habitame.api.property.entity.PropertyEntity;
+import com.habitame.api.property.service.PropertySecurityService;
 import com.habitame.api.property.service.PropertyService;
 import com.habitame.api.propertyImage.dto.PropertyImageRequest;
 import com.habitame.api.propertyImage.dto.PropertyImageResponse;
@@ -28,21 +29,21 @@ public class PropertyImageService {
     private final PropertyImageRepository propertyImageRepository;
     private final ImageStorageService imageStorageService;
     private final PropertyService propertyService;
+    private final PropertySecurityService propertySecurityService;
 
     @Transactional
     public PropertyImageResponse upload(Integer propertyId, PropertyImageRequest request) throws IOException {
-        PropertyEntity propertyEntity = propertyService.findEntityById(propertyId);
+        PropertyEntity property = propertyService.findEntityById(propertyId);
 
-        Integer currentUserId = SecurityUtils.getCurrentUserId();
-        Role currentUserRole = SecurityUtils.getCurrentUser().getRole();
-        if (!propertyEntity.getOwner().getId().equals(currentUserId) && !currentUserRole.equals(Role.ADMIN)) {
-            throw new UnauthorizedException("No tienes permiso para añadir una imagen a esta propiedad");
-        }
+        // Autorización centralizada
+        propertySecurityService.checkPropertyAccess(property);
 
+        // Validación del archivo
         if (request.getFile().isEmpty() || !isImage(request.getFile())) {
-            throw new IllegalArgument("Archivo invalido: debe ser una imagen no vacia");
+            throw new IllegalArgumentException("Archivo inválido: debe ser una imagen no vacía");
         }
 
+        // Si no hay imagen principal, esta pasa a serlo automáticamente
         if (!request.isMain() && propertyImageRepository.countMainImages(propertyId) == 0) {
             request.setMain(true);
         }
@@ -54,31 +55,25 @@ public class PropertyImageService {
         String url = imageStorageService.store(request.getFile(), "properties");
 
         PropertyImageEntity propertyImageEntity = PropertyImageEntity.builder()
-                .property(propertyEntity)
+                .property(property)
                 .imageUrl(url)
                 .isMain(request.isMain())
                 .build();
 
-        PropertyImageEntity saved = propertyImageRepository.save(propertyImageEntity);
-
-        return PropertyImageMapper.toResponse(saved);
+        return PropertyImageMapper.toResponse(propertyImageRepository.save(propertyImageEntity));
     }
 
     @Transactional
     public void delete(Integer imageId) throws IOException {
-        PropertyImageEntity propertyImageEntity = propertyImageRepository.findById(imageId).orElseThrow(() -> new ResourceNotFoundException("Imagen no encontrada: " + imageId));
+        PropertyImageEntity image = propertyImageRepository.findById(imageId)
+                .orElseThrow(() -> new ResourceNotFoundException("Imagen no encontrada: " + imageId));
 
-        Integer currentUserId = SecurityUtils.getCurrentUserId();
-        Role currentUserRole = SecurityUtils.getCurrentUser().getRole();
-        if (!propertyImageEntity.getProperty().getOwner().getId().equals(currentUserId) && !currentUserRole.equals(Role.ADMIN)) {
-            throw new UnauthorizedException("No tienes permiso para eliminar");
-        }
+        // Autorización centralizada
+        propertySecurityService.checkImageAccess(image);
 
-        try {
-            imageStorageService.delete(propertyImageEntity.getImageUrl());
-        } catch (IOException e) {
-            throw new IOException("Error al eliminar la imagen");
-        }
+        // Separamos el error de storage del error de lógica
+        imageStorageService.delete(image.getImageUrl());
+
         propertyImageRepository.deleteById(imageId);
     }
 
@@ -87,8 +82,8 @@ public class PropertyImageService {
         return contentType != null && contentType.startsWith("image/");
     }
 
-    public List<PropertyImageResponse> findByPropertyId(Integer idProperty) {
-        return propertyImageRepository.findAllByPropertyId(idProperty)
+    public List<PropertyImageResponse> findByPropertyId(Integer propertyId) {
+        return propertyImageRepository.findAllByPropertyId(propertyId)
                 .stream()
                 .map(PropertyImageMapper::toResponse)
                 .toList();
