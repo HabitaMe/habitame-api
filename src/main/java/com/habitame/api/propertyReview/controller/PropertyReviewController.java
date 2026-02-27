@@ -15,23 +15,21 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/property-reviews")
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
 public class PropertyReviewController {
 
     private final PropertyReviewService propertyReviewService;
 
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<PageResponse<PropertyReviewResponse>> getReviews(Pageable pageable) {
         return ResponseEntity.ok(propertyReviewService.getReviews(pageable));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/status/{status}")
     public ResponseEntity<PageResponse<PropertyReviewResponse>> getReviews(@PathVariable ReviewStatus status, Pageable pageable) {
         return ResponseEntity.ok(propertyReviewService.getReviewsByStatus(status, pageable));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<PropertyReviewDetailResponse> getReviewById(@PathVariable Integer id) {
         return ResponseEntity.ok(propertyReviewService.findById(id));

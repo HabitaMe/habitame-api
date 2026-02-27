@@ -19,7 +19,7 @@ public class PropertyReviewMapper {
         dto.setStatus(propertyReviewEntity.getStatus().toString());
         dto.setComment(propertyReviewEntity.getComment());
         dto.setProperty(PropertyMapper.toOwnerResponse(propertyReviewEntity.getProperty()));
-        dto.setAdmin(propertyReviewEntity.getAdmin() == null ? null : propertyReviewEntity.getAdmin().getFullName() + "(" + propertyReviewEntity.getAdmin().getEmail() + ")");
+        dto.setAdmin(propertyReviewEntity.getAdmin() == null ? null : UserMapper.toResponse(propertyReviewEntity.getAdmin()));
         dto.setReviewedAt(propertyReviewEntity.getReviewedAt());
         return dto;
     }
