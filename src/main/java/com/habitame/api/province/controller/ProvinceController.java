@@ -39,7 +39,7 @@ public class ProvinceController {
         return ResponseEntity.ok(cityService.findByProvince(id, pageable));
     }
 
-    @PostMapping()
+    @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> addProvince(@Valid @RequestBody ProvinceRequest request) {
         ProvinceResponse provinceResponse = provinceService.addProvince(request);

@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -39,6 +40,19 @@ public class GlobalExceptionHandler {
                 HttpStatus.CONFLICT,
                 ApiError.DUPLICATE_RESOURCE,
                 ex.getMessage(),
+                request.getRequestURI()
+        );
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDenied(
+            AuthorizationDeniedException ex,
+            HttpServletRequest request) {
+
+        return buildError(
+                HttpStatus.FORBIDDEN,
+                ApiError.ACCESS_DENIED,
+                "Access Denied: " + ex.getMessage(),
                 request.getRequestURI()
         );
     }
