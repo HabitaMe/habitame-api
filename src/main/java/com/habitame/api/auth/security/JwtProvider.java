@@ -1,5 +1,6 @@
 package com.habitame.api.auth.security;
 
+import com.habitame.api.common.exception.UnauthorizedException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,64 +14,80 @@ import java.util.Date;
 public class JwtProvider {
 
     private final SecretKey key;
-    private final long expirationMillis;
+    private final long accessExpirationMillis;
+    private final long refreshExpirationMillis;
 
     public JwtProvider(
             @Value("${jwt.secret}") String jwtSecret,
-            @Value("${jwt.expiration:3600000}") long expirationMillis // default 1 hora
+            @Value("${jwt.expiration:3600000}") long accessExpirationMillis,
+            @Value("${jwt.refresh-expiration:86400000}") long refreshExpirationMillis
     ) {
-        // Crea la key a partir de cualquier string (UTF-8)
         this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
-        this.expirationMillis = expirationMillis;
+        this.accessExpirationMillis = accessExpirationMillis;
+        this.refreshExpirationMillis = refreshExpirationMillis;
     }
 
-    // Genera un JWT de acceso
+    /**
+     * Genera un token de acceso de corta duración (default 1h).
+     */
     public String generateAccessToken(String subject) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + expirationMillis);
-
         return Jwts.builder()
                 .setSubject(subject)
                 .setIssuedAt(now)
-                .setExpiration(expiryDate)
+                .setExpiration(new Date(now.getTime() + accessExpirationMillis))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // Genera un JWT de refresh
+    /**
+     * Genera un refresh token de larga duración (default 24h).
+     * Configurar jwt.refresh-expiration en application.yml para cambiarlo.
+     */
     public String generateRefreshToken(String subject) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + expirationMillis * 24); // 24 horas
         return Jwts.builder()
                 .setSubject(subject)
                 .setIssuedAt(now)
-                .setExpiration(expiryDate)
+                .setExpiration(new Date(now.getTime() + refreshExpirationMillis))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // Validar token
+    /**
+     * Valida la firma y expiración del token.
+     *
+     * @throws UnauthorizedException si el token expiró o es inválido
+     */
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
                     .parseClaimsJws(token);
+            return true;
         } catch (ExpiredJwtException ex) {
-            throw new RuntimeException("Token expirado");
+            throw new UnauthorizedException("Expired token");
         } catch (JwtException ex) {
-            throw new RuntimeException("Token inválido: " + ex.getMessage());
+            throw new UnauthorizedException("Invalid token");
         }
-        return true;
     }
 
-    // Obtener subject (username/email) desde token
+    /**
+     * Extrae el subject del token.
+     *
+     * @throws UnauthorizedException si el token no puede ser parseado
+     */
     public String getSubjectFromToken(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-        return claims.getSubject();
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();
+        } catch (JwtException ex) {
+            throw new UnauthorizedException("The token could not be read");
+        }
     }
 }

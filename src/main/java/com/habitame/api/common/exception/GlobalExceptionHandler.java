@@ -16,6 +16,69 @@ import java.time.LocalDateTime;
 @Slf4j
 public class GlobalExceptionHandler {
 
+    // 400 - Validation Errors
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleValidation(
+            MethodArgumentNotValidException ex,
+            HttpServletRequest request) {
+
+        String message = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(e -> e.getField() + ": " + e.getDefaultMessage())
+                .findFirst()
+                .orElse("Validation error");
+
+        return buildError(
+                HttpStatus.BAD_REQUEST,
+                ApiError.VALIDATION_ERROR,
+                message,
+                request.getRequestURI()
+        );
+    }
+
+    // 401 - Unauthorized
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ErrorResponse> handleUnauthorized(
+            UnauthorizedException ex,
+            HttpServletRequest request) {
+
+        return buildError(
+                HttpStatus.UNAUTHORIZED,
+                ApiError.UNAUTHORIZED_EXCEPTION,
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+    }
+
+    // 403 - Forbidden
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ErrorResponse> handleForbidden(
+            ForbiddenException ex,
+            HttpServletRequest request) {
+
+        return buildError(
+                HttpStatus.FORBIDDEN,
+                ApiError.ACCESS_DENIED,
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+    }
+
+    // 403 - Spring Security (@PreAuthorize, etc.)
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAuthorizationDenied(
+            AuthorizationDeniedException ex,
+            HttpServletRequest request) {
+
+        return buildError(
+                HttpStatus.FORBIDDEN,
+                ApiError.ACCESS_DENIED,
+                "Access denied: " + ex.getMessage(),
+                request.getRequestURI()
+        );
+    }
+
     // 404 - Not Found
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFound(
@@ -44,61 +107,13 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(AuthorizationDeniedException.class)
-    public ResponseEntity<ErrorResponse> handleAccessDenied(
-            AuthorizationDeniedException ex,
-            HttpServletRequest request) {
-
-        return buildError(
-                HttpStatus.FORBIDDEN,
-                ApiError.ACCESS_DENIED,
-                "Access Denied: " + ex.getMessage(),
-                request.getRequestURI()
-        );
-    }
-
-    // - Unhautorized
-    @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicate(
-            UnauthorizedException ex,
-            HttpServletRequest request) {
-
-        return buildError(
-                HttpStatus.CONFLICT,
-                ApiError.UNHAUTORIZED_EXCEPTION,
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-    }
-
-    // 400 - Validation Errors
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleValidation(
-            MethodArgumentNotValidException ex,
-            HttpServletRequest request) {
-
-        String message = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(e -> e.getField() + ": " + e.getDefaultMessage())
-                .findFirst()
-                .orElse("Validation error");
-
-        return buildError(
-                HttpStatus.BAD_REQUEST,
-                ApiError.VALIDATION_ERROR,
-                message,
-                request.getRequestURI()
-        );
-    }
-
-    // 500 - Fallback / Generic
+    // 500 - Fallback
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(
             Exception ex,
             HttpServletRequest request) {
 
-        log.error("Unhandled exception", ex);
+        log.error("Unhandled exception at {}: {}", request.getRequestURI(), ex.getMessage(), ex);
 
         return buildError(
                 HttpStatus.INTERNAL_SERVER_ERROR,
@@ -111,14 +126,14 @@ public class GlobalExceptionHandler {
     private ResponseEntity<ErrorResponse> buildError(
             HttpStatus status,
             ApiError errorType,
-            String detailMessage,
+            String message,
             String path) {
 
         ErrorResponse error = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(status.value())
                 .error(errorType)
-                .message(detailMessage)
+                .message(message)
                 .path(path)
                 .build();
 
