@@ -144,7 +144,7 @@ public class PropertyMapper {
         response.setCity(CityMapper.toResponse(propertyEntity.getCityEntity()));
         response.setImages(propertyEntity.getImages().stream().map(PropertyImageMapper::toResponse).toList());
         response.setAmenities(propertyEntity.getPropertyAmenities().stream().map(AmenityMapper::toResponse).toList());
-        response.setReviews(List.of());
+        response.setReviews(propertyEntity.getReviews().stream().map(PropertyReviewMapper::toResponse).toList());
         return response;
     }
 
