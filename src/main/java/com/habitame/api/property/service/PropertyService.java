@@ -125,7 +125,8 @@ public class PropertyService {
 
         boolean requiresReview = !property.getTitle().equals(request.getTitle())
                 || !property.getDescription().equals(request.getDescription())
-                || !property.getAddress().equals(request.getAddress());
+                || !property.getAddress().equals(request.getAddress())
+                || property.getStatus().equals(PropertyStatus.INACTIVE);
 
         PropertyMapper.updateProperty(property, request, cityService.findEntityById(request.getCityId()));
         property.setUpdatedBy(SecurityUtils.getCurrentUser());
@@ -199,6 +200,23 @@ public class PropertyService {
         property.setUpdatedBy(SecurityUtils.getCurrentUser());
 
         return PropertyMapper.toAdminDetailResponse(propertyRepository.save(property));
+    }
+
+    /**
+     * Resuelve la review pendiente de una propiedad y actualiza su status en consecuencia.
+     * Coordina PropertyReviewService y PropertyRepository en la misma transacción.
+     */
+    @Transactional
+    public PropertyReviewResponse resolveReview(Integer propertyId, PropertyReviewDecisionRequest request) {
+        PropertyEntity property = findEntityById(propertyId);
+
+        PropertyReviewResponse response = propertyReviewService.resolveReview(propertyId, request);
+
+        property.setStatus(request.getStatus() == ReviewStatus.APPROVED ? PropertyStatus.ACTIVE : PropertyStatus.INACTIVE);
+
+        propertyRepository.save(property);
+
+        return response;
     }
 
     // -------------
@@ -290,22 +308,5 @@ public class PropertyService {
                 page.getTotalElements(),
                 page.getTotalPages()
         );
-    }
-
-    /**
-     * Resuelve la review pendiente de una propiedad y actualiza su status en consecuencia.
-     * Coordina PropertyReviewService y PropertyRepository en la misma transacción.
-     */
-    @Transactional
-    public PropertyReviewResponse resolveReview(Integer propertyId, PropertyReviewDecisionRequest request) {
-        PropertyEntity property = findEntityById(propertyId);
-
-        PropertyReviewResponse response = propertyReviewService.resolveReview(propertyId, request);
-
-        property.setStatus(request.getStatus() == ReviewStatus.APPROVED ? PropertyStatus.ACTIVE : PropertyStatus.INACTIVE);
-
-        propertyRepository.save(property);
-
-        return response;
     }
 }
