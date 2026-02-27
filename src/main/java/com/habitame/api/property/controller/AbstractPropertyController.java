@@ -5,6 +5,7 @@ import com.habitame.api.property.service.PropertyService;
 import com.habitame.api.propertyImage.dto.PropertyImageRequest;
 import com.habitame.api.propertyImage.dto.PropertyImageResponse;
 import com.habitame.api.propertyImage.service.PropertyImageService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public abstract class AbstractPropertyController {
     @PostMapping("/{idProperty}/images")
     public ResponseEntity<PropertyImageResponse> addImage(
             @PathVariable Integer idProperty,
-            PropertyImageRequest request) throws IOException {
+            @Valid PropertyImageRequest request) throws IOException {
         return ResponseEntity.ok(propertyImageService.upload(idProperty, request));
     }
 
