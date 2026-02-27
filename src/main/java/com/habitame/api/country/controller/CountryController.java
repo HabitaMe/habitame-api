@@ -29,9 +29,9 @@ public class CountryController {
         return ResponseEntity.ok(countryService.findAll(pageable));
     }
 
-    @GetMapping("/{id}")
-    public CountryResponse findById(@PathVariable Integer id) {
-        return countryService.findById(id);
+    @GetMapping("/{countryId}")
+    public CountryResponse findById(@PathVariable Integer countryId) {
+        return countryService.findById(countryId);
     }
 
     @GetMapping("/{countryId}/provinces")

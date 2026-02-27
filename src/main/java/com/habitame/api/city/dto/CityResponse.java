@@ -6,9 +6,7 @@ import lombok.Data;
 
 @Data
 public class CityResponse {
-    @NotBlank
     String name;
 
-    @NotNull
     Integer id;
 }

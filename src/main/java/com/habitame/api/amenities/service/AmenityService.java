@@ -19,24 +19,24 @@ public class AmenityService {
 
     private final AmenityRepository amenityRepository;
 
-    public List<AmenityResponse> getAmenities() {
+    public List<AmenityResponse> findAmenities() {
         return amenityRepository.findAll().stream().map(AmenityMapper::toResponse).toList();
     }
 
-    public List<AmenityResponse> getAmenitiesByScope(AmenityScope scope) {
+    public List<AmenityResponse> findAmenitiesByScope(AmenityScope scope) {
         return amenityRepository.findAllByScopeIn(List.of(scope, AmenityScope.BOTH))
                 .stream()
                 .map(AmenityMapper::toResponse)
                 .toList();
     }
 
-    public AmenityEntity getAmenityById(Integer amenityId) {
+    public AmenityEntity findAmenityById(Integer amenityId) {
         return amenityRepository.findById(amenityId)
                 .orElseThrow(() -> new RuntimeException("Amenity not found: " + amenityId));
     }
 
     @Transactional
-    public AmenityResponse addAmenity(AmenityRequest request) {
+    public AmenityResponse saveAmenity(AmenityRequest request) {
         return AmenityMapper.toResponse(amenityRepository.save(AmenityMapper.toEntity(request))) ;
     }
 

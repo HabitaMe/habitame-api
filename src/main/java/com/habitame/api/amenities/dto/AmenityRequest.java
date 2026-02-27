@@ -8,8 +8,10 @@ import lombok.Data;
 public class AmenityRequest {
     @NotBlank
     private String name;
+
     @NotBlank
     private String description;
+
     @NotBlank
     private AmenityScope scope;
 }

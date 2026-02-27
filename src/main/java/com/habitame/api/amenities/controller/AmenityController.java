@@ -22,19 +22,19 @@ public class AmenityController {
     private final AmenityService amenityService;
 
     @GetMapping
-    public ResponseEntity<List<AmenityResponse>> getAmenities() {
-        return ResponseEntity.ok(amenityService.getAmenities());
+    public ResponseEntity<List<AmenityResponse>> findAmenities() {
+        return ResponseEntity.ok(amenityService.findAmenities());
     }
 
     @GetMapping("/scope/{scope}")
-    public ResponseEntity<List<AmenityResponse>> getPropertyAmenities(@PathVariable AmenityScope scope){
-        return ResponseEntity.ok(amenityService.getAmenitiesByScope(scope));
+    public ResponseEntity<List<AmenityResponse>> getAmenitiesByScope(@PathVariable AmenityScope scope){
+        return ResponseEntity.ok(amenityService.findAmenitiesByScope(scope));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<Void> addAmenity(@RequestBody @Valid AmenityRequest request) {
-        AmenityResponse amenityResponse = amenityService.addAmenity(request);
+    public ResponseEntity<Void> saveAmenity(@RequestBody @Valid AmenityRequest request) {
+        AmenityResponse amenityResponse = amenityService.saveAmenity(request);
         URI location = URI.create("api/amenities/" + amenityResponse.getId());
         return ResponseEntity.created(location).build();
     }
