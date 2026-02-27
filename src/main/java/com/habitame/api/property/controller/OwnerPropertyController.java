@@ -6,6 +6,9 @@ import com.habitame.api.property.dto.PropertyOwnerRequest;
 import com.habitame.api.property.dto.PropertyOwnerResponse;
 import com.habitame.api.property.service.PropertyService;
 import com.habitame.api.propertyImage.service.PropertyImageService;
+import com.habitame.api.propertyReview.dto.PropertyReviewDetailResponse;
+import com.habitame.api.propertyReview.dto.PropertyReviewResponse;
+import com.habitame.api.propertyReview.service.PropertyReviewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -21,12 +24,12 @@ import java.net.URI;
 @PreAuthorize("hasRole('ARRENDADOR')")
 public class OwnerPropertyController extends AbstractPropertyController {
 
-    private final PropertyService propertyService;
+    private final PropertyReviewService propertyReviewService;
 
     public OwnerPropertyController(PropertyImageService propertyImageService,
-                                   PropertyService propertyService) {
+                                   PropertyService propertyService, PropertyReviewService propertyReviewService) {
         super(propertyImageService, propertyService);
-        this.propertyService = propertyService;
+        this.propertyReviewService = propertyReviewService;
     }
 
     @GetMapping
@@ -57,5 +60,12 @@ public class OwnerPropertyController extends AbstractPropertyController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteOwnerProperty(@PathVariable Integer idProperty) {
         propertyService.deleteProperty(idProperty);
+    }
+
+    @GetMapping("/{idProperty}/reviews/latest")
+    public ResponseEntity<PropertyReviewDetailResponse> findLatestRejectedReview(@PathVariable Integer idProperty) {
+        return propertyReviewService.findLatestRejectedReview(idProperty)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.noContent().build());
     }
 }

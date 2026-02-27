@@ -138,7 +138,7 @@ public class PropertyMapper {
         response.setOwnerInHouse(propertyEntity.isOwnerInHouse());
         response.setStatus(propertyEntity.getStatus().toString());
         response.setCreatedAt(propertyEntity.getCreatedAt().toString());
-        response.setUpdatedAt(propertyEntity.getUpdatedAt().toString());
+        response.setUpdatedAt(propertyEntity.getUpdatedAt() == null ? null : propertyEntity.getUpdatedAt().toString());
         response.setUpdatedBy(propertyEntity.getUpdatedBy() == null ? null : UserMapper.toResponse(propertyEntity.getUpdatedBy()));
         response.setOwner(UserMapper.toResponse(propertyEntity.getOwner()));
         response.setCity(CityMapper.toResponse(propertyEntity.getCityEntity()));

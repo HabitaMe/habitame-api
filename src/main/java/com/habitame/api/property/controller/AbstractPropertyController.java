@@ -16,8 +16,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public abstract class AbstractPropertyController {
 
-    private final PropertyImageService propertyImageService;
-    private final PropertyService propertyService;
+    protected final PropertyImageService propertyImageService;
+    protected final PropertyService propertyService;
 
     @GetMapping("/{idProperty}/images")
     public ResponseEntity<List<PropertyImageResponse>> findImages(@PathVariable Integer idProperty) {

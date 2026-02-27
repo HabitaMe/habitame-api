@@ -14,6 +14,9 @@ import com.habitame.api.property.dto.*;
 import com.habitame.api.property.entity.PropertyEntity;
 import com.habitame.api.property.entity.PropertyStatus;
 import com.habitame.api.property.repository.PropertyRepository;
+import com.habitame.api.propertyReview.dto.PropertyReviewDecisionRequest;
+import com.habitame.api.propertyReview.dto.PropertyReviewResponse;
+import com.habitame.api.propertyReview.entity.ReviewStatus;
 import com.habitame.api.propertyReview.service.PropertyReviewService;
 import com.habitame.api.user.entity.Role;
 import com.habitame.api.user.service.UserService;
@@ -83,9 +86,9 @@ public class PropertyService {
      * @throws ResourceNotFoundException si la propiedad no existe o no pertenece al owner
      */
     public PropertyOwnerDetailResponse findMyPropertyById(Integer propertyId) {
-        PropertyEntity property = propertyRepository.findById(propertyId)
+        Integer ownerId = SecurityUtils.getCurrentUserId();
+        PropertyEntity property = propertyRepository.findByIdAndOwnerId(ownerId, propertyId)
                 .orElseThrow(() -> new ResourceNotFoundException("Property not found: " + propertyId));
-        propertySecurityService.checkPropertyAccess(propertyId);
         return PropertyMapper.toOwnerDetailResponse(property);
     }
 
@@ -287,5 +290,22 @@ public class PropertyService {
                 page.getTotalElements(),
                 page.getTotalPages()
         );
+    }
+
+    /**
+     * Resuelve la review pendiente de una propiedad y actualiza su status en consecuencia.
+     * Coordina PropertyReviewService y PropertyRepository en la misma transacción.
+     */
+    @Transactional
+    public PropertyReviewResponse resolveReview(Integer propertyId, PropertyReviewDecisionRequest request) {
+        PropertyEntity property = findEntityById(propertyId);
+
+        PropertyReviewResponse response = propertyReviewService.resolveReview(propertyId, request);
+
+        property.setStatus(request.getStatus() == ReviewStatus.APPROVED ? PropertyStatus.ACTIVE : PropertyStatus.INACTIVE);
+
+        propertyRepository.save(property);
+
+        return response;
     }
 }
