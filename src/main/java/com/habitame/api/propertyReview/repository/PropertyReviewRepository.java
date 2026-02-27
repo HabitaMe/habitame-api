@@ -15,7 +15,9 @@ public interface PropertyReviewRepository extends JpaRepository<PropertyReviewEn
     Page<PropertyReviewEntity> findAllByStatus(ReviewStatus status, Pageable pageable);
 
 
-    // Historial completo ordenado de más reciente a más antiguo
+    /**
+     * Historial completo ordenado de más reciente a más antiguo
+     */
     @Query("""
         SELECT r FROM PropertyReviewEntity r
         LEFT JOIN FETCH r.admin
@@ -24,7 +26,10 @@ public interface PropertyReviewRepository extends JpaRepository<PropertyReviewEn
         """)
     List<PropertyReviewEntity> findAllByPropertyId(@Param("propertyId") Integer propertyId);
 
-    // La review más reciente — para mostrársela al owner si fue rechazada
+    /**
+     * La review más reciente para mostrársela al owner si fue rechazada
+     */
+
     @Query("""
         SELECT r FROM PropertyReviewEntity r
         LEFT JOIN FETCH r.admin
@@ -34,6 +39,8 @@ public interface PropertyReviewRepository extends JpaRepository<PropertyReviewEn
         """)
     Optional<PropertyReviewEntity> findLatestByPropertyId(@Param("propertyId") Integer propertyId);
 
-    // La review pendiente activa — solo debería haber una a la vez
+    /**
+     * La review pendiente activa — solo debería haber una a la vez
+     */
     Optional<PropertyReviewEntity> findByPropertyIdAndStatus(Integer propertyId, ReviewStatus status);
 }

@@ -123,6 +123,9 @@ public class PropertyReviewService {
         return PropertyReviewMapper.toResponse(propertyReviewRepository.save(review));
     }
 
+    /**
+     * Encontrar la última review rechazada de la propiedad.
+     */
     public Optional<PropertyReviewDetailResponse> findLatestRejectedReview(Integer idProperty) {
         propertySecurityService.checkPropertyAccess(idProperty);
         return propertyReviewRepository.findLatestByPropertyId(idProperty)
