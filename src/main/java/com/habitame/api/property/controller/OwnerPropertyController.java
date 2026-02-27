@@ -79,8 +79,9 @@ public class OwnerPropertyController {
         return ResponseEntity.ok(propertyService.addAmenities(idProperty, amenities));
     }
 
-    @PostMapping("/{idProperty}/amenities/delete")
-    public ResponseEntity<PropertyOwnerResponse> removeAmenities(@PathVariable Integer idProperty, @RequestBody List<Integer> amenities) {
-        return ResponseEntity.ok(propertyService.removeAmenities(idProperty, amenities));
+    @DeleteMapping("/{idProperty}/amenities")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeAmenities(@PathVariable Integer idProperty, @RequestBody List<Integer> amenities) {
+        propertyService.removeAmenities(idProperty, amenities);
     }
 }

@@ -33,8 +33,9 @@ public class PropertyImageEntity implements Serializable {
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
-    @Column(name = "is_main")
-    private Boolean isMain = false;
+    @Builder.Default
+    @Column(name = "is_main", nullable = false)
+    private boolean isMain = false;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

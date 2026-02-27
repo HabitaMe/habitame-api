@@ -22,7 +22,7 @@ public class PropertyMapper {
         dto.setBathroomsTotal(propertyEntity.getBathroomsTotal());
         dto.setFloor(propertyEntity.getFloor());
         dto.setMainImage(propertyEntity.getImages().stream()
-                .filter(PropertyImageEntity::getIsMain)
+                .filter(PropertyImageEntity::isMain)
                 .map(PropertyImageEntity::getImageUrl)
                 .findFirst()
                 .orElse(null));
@@ -58,7 +58,7 @@ public class PropertyMapper {
         response.setBathroomsTotal(propertyEntity.getBathroomsTotal());
         response.setFloor(propertyEntity.getFloor());
         response.setMainImage(propertyEntity.getImages().stream()
-                .filter(PropertyImageEntity::getIsMain)
+                .filter(PropertyImageEntity::isMain)
                 .map(PropertyImageEntity::getImageUrl)
                 .findFirst()
                 .orElse(null));
@@ -117,7 +117,7 @@ public class PropertyMapper {
         response.setTitle(propertyEntity.getTitle());
         response.setOwner(UserMapper.toResponse(propertyEntity.getOwner()));
         response.setMainImage(propertyEntity.getImages().stream()
-                .filter(PropertyImageEntity::getIsMain)
+                .filter(PropertyImageEntity::isMain)
                 .map(PropertyImageEntity::getImageUrl)
                 .findFirst()
                 .orElse(null));

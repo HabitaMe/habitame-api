@@ -177,7 +177,7 @@ public class PropertyService {
     }
 
     @Transactional
-    public PropertyOwnerResponse removeAmenities(Integer idProperty, List<Integer> amenities) {
+    public void removeAmenities(Integer idProperty, List<Integer> amenities) {
         PropertyEntity propertyEntity = findEntityById(idProperty);
         if (propertyEntity.getOwner() != SecurityUtils.getCurrentUser() && SecurityUtils.getCurrentUser().getRole() != Role.ADMIN) {
             throw new UnauthorizedException("No tienes permiso para eliminar amenidades a esta propiedad");
@@ -186,6 +186,5 @@ public class PropertyService {
             propertyEntity.getPropertyAmenities().removeAll(amenityEntities);
             propertyRepository.save(propertyEntity);
         }
-        return PropertyMapper.toOwnerResponse(propertyEntity);
     }
 }
