@@ -17,7 +17,7 @@ public class PropertySecurityService {
 
     /**
      * Verifica que el usuario actual sea el owner de la propiedad o un ADMIN.
-     * Lanza ForbiddenException si no tiene permiso.
+     * @throws ForbiddenException si no tiene permiso.
      */
     public void checkPropertyAccess(Integer propertyId) {
         PropertyEntity property = propertyRepository.findById(propertyId)
@@ -33,7 +33,8 @@ public class PropertySecurityService {
     }
 
     /**
-     * Verifica que el usuario actual sea el owner de la imagen (a través de la propiedad) o un ADMIN.
+     * Verifica que el usuario actual sea el owner de la imagen (a través de la room) o un ADMIN.
+     * @throws ForbiddenException si no tiene permiso.
      */
     public void checkImageAccess(PropertyImageEntity image) {
         if (!SecurityUtils.isAdmin() && !SecurityUtils.isOwnerOf(image.getProperty().getOwner())) {
