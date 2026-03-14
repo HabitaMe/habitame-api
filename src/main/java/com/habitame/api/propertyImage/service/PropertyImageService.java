@@ -35,7 +35,6 @@ public class PropertyImageService {
     public PropertyImageResponse upload(Integer propertyId, PropertyImageRequest request) throws IOException {
         PropertyEntity property = propertyService.findEntityById(propertyId);
 
-        // Autorización centralizada
         propertySecurityService.checkPropertyAccess(property);
 
         // Validación del archivo
@@ -68,7 +67,6 @@ public class PropertyImageService {
         PropertyImageEntity image = propertyImageRepository.findById(imageId)
                 .orElseThrow(() -> new ResourceNotFoundException("Imagen no encontrada: " + imageId));
 
-        // Autorización centralizada
         propertySecurityService.checkImageAccess(image);
 
         // Separamos el error de storage del error de lógica
