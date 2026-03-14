@@ -9,7 +9,7 @@ public class PropertyImageMapper {
         PropertyImageResponse dto = new PropertyImageResponse();
         dto.setId(propertyImageEntity.getId());
         dto.setImageUrl(propertyImageEntity.getImageUrl());
-        dto.setMain(propertyImageEntity.getIsMain());
+        dto.setMain(propertyImageEntity.isMain());
         return dto;
     }
 }

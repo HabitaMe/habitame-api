@@ -69,7 +69,7 @@ public class CityService {
     }
 
     @Transactional
-    public CityResponse addCity(CityRequest request) {
+    public CityResponse saveCity(CityRequest request) {
         if (cityRepository.existsByProvinceEntity_IdAndName(
                 request.getProvinceId(),
                 request.getName()

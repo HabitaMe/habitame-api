@@ -1,7 +1,14 @@
 package com.habitame.api.amenities.dto;
 
+import lombok.Data;
+
+@Data
 public class AmenityResponse {
-    public Integer id;
-    public String name;
-    public String description;
+    private Integer id;
+
+    private String name;
+
+    private String description;
+
+    private String scope;
 }

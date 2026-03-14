@@ -11,6 +11,7 @@ public class UserMapper {
         dto.username = userEntity.getUsername();
         dto.email = userEntity.getEmail();
         dto.role = userEntity.getRole().name();
+        dto.photoUrl = userEntity.getPhotoUrl();
         dto.isActive = userEntity.getIsActive();
         dto.createdAt = userEntity.getCreatedAt();
         return dto;

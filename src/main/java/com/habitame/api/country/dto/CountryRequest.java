@@ -7,6 +7,7 @@ import lombok.Data;
 public class CountryRequest {
     @NotBlank
     private String name;
+
     @NotBlank
     private String isoCode;
 }

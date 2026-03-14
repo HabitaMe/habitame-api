@@ -4,6 +4,7 @@ import com.habitame.api.property.entity.PropertyEntity;
 import com.habitame.api.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @Table(name = "property_reviews")
 @Data
 @NoArgsConstructor
+@Builder
 @AllArgsConstructor
 public class PropertyReviewEntity implements Serializable {
 
@@ -26,7 +28,7 @@ public class PropertyReviewEntity implements Serializable {
     private Integer id;
 
     @Enumerated(EnumType.STRING)
-    private ReviewStatus status;
+    private PropertyReviewStatus status;
 
     @Column(columnDefinition = "TEXT")
     private String comment;
@@ -36,7 +38,7 @@ public class PropertyReviewEntity implements Serializable {
     private PropertyEntity property;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "admin_id", nullable = false)
+    @JoinColumn(name = "admin_id")
     private UserEntity admin;
 
     private LocalDateTime createdAt;

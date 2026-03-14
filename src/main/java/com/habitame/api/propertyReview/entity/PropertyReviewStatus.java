@@ -1,6 +1,6 @@
 package com.habitame.api.propertyReview.entity;
 
-public enum ReviewStatus {
+public enum PropertyReviewStatus {
     APPROVED,
     REJECTED,
     PENDING

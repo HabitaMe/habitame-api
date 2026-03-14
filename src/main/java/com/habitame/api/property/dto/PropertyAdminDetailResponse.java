@@ -13,21 +13,38 @@ import java.util.List;
 @Data
 public class PropertyAdminDetailResponse {
     private Integer id;
+
     private String title;
+
     private String description;
+
     private String type;
+
     private String address;
+
     private Integer floor;
+
     private BigDecimal areaM2;
+
     private Integer bathroomsTotal;
+
     private boolean ownerInHouse;
+
     private String status;
+
     private String createdAt;
+
     private String updatedAt;
+
     private UserResponse updatedBy;
+
     private UserResponse owner;
+
     private CityResponse city;
+
     private List<PropertyImageResponse> images;
+
     private List<AmenityResponse> amenities;
+
     private List<PropertyReviewResponse> reviews;
 }

@@ -4,11 +4,13 @@ import com.habitame.api.amenities.entity.AmenityEntity;
 import com.habitame.api.city.entity.CityEntity;
 import com.habitame.api.propertyImage.entity.PropertyImageEntity;
 import com.habitame.api.propertyReview.entity.PropertyReviewEntity;
+import com.habitame.api.room.entity.RoomEntity;
 import com.habitame.api.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -19,9 +21,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "properties")
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class PropertyEntity implements Serializable {
 
     @Serial
@@ -54,6 +57,7 @@ public class PropertyEntity implements Serializable {
     private boolean ownerInHouse = false;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private PropertyStatus status = PropertyStatus.IN_REVIEW;
 
     @Column(name = "created_at", updatable = false)
@@ -66,8 +70,8 @@ public class PropertyEntity implements Serializable {
     @JoinColumn(name = "updated_by")
     private UserEntity updatedBy;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "owner_id", nullable = false)
     private UserEntity owner;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -88,10 +92,12 @@ public class PropertyEntity implements Serializable {
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PropertyReviewEntity> reviews = new ArrayList<>();
 
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RoomEntity> rooms = new ArrayList<>();
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate

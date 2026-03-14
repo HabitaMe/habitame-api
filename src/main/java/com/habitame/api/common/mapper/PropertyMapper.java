@@ -8,8 +8,6 @@ import com.habitame.api.user.entity.UserEntity;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
-
 @RequiredArgsConstructor
 public class PropertyMapper {
 
@@ -22,7 +20,7 @@ public class PropertyMapper {
         dto.setBathroomsTotal(propertyEntity.getBathroomsTotal());
         dto.setFloor(propertyEntity.getFloor());
         dto.setMainImage(propertyEntity.getImages().stream()
-                .filter(PropertyImageEntity::getIsMain)
+                .filter(PropertyImageEntity::isMain)
                 .map(PropertyImageEntity::getImageUrl)
                 .findFirst()
                 .orElse(null));
@@ -58,7 +56,7 @@ public class PropertyMapper {
         response.setBathroomsTotal(propertyEntity.getBathroomsTotal());
         response.setFloor(propertyEntity.getFloor());
         response.setMainImage(propertyEntity.getImages().stream()
-                .filter(PropertyImageEntity::getIsMain)
+                .filter(PropertyImageEntity::isMain)
                 .map(PropertyImageEntity::getImageUrl)
                 .findFirst()
                 .orElse(null));
@@ -117,7 +115,7 @@ public class PropertyMapper {
         response.setTitle(propertyEntity.getTitle());
         response.setOwner(UserMapper.toResponse(propertyEntity.getOwner()));
         response.setMainImage(propertyEntity.getImages().stream()
-                .filter(PropertyImageEntity::getIsMain)
+                .filter(PropertyImageEntity::isMain)
                 .map(PropertyImageEntity::getImageUrl)
                 .findFirst()
                 .orElse(null));
@@ -138,13 +136,13 @@ public class PropertyMapper {
         response.setOwnerInHouse(propertyEntity.isOwnerInHouse());
         response.setStatus(propertyEntity.getStatus().toString());
         response.setCreatedAt(propertyEntity.getCreatedAt().toString());
-        response.setUpdatedAt(propertyEntity.getUpdatedAt().toString());
+        response.setUpdatedAt(propertyEntity.getUpdatedAt() == null ? null : propertyEntity.getUpdatedAt().toString());
         response.setUpdatedBy(propertyEntity.getUpdatedBy() == null ? null : UserMapper.toResponse(propertyEntity.getUpdatedBy()));
         response.setOwner(UserMapper.toResponse(propertyEntity.getOwner()));
         response.setCity(CityMapper.toResponse(propertyEntity.getCityEntity()));
         response.setImages(propertyEntity.getImages().stream().map(PropertyImageMapper::toResponse).toList());
         response.setAmenities(propertyEntity.getPropertyAmenities().stream().map(AmenityMapper::toResponse).toList());
-        response.setReviews(List.of());
+        response.setReviews(propertyEntity.getReviews().stream().map(PropertyReviewMapper::toResponse).toList());
         return response;
     }
 

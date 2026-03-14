@@ -33,8 +33,8 @@ public class CityController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> addCity(@Valid @RequestBody CityRequest request) {
-        CityResponse cityResponse = cityService.addCity(request);
+    public ResponseEntity<Void> saveCity(@Valid @RequestBody CityRequest request) {
+        CityResponse cityResponse = cityService.saveCity(request);
         URI location = URI.create("api/cities/" + cityResponse.getId());
         return ResponseEntity.created(location).build();
     }
