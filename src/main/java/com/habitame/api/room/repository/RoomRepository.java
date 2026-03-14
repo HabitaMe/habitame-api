@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 public interface RoomRepository extends JpaRepository <RoomEntity, Integer>{
@@ -16,7 +15,14 @@ public interface RoomRepository extends JpaRepository <RoomEntity, Integer>{
 
     @Query("""
                 SELECT r FROM RoomEntity r
-                WHERE r.id = :id AND r.status = :status 
-            """) //  LEFT JOIN FETCH r.images i
+                LEFT JOIN FETCH r.images i
+                WHERE r.id = :id AND r.status = :status
+            """)
     Optional<RoomEntity> findByIdAndStatus(Integer id, RoomStatus status);
+
+    Page<RoomEntity> findAllByPropertyId(Integer attr0, Pageable attr1);
+
+    Page<RoomEntity> findAllByPropertyOwnerId(Integer ownerId, Pageable pageable);
+
+    Optional<RoomEntity> findByIdAndPropertyOwnerId(Integer roomId, Integer ownerId);
 }

@@ -1,6 +1,11 @@
 package com.habitame.api.room.entity;
 
+import com.habitame.api.amenities.entity.AmenityEntity;
 import com.habitame.api.property.entity.PropertyEntity;
+import com.habitame.api.propertyImage.entity.PropertyImageEntity;
+import com.habitame.api.propertyReview.entity.PropertyReviewEntity;
+import com.habitame.api.roomImage.entity.RoomImageEntity;
+import com.habitame.api.roomReview.entity.RoomReviewEntity;
 import com.habitame.api.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,6 +16,8 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "rooms")
@@ -53,13 +60,27 @@ public class RoomEntity implements Serializable {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-//    @ManyToOne
-//    @JoinColumn(name = "updated_by")
-//    private UserEntity updatedBy;
+    @ManyToOne
+    @JoinColumn(name = "updated_by")
+    private UserEntity updatedBy;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "property_id", nullable = false)
     private PropertyEntity property;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "room_amenities",
+            joinColumns = @JoinColumn(name = "room_id"),
+            inverseJoinColumns = @JoinColumn(name = "amenity_id")
+    )
+    private List<AmenityEntity> roomAmenities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<RoomImageEntity> images = new ArrayList<>();
+
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RoomReviewEntity> reviews = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
