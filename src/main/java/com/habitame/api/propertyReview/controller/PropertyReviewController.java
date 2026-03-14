@@ -3,10 +3,9 @@ package com.habitame.api.propertyReview.controller;
 import com.habitame.api.common.wrapper.PageResponse;
 import com.habitame.api.propertyReview.dto.PropertyReviewDetailResponse;
 import com.habitame.api.propertyReview.dto.PropertyReviewResponse;
-import com.habitame.api.propertyReview.entity.ReviewStatus;
+import com.habitame.api.propertyReview.entity.PropertyReviewStatus;
 import com.habitame.api.propertyReview.service.PropertyReviewService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,7 +25,7 @@ public class PropertyReviewController {
     }
 
     @GetMapping("/status/{status}")
-    public ResponseEntity<PageResponse<PropertyReviewResponse>> getReviews(@PathVariable ReviewStatus status, Pageable pageable) {
+    public ResponseEntity<PageResponse<PropertyReviewResponse>> getReviews(@PathVariable PropertyReviewStatus status, Pageable pageable) {
         return ResponseEntity.ok(propertyReviewService.getReviewsByStatus(status, pageable));
     }
 

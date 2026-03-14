@@ -1,22 +1,17 @@
 package com.habitame.api.propertyReview.service;
 
-import aj.org.objectweb.asm.commons.Remapper;
 import com.habitame.api.auth.security.SecurityUtils;
 import com.habitame.api.common.exception.IllegalArgument;
 import com.habitame.api.common.exception.ResourceNotFoundException;
-import com.habitame.api.common.mapper.PropertyMapper;
 import com.habitame.api.common.mapper.PropertyReviewMapper;
 import com.habitame.api.common.wrapper.PageResponse;
-import com.habitame.api.property.dto.PropertyAdminResponse;
 import com.habitame.api.property.entity.PropertyEntity;
-import com.habitame.api.property.entity.PropertyStatus;
 import com.habitame.api.property.service.PropertySecurityService;
-import com.habitame.api.property.service.PropertyService;
 import com.habitame.api.propertyReview.dto.PropertyReviewDecisionRequest;
 import com.habitame.api.propertyReview.dto.PropertyReviewDetailResponse;
 import com.habitame.api.propertyReview.dto.PropertyReviewResponse;
 import com.habitame.api.propertyReview.entity.PropertyReviewEntity;
-import com.habitame.api.propertyReview.entity.ReviewStatus;
+import com.habitame.api.propertyReview.entity.PropertyReviewStatus;
 import com.habitame.api.propertyReview.repository.PropertyReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PropertyReviewService {
     private final PropertyReviewRepository propertyReviewRepository;
@@ -41,7 +37,7 @@ public class PropertyReviewService {
     public void addReview(PropertyEntity propertyEntity) {
         PropertyReviewEntity propertyReviewEntity = new PropertyReviewEntity();
         propertyReviewEntity.setProperty(propertyEntity);
-        propertyReviewEntity.setStatus(ReviewStatus.PENDING);
+        propertyReviewEntity.setStatus(PropertyReviewStatus.PENDING);
         propertyReviewRepository.save(propertyReviewEntity);
     }
 
@@ -69,9 +65,9 @@ public class PropertyReviewService {
     }
 
     /**
-     * Historial completo de reviews filtrado por {@link ReviewStatus}.
+     * Historial completo de reviews filtrado por {@link PropertyReviewStatus}.
      */
-    public PageResponse<PropertyReviewResponse> getReviewsByStatus(ReviewStatus status, Pageable pageable) {
+    public PageResponse<PropertyReviewResponse> getReviewsByStatus(PropertyReviewStatus status, Pageable pageable) {
         Page<PropertyReviewEntity> page = propertyReviewRepository.findAllByStatus(status, pageable);
 
         List<PropertyReviewResponse> content = page
@@ -107,11 +103,11 @@ public class PropertyReviewService {
      */
     @Transactional
     public PropertyReviewResponse resolveReview(Integer propertyId, PropertyReviewDecisionRequest request) {
-        if (request.getStatus() == ReviewStatus.REJECTED && (request.getComment() == null || request.getComment().isBlank())) {
+        if (request.getStatus() == PropertyReviewStatus.REJECTED && (request.getComment() == null || request.getComment().isBlank())) {
             throw new IllegalArgument("Comment is required when rejecting a review");
         }
 
-        PropertyReviewEntity review = propertyReviewRepository.findByPropertyIdAndStatus(propertyId, ReviewStatus.PENDING)
+        PropertyReviewEntity review = propertyReviewRepository.findByPropertyIdAndStatus(propertyId, PropertyReviewStatus.PENDING)
                 .orElseThrow(() -> new ResourceNotFoundException("Review not found for property: " + propertyId));
 
 
@@ -129,7 +125,7 @@ public class PropertyReviewService {
     public Optional<PropertyReviewDetailResponse> findLatestRejectedReview(Integer idProperty) {
         propertySecurityService.checkPropertyAccess(idProperty);
         return propertyReviewRepository.findLatestByPropertyId(idProperty)
-                .filter(r -> r.getStatus() == ReviewStatus.REJECTED)
+                .filter(r -> r.getStatus() == PropertyReviewStatus.REJECTED)
                 .map(PropertyReviewMapper::toDetailResponse);
     }
 }

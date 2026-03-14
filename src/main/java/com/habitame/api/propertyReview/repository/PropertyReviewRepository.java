@@ -1,7 +1,7 @@
 package com.habitame.api.propertyReview.repository;
 
 import com.habitame.api.propertyReview.entity.PropertyReviewEntity;
-import com.habitame.api.propertyReview.entity.ReviewStatus;
+import com.habitame.api.propertyReview.entity.PropertyReviewStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PropertyReviewRepository extends JpaRepository<PropertyReviewEntity, Integer> {
-    Page<PropertyReviewEntity> findAllByStatus(ReviewStatus status, Pageable pageable);
+    Page<PropertyReviewEntity> findAllByStatus(PropertyReviewStatus status, Pageable pageable);
 
 
     /**
@@ -42,5 +42,5 @@ public interface PropertyReviewRepository extends JpaRepository<PropertyReviewEn
     /**
      * La review pendiente activa — solo debería haber una a la vez
      */
-    Optional<PropertyReviewEntity> findByPropertyIdAndStatus(Integer propertyId, ReviewStatus status);
+    Optional<PropertyReviewEntity> findByPropertyIdAndStatus(Integer propertyId, PropertyReviewStatus status);
 }

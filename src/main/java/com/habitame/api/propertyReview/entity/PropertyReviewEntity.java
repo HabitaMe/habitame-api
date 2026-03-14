@@ -28,7 +28,7 @@ public class PropertyReviewEntity implements Serializable {
     private Integer id;
 
     @Enumerated(EnumType.STRING)
-    private ReviewStatus status;
+    private PropertyReviewStatus status;
 
     @Column(columnDefinition = "TEXT")
     private String comment;
