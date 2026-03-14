@@ -1,13 +1,11 @@
 package com.habitame.api.property.service;
 
 import com.habitame.api.amenities.entity.AmenityEntity;
-import com.habitame.api.amenities.entity.AmenityScope;
 import com.habitame.api.amenities.service.AmenityService;
 import com.habitame.api.auth.security.SecurityUtils;
 import com.habitame.api.city.service.CityService;
 import com.habitame.api.common.exception.ForbiddenException;
 import com.habitame.api.common.exception.ResourceNotFoundException;
-import com.habitame.api.common.exception.UnauthorizedException;
 import com.habitame.api.common.mapper.PropertyMapper;
 import com.habitame.api.common.wrapper.PageResponse;
 import com.habitame.api.property.dto.*;
@@ -16,9 +14,8 @@ import com.habitame.api.property.entity.PropertyStatus;
 import com.habitame.api.property.repository.PropertyRepository;
 import com.habitame.api.propertyReview.dto.PropertyReviewDecisionRequest;
 import com.habitame.api.propertyReview.dto.PropertyReviewResponse;
-import com.habitame.api.propertyReview.entity.ReviewStatus;
+import com.habitame.api.propertyReview.entity.PropertyReviewStatus;
 import com.habitame.api.propertyReview.service.PropertyReviewService;
-import com.habitame.api.user.entity.Role;
 import com.habitame.api.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -212,7 +209,7 @@ public class PropertyService {
 
         PropertyReviewResponse response = propertyReviewService.resolveReview(propertyId, request);
 
-        property.setStatus(request.getStatus() == ReviewStatus.APPROVED ? PropertyStatus.ACTIVE : PropertyStatus.INACTIVE);
+        property.setStatus(request.getStatus() == PropertyReviewStatus.APPROVED ? PropertyStatus.ACTIVE : PropertyStatus.INACTIVE);
 
         propertyRepository.save(property);
 
@@ -241,8 +238,6 @@ public class PropertyService {
 
     /**
      * Agrega amenidades a una propiedad.
-     * No filtra duplicados — si se envían amenidades ya asignadas, se añaden de nuevo.
-     * Validar duplicados es responsabilidad del caller, o añadir la lógica aquí si se vuelve un problema.
      *
      * @throws ResourceNotFoundException si la propiedad o alguna amenidad no existe
      * @throws ForbiddenException        si el usuario no tiene permisos sobre la propiedad
