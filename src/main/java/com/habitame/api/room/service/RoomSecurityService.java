@@ -3,8 +3,6 @@ package com.habitame.api.room.service;
 import com.habitame.api.auth.security.SecurityUtils;
 import com.habitame.api.common.exception.ForbiddenException;
 import com.habitame.api.common.exception.ResourceNotFoundException;
-import com.habitame.api.property.entity.PropertyEntity;
-import com.habitame.api.propertyImage.entity.PropertyImageEntity;
 import com.habitame.api.room.entity.RoomEntity;
 import com.habitame.api.room.repository.RoomRepository;
 import com.habitame.api.roomImage.entity.RoomImageEntity;
@@ -18,6 +16,7 @@ public class RoomSecurityService {
 
     /**
      * Verifica que el usuario actual sea el owner de la habitación o un ADMIN.
+     *
      * @param propertyId id de la propiedad.
      * @throws ForbiddenException si no tiene permiso.
      */

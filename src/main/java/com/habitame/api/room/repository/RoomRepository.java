@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
-public interface RoomRepository extends JpaRepository <RoomEntity, Integer>{
+public interface RoomRepository extends JpaRepository<RoomEntity, Integer> {
     Page<RoomEntity> findAllByStatus(RoomStatus roomStatus, Pageable pageable);
 
 

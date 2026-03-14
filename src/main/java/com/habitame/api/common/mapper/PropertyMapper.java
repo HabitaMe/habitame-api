@@ -8,8 +8,6 @@ import com.habitame.api.user.entity.UserEntity;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
-
 @RequiredArgsConstructor
 public class PropertyMapper {
 

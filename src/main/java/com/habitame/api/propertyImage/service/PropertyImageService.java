@@ -1,9 +1,6 @@
 package com.habitame.api.propertyImage.service;
 
-import com.habitame.api.auth.security.SecurityUtils;
-import com.habitame.api.common.exception.IllegalArgument;
 import com.habitame.api.common.exception.ResourceNotFoundException;
-import com.habitame.api.common.exception.UnauthorizedException;
 import com.habitame.api.common.mapper.PropertyImageMapper;
 import com.habitame.api.media.service.ImageStorageService;
 import com.habitame.api.property.entity.PropertyEntity;
@@ -13,7 +10,6 @@ import com.habitame.api.propertyImage.dto.PropertyImageRequest;
 import com.habitame.api.propertyImage.dto.PropertyImageResponse;
 import com.habitame.api.propertyImage.entity.PropertyImageEntity;
 import com.habitame.api.propertyImage.repository.PropertyImageRepository;
-import com.habitame.api.user.entity.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,6 +1,5 @@
 package com.habitame.api.room.dto;
 
-import com.habitame.api.room.entity.RoomStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

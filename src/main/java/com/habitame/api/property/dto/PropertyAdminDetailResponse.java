@@ -45,6 +45,6 @@ public class PropertyAdminDetailResponse {
     private List<PropertyImageResponse> images;
 
     private List<AmenityResponse> amenities;
-    
+
     private List<PropertyReviewResponse> reviews;
 }

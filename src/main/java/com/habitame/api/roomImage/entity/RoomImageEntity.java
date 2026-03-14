@@ -1,6 +1,5 @@
 package com.habitame.api.roomImage.entity;
 
-import com.habitame.api.property.entity.PropertyEntity;
 import com.habitame.api.room.entity.RoomEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

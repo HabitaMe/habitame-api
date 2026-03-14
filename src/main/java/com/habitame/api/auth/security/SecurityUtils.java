@@ -8,7 +8,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 public class SecurityUtils {
 
-    private SecurityUtils() {}
+    private SecurityUtils() {
+    }
 
     public static Integer getCurrentUserId() {
         return getCurrentUser().getId();

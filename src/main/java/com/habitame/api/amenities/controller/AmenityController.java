@@ -27,7 +27,7 @@ public class AmenityController {
     }
 
     @GetMapping("/scope/{scope}")
-    public ResponseEntity<List<AmenityResponse>> getAmenitiesByScope(@PathVariable AmenityScope scope){
+    public ResponseEntity<List<AmenityResponse>> getAmenitiesByScope(@PathVariable AmenityScope scope) {
         return ResponseEntity.ok(amenityService.findAmenitiesByScope(scope));
     }
 

@@ -5,14 +5,8 @@ import com.habitame.api.amenities.service.AmenityService;
 import com.habitame.api.auth.security.SecurityUtils;
 import com.habitame.api.common.exception.ForbiddenException;
 import com.habitame.api.common.exception.ResourceNotFoundException;
-import com.habitame.api.common.mapper.PropertyMapper;
 import com.habitame.api.common.mapper.RoomMapper;
 import com.habitame.api.common.wrapper.PageResponse;
-import com.habitame.api.property.dto.PropertyOwnerDetailResponse;
-import com.habitame.api.property.dto.PropertyOwnerRequest;
-import com.habitame.api.property.dto.PropertyOwnerResponse;
-import com.habitame.api.property.entity.PropertyEntity;
-import com.habitame.api.property.entity.PropertyStatus;
 import com.habitame.api.property.service.PropertyService;
 import com.habitame.api.room.dto.*;
 import com.habitame.api.room.entity.RoomEntity;
@@ -22,7 +16,6 @@ import com.habitame.api.roomReview.dto.RoomReviewDecisionRequest;
 import com.habitame.api.roomReview.dto.RoomReviewResponse;
 import com.habitame.api.roomReview.entity.RoomReviewStatus;
 import com.habitame.api.roomReview.service.RoomReviewService;
-import com.habitame.api.user.entity.Role;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 
 @Service
@@ -45,7 +37,6 @@ public class RoomService {
     private final RoomReviewService roomReviewService;
 
 
-
     // -------------
     // PÚBLICO
     // -------------
@@ -57,7 +48,7 @@ public class RoomService {
     }
 
     public RoomPublicDetailResponse findByIdPublicRoom(Integer idRoom) {
-        RoomEntity roomEntity = roomRepository.findByIdAndStatus(idRoom, RoomStatus.ACTIVE).orElseThrow( () -> new ResourceNotFoundException("Room not found: " + idRoom) );
+        RoomEntity roomEntity = roomRepository.findByIdAndStatus(idRoom, RoomStatus.ACTIVE).orElseThrow(() -> new ResourceNotFoundException("Room not found: " + idRoom));
         return RoomMapper.toPublicDetailResponse(roomEntity);
     }
 
@@ -136,7 +127,6 @@ public class RoomService {
 
         return RoomMapper.toOwnerDetailResponse(roomRepository.save(room));
     }
-
 
 
     // -------------

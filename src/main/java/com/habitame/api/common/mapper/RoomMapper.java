@@ -1,20 +1,9 @@
 package com.habitame.api.common.mapper;
 
-import com.habitame.api.amenities.dto.AmenityResponse;
-import com.habitame.api.property.dto.PropertyPublicResponse;
 import com.habitame.api.property.entity.PropertyEntity;
-import com.habitame.api.propertyImage.entity.PropertyImageEntity;
-import com.habitame.api.propertyReview.dto.PropertyReviewResponse;
 import com.habitame.api.room.dto.*;
 import com.habitame.api.room.entity.RoomEntity;
-import com.habitame.api.roomImage.dto.RoomImageResponse;
 import com.habitame.api.roomImage.entity.RoomImageEntity;
-import com.habitame.api.user.dto.UserResponse;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 public class RoomMapper {
 
@@ -35,7 +24,7 @@ public class RoomMapper {
         return dto;
     }
 
-    public static RoomPublicDetailResponse toPublicDetailResponse(RoomEntity roomEntity){
+    public static RoomPublicDetailResponse toPublicDetailResponse(RoomEntity roomEntity) {
         RoomPublicDetailResponse dto = new RoomPublicDetailResponse();
         dto.setId(roomEntity.getId());
         dto.setTitle(roomEntity.getTitle());

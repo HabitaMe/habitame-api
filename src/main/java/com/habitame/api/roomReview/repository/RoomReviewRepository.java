@@ -20,11 +20,11 @@ public interface RoomReviewRepository extends JpaRepository<RoomReviewEntity, In
      * Historial completo ordenado de más reciente a más antiguo
      */
     @Query("""
-        SELECT r FROM RoomReviewEntity r
-        LEFT JOIN FETCH r.admin
-        WHERE r.room.id = :roomId
-        ORDER BY r.createdAt DESC
-        """)
+            SELECT r FROM RoomReviewEntity r
+            LEFT JOIN FETCH r.admin
+            WHERE r.room.id = :roomId
+            ORDER BY r.createdAt DESC
+            """)
     List<RoomReviewEntity> findAllByRoomId(@Param("roomId") Integer roomId);
 
     /**
@@ -32,12 +32,12 @@ public interface RoomReviewRepository extends JpaRepository<RoomReviewEntity, In
      */
 
     @Query("""
-        SELECT r FROM RoomReviewEntity r
-        LEFT JOIN FETCH r.admin
-        WHERE r.room.id = :roomId
-        ORDER BY r.createdAt DESC
-        LIMIT 1
-        """)
+            SELECT r FROM RoomReviewEntity r
+            LEFT JOIN FETCH r.admin
+            WHERE r.room.id = :roomId
+            ORDER BY r.createdAt DESC
+            LIMIT 1
+            """)
     Optional<RoomReviewEntity> findLatestByRoomId(@Param("roomId") Integer roomId);
 
     /**

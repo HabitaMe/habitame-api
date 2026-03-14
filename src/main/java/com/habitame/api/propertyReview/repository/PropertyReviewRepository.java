@@ -19,11 +19,11 @@ public interface PropertyReviewRepository extends JpaRepository<PropertyReviewEn
      * Historial completo ordenado de más reciente a más antiguo
      */
     @Query("""
-        SELECT r FROM PropertyReviewEntity r
-        LEFT JOIN FETCH r.admin
-        WHERE r.property.id = :propertyId
-        ORDER BY r.createdAt DESC
-        """)
+            SELECT r FROM PropertyReviewEntity r
+            LEFT JOIN FETCH r.admin
+            WHERE r.property.id = :propertyId
+            ORDER BY r.createdAt DESC
+            """)
     List<PropertyReviewEntity> findAllByPropertyId(@Param("propertyId") Integer propertyId);
 
     /**
@@ -31,12 +31,12 @@ public interface PropertyReviewRepository extends JpaRepository<PropertyReviewEn
      */
 
     @Query("""
-        SELECT r FROM PropertyReviewEntity r
-        LEFT JOIN FETCH r.admin
-        WHERE r.property.id = :propertyId
-        ORDER BY r.createdAt DESC
-        LIMIT 1
-        """)
+            SELECT r FROM PropertyReviewEntity r
+            LEFT JOIN FETCH r.admin
+            WHERE r.property.id = :propertyId
+            ORDER BY r.createdAt DESC
+            LIMIT 1
+            """)
     Optional<PropertyReviewEntity> findLatestByPropertyId(@Param("propertyId") Integer propertyId);
 
     /**

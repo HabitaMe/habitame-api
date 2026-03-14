@@ -3,17 +3,9 @@ package com.habitame.api.roomReview.service;
 import com.habitame.api.auth.security.SecurityUtils;
 import com.habitame.api.common.exception.IllegalArgument;
 import com.habitame.api.common.exception.ResourceNotFoundException;
-import com.habitame.api.common.mapper.PropertyReviewMapper;
 import com.habitame.api.common.mapper.RoomReviewMapper;
 import com.habitame.api.common.wrapper.PageResponse;
-import com.habitame.api.property.entity.PropertyEntity;
-import com.habitame.api.property.service.PropertySecurityService;
-import com.habitame.api.propertyReview.dto.PropertyReviewDecisionRequest;
-import com.habitame.api.propertyReview.dto.PropertyReviewDetailResponse;
-import com.habitame.api.propertyReview.dto.PropertyReviewResponse;
-import com.habitame.api.propertyReview.entity.PropertyReviewEntity;
 import com.habitame.api.propertyReview.entity.PropertyReviewStatus;
-import com.habitame.api.propertyReview.repository.PropertyReviewRepository;
 import com.habitame.api.room.entity.RoomEntity;
 import com.habitame.api.room.service.RoomSecurityService;
 import com.habitame.api.roomReview.dto.RoomReviewDecisionRequest;
@@ -27,14 +19,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional( readOnly = true )
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class RoomReviewService {
 

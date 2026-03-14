@@ -19,12 +19,12 @@ public class PublicRoomController {
     private final RoomService roomService;
 
     @GetMapping
-    public ResponseEntity<PageResponse<RoomPublicResponse>> findAllPublicRooms(Pageable pageable){
+    public ResponseEntity<PageResponse<RoomPublicResponse>> findAllPublicRooms(Pageable pageable) {
         return ResponseEntity.ok(roomService.findAllPublicRooms(pageable));
     }
 
     @GetMapping("/{idRoom}")
-    public ResponseEntity<RoomPublicDetailResponse> findByIdPublicRoom(@PathVariable Integer idRoom){
+    public ResponseEntity<RoomPublicDetailResponse> findByIdPublicRoom(@PathVariable Integer idRoom) {
         return ResponseEntity.ok(roomService.findByIdPublicRoom(idRoom));
     }
 }

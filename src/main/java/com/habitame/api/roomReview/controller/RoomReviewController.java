@@ -1,7 +1,6 @@
 package com.habitame.api.roomReview.controller;
 
 import com.habitame.api.common.wrapper.PageResponse;
-import com.habitame.api.propertyReview.entity.PropertyReviewStatus;
 import com.habitame.api.roomReview.dto.RoomReviewDetailResponse;
 import com.habitame.api.roomReview.dto.RoomReviewResponse;
 import com.habitame.api.roomReview.entity.RoomReviewStatus;

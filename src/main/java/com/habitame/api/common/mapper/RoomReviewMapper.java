@@ -1,8 +1,5 @@
 package com.habitame.api.common.mapper;
 
-import com.habitame.api.propertyReview.dto.PropertyReviewDetailResponse;
-import com.habitame.api.propertyReview.dto.PropertyReviewResponse;
-import com.habitame.api.propertyReview.entity.PropertyReviewEntity;
 import com.habitame.api.roomReview.dto.RoomReviewDetailResponse;
 import com.habitame.api.roomReview.dto.RoomReviewResponse;
 import com.habitame.api.roomReview.entity.RoomReviewEntity;

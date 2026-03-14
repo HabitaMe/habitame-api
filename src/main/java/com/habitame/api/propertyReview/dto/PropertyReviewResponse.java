@@ -1,9 +1,6 @@
 package com.habitame.api.propertyReview.dto;
 
-import com.habitame.api.property.dto.PropertyOwnerResponse;
 import lombok.Data;
-
-import java.time.LocalDateTime;
 
 @Data
 public class PropertyReviewResponse {

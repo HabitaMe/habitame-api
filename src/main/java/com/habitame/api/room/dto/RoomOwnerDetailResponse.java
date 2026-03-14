@@ -2,7 +2,6 @@ package com.habitame.api.room.dto;
 
 import com.habitame.api.amenities.dto.AmenityResponse;
 import com.habitame.api.property.dto.PropertyAdminResponse;
-import com.habitame.api.propertyReview.dto.PropertyReviewResponse;
 import com.habitame.api.roomImage.dto.RoomImageResponse;
 import com.habitame.api.roomReview.dto.RoomReviewResponse;
 import com.habitame.api.user.dto.UserResponse;

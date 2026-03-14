@@ -1,16 +1,8 @@
 package com.habitame.api.roomImage.service;
 
 import com.habitame.api.common.exception.ResourceNotFoundException;
-import com.habitame.api.common.mapper.PropertyImageMapper;
 import com.habitame.api.common.mapper.RoomImageMapper;
 import com.habitame.api.media.service.ImageStorageService;
-import com.habitame.api.property.entity.PropertyEntity;
-import com.habitame.api.property.service.PropertySecurityService;
-import com.habitame.api.property.service.PropertyService;
-import com.habitame.api.propertyImage.dto.PropertyImageRequest;
-import com.habitame.api.propertyImage.dto.PropertyImageResponse;
-import com.habitame.api.propertyImage.entity.PropertyImageEntity;
-import com.habitame.api.propertyImage.repository.PropertyImageRepository;
 import com.habitame.api.room.entity.RoomEntity;
 import com.habitame.api.room.service.RoomSecurityService;
 import com.habitame.api.room.service.RoomService;

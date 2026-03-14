@@ -2,8 +2,6 @@ package com.habitame.api.room.entity;
 
 import com.habitame.api.amenities.entity.AmenityEntity;
 import com.habitame.api.property.entity.PropertyEntity;
-import com.habitame.api.propertyImage.entity.PropertyImageEntity;
-import com.habitame.api.propertyReview.entity.PropertyReviewEntity;
 import com.habitame.api.roomImage.entity.RoomImageEntity;
 import com.habitame.api.roomReview.entity.RoomReviewEntity;
 import com.habitame.api.user.entity.UserEntity;

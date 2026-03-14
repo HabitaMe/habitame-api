@@ -1,7 +1,5 @@
 package com.habitame.api.roomReview.entity;
 
-import com.habitame.api.property.entity.PropertyEntity;
-import com.habitame.api.propertyReview.entity.PropertyReviewStatus;
 import com.habitame.api.room.entity.RoomEntity;
 import com.habitame.api.user.entity.UserEntity;
 import jakarta.persistence.*;

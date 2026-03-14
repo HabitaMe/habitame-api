@@ -1,6 +1,5 @@
 package com.habitame.api.roomReview.dto;
 
-import com.habitame.api.room.dto.RoomAdminResponse;
 import com.habitame.api.room.dto.RoomOwnerResponse;
 import com.habitame.api.user.dto.UserResponse;
 import lombok.Data;
