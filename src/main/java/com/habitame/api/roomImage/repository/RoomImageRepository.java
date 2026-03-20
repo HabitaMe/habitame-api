@@ -15,10 +15,10 @@ public interface RoomImageRepository extends JpaRepository<RoomImageEntity, Inte
             SET r.isMain = false
             WHERE r.room.id = :idRoom
             """)
-    void resetMainImage(@Param("propertyId") Integer idRoom);
+    void resetMainImage(@Param("idRoom") Integer idRoom);
 
     @Query("SELECT COUNT(r) FROM RoomImageEntity r WHERE r.room.id = :idRoom AND r.isMain = true")
-    int countMainImages(@Param("propertyId") Integer idRoom);
+    int countMainImages(@Param("idRoom") Integer idRoom);
 
     List<RoomImageEntity> findAllByRoomId(Integer idRoom);
 }
