@@ -3,6 +3,7 @@ package com.habitame.api.country.entity;
 import com.habitame.api.province.entity.ProvinceEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +16,7 @@ import java.util.List;
 @Table(name = "countries")
 @Data
 @AllArgsConstructor
+@Builder
 @NoArgsConstructor
 public class CountryEntity implements Serializable {
 
