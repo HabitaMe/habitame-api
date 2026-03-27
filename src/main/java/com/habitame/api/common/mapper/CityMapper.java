@@ -7,16 +7,16 @@ import com.habitame.api.province.entity.ProvinceEntity;
 
 public class CityMapper {
     public static CityResponse toResponse(CityEntity cityEntity) {
-        CityResponse dto = new CityResponse();
-        dto.setId(cityEntity.getId());
-        dto.setName(cityEntity.getName());
-        return dto;
+        return new CityResponse(
+                cityEntity.getId(),
+                cityEntity.getName()
+        );
     }
 
     public static CityEntity toEntity(CityRequest request, ProvinceEntity provinceEntity) {
-        CityEntity cityEntity = new CityEntity();
-        cityEntity.setName(request.getName());
-        cityEntity.setProvinceEntity(provinceEntity);
-        return cityEntity;
+        return CityEntity.builder()
+                .name(request.name())
+                .provinceEntity(provinceEntity)
+                .build();
     }
 }

@@ -4,6 +4,7 @@ import com.habitame.api.property.entity.PropertyEntity;
 import com.habitame.api.province.entity.ProvinceEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +18,7 @@ import java.util.List;
         uniqueConstraints = @UniqueConstraint(columnNames = {"province_id", "name"}))
 @Data
 @AllArgsConstructor
+@Builder
 @NoArgsConstructor
 public class CityEntity implements Serializable {
 
