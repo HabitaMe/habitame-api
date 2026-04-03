@@ -171,8 +171,8 @@ public class PropertyService {
     public PropertyAdminResponse saveAdminProperty(PropertyAdminRequest request) {
         PropertyEntity property = PropertyMapper.adminToEntity(
                 request,
-                userService.findById(request.getOwnerId()),
-                cityService.findEntityById(request.getCityId())
+                userService.findById(request.ownerId()),
+                cityService.findEntityById(request.cityId())
         );
         return PropertyMapper.toAdminResponse(propertyRepository.save(property));
     }
@@ -191,8 +191,8 @@ public class PropertyService {
         PropertyMapper.updateAdminProperty(
                 property,
                 request,
-                cityService.findEntityById(request.getCityId()),
-                userService.findById(request.getOwnerId())
+                cityService.findEntityById(request.cityId()),
+                userService.findById(request.ownerId())
         );
         property.setUpdatedBy(SecurityUtils.getCurrentUser());
 

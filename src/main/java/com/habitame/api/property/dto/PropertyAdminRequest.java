@@ -6,35 +6,15 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 
-@Data
-public class PropertyAdminRequest {
-    @NotBlank
-    private String title;
-
-    @NotBlank
-    private String description;
-
-    @NotBlank
-    private String type;
-
-    @NotBlank
-    private String address;
-
-    @NotNull
-    private Integer cityId;
-
-    @NotNull
-    private Integer floor;
-
-    @NotNull
-    private BigDecimal areaM2;
-
-    @NotNull
-    private Integer bathroomsTotal;
-
-    @NotNull
-    private boolean ownerInHouse;
-
-    @NotNull
-    private Integer ownerId;
-}
+public record PropertyAdminRequest (
+      @NotBlank String title,
+      @NotBlank String description,
+      @NotBlank String type,
+      @NotBlank String address,
+      @NotNull Integer cityId,
+      @NotNull Integer floor,
+      @NotNull BigDecimal areaM2,
+      @NotNull Integer bathroomsTotal,
+      @NotNull boolean ownerInHouse,
+      @NotNull Integer ownerId
+) { };
