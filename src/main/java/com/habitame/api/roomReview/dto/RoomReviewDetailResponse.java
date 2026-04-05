@@ -6,12 +6,11 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@Data
-public class RoomReviewDetailResponse {
-    private Integer id;
-    private String status;
-    private String comment;
-    private RoomOwnerResponse room;
-    private UserResponse admin;
-    private LocalDateTime reviewedAt;
-}
+public record RoomReviewDetailResponse (
+    Integer id,
+    String status,
+    String comment,
+    RoomOwnerResponse room,
+    UserResponse admin,
+    LocalDateTime reviewedAt
+) { };

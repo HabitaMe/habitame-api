@@ -201,7 +201,7 @@ public class RoomService {
 
         RoomReviewResponse response = roomReviewService.resolveReview(roomId, request);
 
-        room.setStatus(request.getStatus() == RoomReviewStatus.APPROVED ? RoomStatus.ACTIVE : RoomStatus.INACTIVE);
+        room.setStatus(request.status() == RoomReviewStatus.APPROVED ? RoomStatus.ACTIVE : RoomStatus.INACTIVE);
 
         roomRepository.save(room);
 

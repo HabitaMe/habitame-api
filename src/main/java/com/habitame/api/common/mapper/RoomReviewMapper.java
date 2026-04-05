@@ -6,21 +6,21 @@ import com.habitame.api.roomReview.entity.RoomReviewEntity;
 
 public class RoomReviewMapper {
     public static RoomReviewResponse toResponse(RoomReviewEntity roomReviewEntity) {
-        RoomReviewResponse dto = new RoomReviewResponse();
-        dto.setId(roomReviewEntity.getId());
-        dto.setStatus(roomReviewEntity.getStatus().toString());
-        dto.setRoom(roomReviewEntity.getRoom().getId());
-        return dto;
+        return new RoomReviewResponse(
+                roomReviewEntity.getId(),
+                roomReviewEntity.getStatus().toString(),
+                roomReviewEntity.getRoom().getId()
+        );
     }
 
     public static RoomReviewDetailResponse toDetailResponse(RoomReviewEntity roomReviewEntity) {
-        RoomReviewDetailResponse dto = new RoomReviewDetailResponse();
-        dto.setId(roomReviewEntity.getId());
-        dto.setStatus(roomReviewEntity.getStatus().toString());
-        dto.setComment(roomReviewEntity.getComment());
-        dto.setRoom(RoomMapper.toOwnerResponse(roomReviewEntity.getRoom()));
-        dto.setAdmin(roomReviewEntity.getAdmin() == null ? null : UserMapper.toResponse(roomReviewEntity.getAdmin()));
-        dto.setReviewedAt(roomReviewEntity.getReviewedAt());
-        return dto;
+        return new RoomReviewDetailResponse(
+                roomReviewEntity.getId(),
+                roomReviewEntity.getStatus().toString(),
+                roomReviewEntity.getComment(),
+                RoomMapper.toOwnerResponse(roomReviewEntity.getRoom()),
+                roomReviewEntity.getAdmin() == null ? null : UserMapper.toResponse(roomReviewEntity.getAdmin()),
+                roomReviewEntity.getReviewedAt() == null ? null : roomReviewEntity.getReviewedAt()
+        );
     }
 }
