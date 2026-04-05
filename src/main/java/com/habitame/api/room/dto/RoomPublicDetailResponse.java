@@ -8,16 +8,15 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Data
-public class RoomPublicDetailResponse {
-    Integer id;
-    String title;
-    String description;
-    BigDecimal areaM2;
-    Integer maxOccupants;
-    BigDecimal pricePerMonth;
-    Integer floor;
-    List<RoomImageResponse> images;
-    List<AmenityResponse> amenities;
-    PropertyPublicResponse property;
-}
+public record RoomPublicDetailResponse (
+    Integer id,
+    String title,
+    String description,
+    BigDecimal areaM2,
+    Integer maxOccupants,
+    BigDecimal pricePerMonth,
+    Integer floor,
+    List<RoomImageResponse> images,
+    List<AmenityResponse> amenities,
+    PropertyPublicResponse property
+) { };
