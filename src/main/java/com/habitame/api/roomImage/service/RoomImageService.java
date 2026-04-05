@@ -3,6 +3,10 @@ package com.habitame.api.roomImage.service;
 import com.habitame.api.common.exception.ResourceNotFoundException;
 import com.habitame.api.common.mapper.RoomImageMapper;
 import com.habitame.api.media.service.ImageStorageService;
+import com.habitame.api.property.entity.PropertyEntity;
+import com.habitame.api.propertyImage.dto.PropertyImageRequest;
+import com.habitame.api.propertyImage.dto.PropertyImageResponse;
+import com.habitame.api.propertyImage.entity.PropertyImageEntity;
 import com.habitame.api.room.entity.RoomEntity;
 import com.habitame.api.room.service.RoomSecurityService;
 import com.habitame.api.room.service.RoomService;
@@ -35,20 +39,18 @@ public class RoomImageService {
         roomSecurityService.checkRoomAccess(room);
 
         // Validación del archivo
-        if (request.getFile().isEmpty() || !isImage(request.getFile())) {
+        if (request.file().isEmpty() || !isImage(request.file())) {
             throw new IllegalArgumentException("Invalid file: must be a non-empty image");
         }
 
         // Si no hay imagen principal, esta pasa a serlo automáticamente
-        if (!request.isMain() && roomImageRepository.countMainImages(roomId) == 0) {
-            request.setMain(true);
-        }
+        boolean main = request.isMain() || roomImageRepository.countMainImages(roomId) == 0;
 
-        if (request.isMain()) {
+        if (main) {
             roomImageRepository.resetMainImage(roomId);
         }
 
-        String url = imageStorageService.store(request.getFile(), "rooms");
+        String url = imageStorageService.store(request.file(), "rooms");
 
         RoomImageEntity roomImageEntity = RoomImageEntity.builder()
                 .room(room)
