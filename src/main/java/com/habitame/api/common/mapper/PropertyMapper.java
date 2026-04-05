@@ -12,56 +12,57 @@ import lombok.RequiredArgsConstructor;
 public class PropertyMapper {
 
     public static PropertyPublicResponse toPublicResponse(PropertyEntity propertyEntity) {
-        PropertyPublicResponse dto = new PropertyPublicResponse();
-        dto.setId(propertyEntity.getId());
-        dto.setTitle(propertyEntity.getTitle());
-        dto.setCity(propertyEntity.getCityEntity().getName());
-        dto.setAreaM2(propertyEntity.getAreaM2());
-        dto.setBathroomsTotal(propertyEntity.getBathroomsTotal());
-        dto.setFloor(propertyEntity.getFloor());
-        dto.setMainImage(propertyEntity.getImages().stream()
-                .filter(PropertyImageEntity::isMain)
-                .map(PropertyImageEntity::getImageUrl)
-                .findFirst()
-                .orElse(null));
-        return dto;
+
+        return new PropertyPublicResponse(
+                propertyEntity.getId(),
+                propertyEntity.getTitle(),
+                CityMapper.toResponse(propertyEntity.getCityEntity()),
+                propertyEntity.getAreaM2(),
+                propertyEntity.getBathroomsTotal(),
+                propertyEntity.getFloor(),
+                propertyEntity.getImages().stream()
+                        .filter(PropertyImageEntity::isMain)
+                        .map(PropertyImageMapper::toResponse)
+                        .findFirst()
+                        .orElse(null)
+        );
     }
 
     public static PropertyPublicDetailResponse toPublicDetailResponse(PropertyEntity propertyEntity) {
-        PropertyPublicDetailResponse response = new PropertyPublicDetailResponse();
-        response.setId(propertyEntity.getId());
-        response.setTitle(propertyEntity.getTitle());
-        response.setDescription(propertyEntity.getDescription());
-        response.setCity(propertyEntity.getCityEntity().getName());
-        response.setAddress(propertyEntity.getAddress());
-        response.setAreaM2(propertyEntity.getAreaM2());
-        response.setBathrooms(propertyEntity.getBathroomsTotal());
-        response.setFloor(propertyEntity.getFloor());
-        response.setImages(propertyEntity.getImages().stream()
-                .map(PropertyImageEntity::getImageUrl)
-                .toList());
-        response.setAmenities(propertyEntity.getPropertyAmenities().stream()
-                .map(AmenityMapper::toResponse)
-                .toList());
-        return response;
+        return new PropertyPublicDetailResponse(
+                propertyEntity.getId(),
+                propertyEntity.getTitle(),
+                propertyEntity.getDescription(),
+                CityMapper.toResponse(propertyEntity.getCityEntity()),
+                propertyEntity.getAddress(),
+                propertyEntity.getAreaM2(),
+                propertyEntity.getBathroomsTotal(),
+                propertyEntity.getFloor(),
+                propertyEntity.getImages().stream()
+                        .map(PropertyImageMapper::toResponse)
+                        .toList(),
+                propertyEntity.getPropertyAmenities().stream()
+                        .map(AmenityMapper::toResponse)
+                        .toList()
+        );
     }
 
     public static PropertyOwnerResponse toOwnerResponse(PropertyEntity propertyEntity) {
-        PropertyOwnerResponse response = new PropertyOwnerResponse();
-        response.setId(propertyEntity.getId());
-        response.setTitle(propertyEntity.getTitle());
-        response.setAddress(propertyEntity.getAddress());
-        response.setCity(propertyEntity.getCityEntity().getName());
-        response.setAreaM2(propertyEntity.getAreaM2());
-        response.setBathroomsTotal(propertyEntity.getBathroomsTotal());
-        response.setFloor(propertyEntity.getFloor());
-        response.setMainImage(propertyEntity.getImages().stream()
-                .filter(PropertyImageEntity::isMain)
-                .map(PropertyImageEntity::getImageUrl)
-                .findFirst()
-                .orElse(null));
-        response.setStatus(propertyEntity.getStatus().toString());
-        return response;
+        return new PropertyOwnerResponse(
+                propertyEntity.getId(),
+                propertyEntity.getTitle(),
+                propertyEntity.getAddress(),
+                CityMapper.toResponse(propertyEntity.getCityEntity()),
+                propertyEntity.getAreaM2(),
+                propertyEntity.getBathroomsTotal(),
+                propertyEntity.getFloor(),
+                propertyEntity.getImages().stream()
+                        .filter(PropertyImageEntity::isMain)
+                        .map(PropertyImageMapper::toResponse)
+                        .findFirst()
+                        .orElse(null),
+                propertyEntity.getStatus().toString()
+        );
     }
 
     public static PropertyOwnerDetailResponse toOwnerDetailResponse(PropertyEntity propertyEntity) {
@@ -81,30 +82,31 @@ public class PropertyMapper {
     }
 
     public static PropertyEntity ownerToEntity(PropertyOwnerRequest request, UserEntity owner, CityEntity cityEntity) {
-        PropertyEntity propertyEntity = new PropertyEntity();
-        propertyEntity.setTitle(request.getTitle());
-        propertyEntity.setDescription(request.getDescription());
-        propertyEntity.setType(request.getType());
-        propertyEntity.setAddress(request.getAddress());
-        propertyEntity.setAreaM2(request.getAreaM2());
-        propertyEntity.setCityEntity(cityEntity);
-        propertyEntity.setBathroomsTotal(request.getBathroomsTotal());
-        propertyEntity.setFloor(request.getFloor());
-        propertyEntity.setOwnerInHouse(request.isOwnerInHouse());
-        propertyEntity.setOwner(owner);
-        return propertyEntity;
+        return PropertyEntity.builder()
+                .title(request.title())
+                .description(request.description())
+                .type(request.type())
+                .address(request.address())
+                .areaM2(request.areaM2())
+                .cityEntity(cityEntity)
+                .bathroomsTotal(request.bathroomsTotal())
+                .bathroomsTotal(request.bathroomsTotal())
+                .floor(request.floor())
+                .ownerInHouse(request.ownerInHouse())
+                .owner(owner)
+                .build();
     }
 
 
     public static PropertyEntity updateProperty(PropertyEntity propertyEntity, @Valid PropertyOwnerRequest request, CityEntity entityById) {
-        propertyEntity.setTitle(request.getTitle());
-        propertyEntity.setDescription(request.getDescription());
-        propertyEntity.setType(request.getType());
-        propertyEntity.setAddress(request.getAddress());
-        propertyEntity.setAreaM2(request.getAreaM2());
-        propertyEntity.setBathroomsTotal(request.getBathroomsTotal());
-        propertyEntity.setFloor(request.getFloor());
-        propertyEntity.setOwnerInHouse(request.isOwnerInHouse());
+        propertyEntity.setTitle(request.title());
+        propertyEntity.setDescription(request.description());
+        propertyEntity.setType(request.type());
+        propertyEntity.setAddress(request.address());
+        propertyEntity.setAreaM2(request.areaM2());
+        propertyEntity.setBathroomsTotal(request.bathroomsTotal());
+        propertyEntity.setFloor(request.floor());
+        propertyEntity.setOwnerInHouse(request.ownerInHouse());
         propertyEntity.setCityEntity(entityById);
         return propertyEntity;
     }
@@ -161,7 +163,7 @@ public class PropertyMapper {
                 .build();
     }
 
-    public static PropertyEntity updateAdminProperty(PropertyEntity propertyEntity, PropertyAdminRequest request, CityEntity entityById, UserEntity owner) {
+    public static PropertyEntity updateAdminProperty(PropertyEntity propertyEntity, PropertyAdminRequest request, CityEntity cityEntity, UserEntity owner) {
         propertyEntity.setTitle(request.title());
         propertyEntity.setDescription(request.description());
         propertyEntity.setType(request.type());
@@ -170,7 +172,7 @@ public class PropertyMapper {
         propertyEntity.setBathroomsTotal(request.bathroomsTotal());
         propertyEntity.setFloor(request.floor());
         propertyEntity.setOwnerInHouse(request.ownerInHouse());
-        propertyEntity.setCityEntity(entityById);
+        propertyEntity.setCityEntity(cityEntity);
         propertyEntity.setOwner(owner);
         return propertyEntity;
     }

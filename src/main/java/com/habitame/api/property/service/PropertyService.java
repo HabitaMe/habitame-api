@@ -99,7 +99,7 @@ public class PropertyService {
         PropertyEntity property = PropertyMapper.ownerToEntity(
                 request,
                 SecurityUtils.getCurrentUser(),
-                cityService.findEntityById(request.getCityId())
+                cityService.findEntityById(request.cityId())
         );
         propertyRepository.save(property);
         propertyReviewService.addReview(property);
@@ -120,12 +120,12 @@ public class PropertyService {
         PropertyEntity property = propertyRepository.findByIdAndOwnerId(ownerId, propertyId)
                 .orElseThrow(() -> new ResourceNotFoundException("Property not found: " + propertyId));
 
-        boolean requiresReview = !property.getTitle().equals(request.getTitle())
-                || !property.getDescription().equals(request.getDescription())
-                || !property.getAddress().equals(request.getAddress())
+        boolean requiresReview = !property.getTitle().equals(request.title())
+                || !property.getDescription().equals(request.description())
+                || !property.getAddress().equals(request.address())
                 || property.getStatus().equals(PropertyStatus.INACTIVE);
 
-        PropertyMapper.updateProperty(property, request, cityService.findEntityById(request.getCityId()));
+        PropertyMapper.updateProperty(property, request, cityService.findEntityById(request.cityId()));
         property.setUpdatedBy(SecurityUtils.getCurrentUser());
 
         if (requiresReview) {
