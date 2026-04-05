@@ -209,7 +209,7 @@ public class PropertyService {
 
         PropertyReviewResponse response = propertyReviewService.resolveReview(propertyId, request);
 
-        property.setStatus(request.getStatus() == PropertyReviewStatus.APPROVED ? PropertyStatus.ACTIVE : PropertyStatus.INACTIVE);
+        property.setStatus(request.status() == PropertyReviewStatus.APPROVED ? PropertyStatus.ACTIVE : PropertyStatus.INACTIVE);
 
         propertyRepository.save(property);
 

@@ -1,10 +1,7 @@
 package com.habitame.api.propertyReview.dto;
 
-import lombok.Data;
-
-@Data
-public class PropertyReviewResponse {
-    private Integer id;
-    private String status;
-    private Integer property;
-}
+public record PropertyReviewResponse (
+        Integer id,
+        String Status,
+        Integer property
+) { };

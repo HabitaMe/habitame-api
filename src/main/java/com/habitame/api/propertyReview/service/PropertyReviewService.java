@@ -103,7 +103,7 @@ public class PropertyReviewService {
      */
     @Transactional
     public PropertyReviewResponse resolveReview(Integer propertyId, PropertyReviewDecisionRequest request) {
-        if (request.getStatus() == PropertyReviewStatus.REJECTED && (request.getComment() == null || request.getComment().isBlank())) {
+        if (request.status() == PropertyReviewStatus.REJECTED && (request.comment() == null || request.comment().isBlank())) {
             throw new IllegalArgument("Comment is required when rejecting a review");
         }
 
@@ -111,8 +111,8 @@ public class PropertyReviewService {
                 .orElseThrow(() -> new ResourceNotFoundException("Review not found for property: " + propertyId));
 
 
-        review.setStatus(request.getStatus());
-        review.setComment(request.getComment());
+        review.setStatus(request.status());
+        review.setComment(request.comment());
         review.setAdmin(SecurityUtils.getCurrentUser());
         review.setReviewedAt(LocalDateTime.now());
 
