@@ -4,6 +4,7 @@ import com.habitame.api.city.entity.CityEntity;
 import com.habitame.api.country.entity.CountryEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +19,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ProvinceEntity implements Serializable {
 
     @Serial

@@ -6,17 +6,17 @@ import com.habitame.api.province.dto.ProvinceResponse;
 import com.habitame.api.province.entity.ProvinceEntity;
 
 public class ProvinceMapper {
-    public static ProvinceResponse toResponse(ProvinceEntity provinceEntity) {
-        ProvinceResponse dto = new ProvinceResponse();
-        dto.setId(provinceEntity.getId());
-        dto.setName(provinceEntity.getName());
-        return dto;
+    public static ProvinceResponse toResponse(ProvinceEntity provinceEntity) {;
+        return new ProvinceResponse(
+                provinceEntity.getId(),
+                provinceEntity.getName()
+        );
     }
 
     public static ProvinceEntity toEntity(ProvinceRequest request, CountryEntity countryEntity) {
-        ProvinceEntity provinceEntity = new ProvinceEntity();
-        provinceEntity.setName(request.getName());
-        provinceEntity.setCountryEntity(countryEntity);
-        return provinceEntity;
+        return ProvinceEntity.builder()
+                .name(request.name())
+                .countryEntity(countryEntity)
+                .build();
     }
 }

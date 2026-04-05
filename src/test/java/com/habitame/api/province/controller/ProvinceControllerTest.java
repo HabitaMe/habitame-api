@@ -121,9 +121,10 @@ class ProvinceControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void addProvince_ShouldReturnCreated() throws Exception {
-        ProvinceRequest request = new ProvinceRequest();
-        request.setName("Sevilla");
-        request.setCountryId(1); // Integer
+        ProvinceRequest request = new ProvinceRequest(
+                1,
+                "Sevilla"
+        );
 
         ProvinceResponse response = new ProvinceResponse(3, "Sevilla");
 
@@ -138,9 +139,10 @@ class ProvinceControllerTest {
 
     @Test
     void addProvince_WithoutAuth_ShouldReturnUnauthorized() throws Exception {
-        ProvinceRequest request = new ProvinceRequest();
-        request.setName("Sevilla");
-        request.setCountryId(1);
+        ProvinceRequest request = new ProvinceRequest(
+                1,
+                "Sevilla"
+        );
 
         mockMvc.perform(post("/api/provinces")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -152,9 +154,10 @@ class ProvinceControllerTest {
     @Test
     @WithMockUser(roles = "ARRENDADOR")
     void addProvince_WithWrongRole_ShouldReturnForbidden() throws Exception {
-        ProvinceRequest json = new ProvinceRequest();
-        json.setName("Sevilla");
-        json.setCountryId(1);
+        ProvinceRequest json = new ProvinceRequest(
+                1,
+                "Sevilla"
+        );
         mockMvc.perform(post("/api/provinces")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(json)))
@@ -164,9 +167,10 @@ class ProvinceControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void addProvince_WithMissingCountryId_ShouldReturnBadRequest() throws Exception {
-        ProvinceRequest request = new ProvinceRequest();
-        request.setName("Sevilla");
-        // countryId = null
+        ProvinceRequest request = new ProvinceRequest(
+                null,
+                "Sevilla"
+        );
 
         mockMvc.perform(post("/api/provinces")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -179,9 +183,10 @@ class ProvinceControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void updateProvince_ShouldReturnUpdated() throws Exception {
-        ProvinceRequest request = new ProvinceRequest();
-        request.setName("Valencia");
-        request.setCountryId(1);
+        ProvinceRequest request = new ProvinceRequest(
+                1,
+                "Valencia"
+        );
 
         ProvinceResponse response = new ProvinceResponse(1, "Valencia");
 
@@ -197,9 +202,10 @@ class ProvinceControllerTest {
 
     @Test
     void updateProvince_WithoutAuth_ShouldReturnUnauthorized() throws Exception {
-        ProvinceRequest request = new ProvinceRequest();
-        request.setName("Valencia");
-        request.setCountryId(1);
+        ProvinceRequest request = new ProvinceRequest(
+                1,
+                "Valencia"
+        );
 
         mockMvc.perform(put("/api/provinces/1")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -210,9 +216,10 @@ class ProvinceControllerTest {
     @Test
     @WithMockUser(roles = "ARRENDADOR")
     void updateProvince_WithWrongRole_ShouldReturnForbidden() throws Exception {
-        ProvinceRequest request = new ProvinceRequest();
-        request.setName("Valencia");
-        request.setCountryId(1);
+        ProvinceRequest request = new ProvinceRequest(
+                1,
+                "Valencia"
+        );
 
         mockMvc.perform(put("/api/provinces/1")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -223,9 +230,10 @@ class ProvinceControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void updateProvince_WithMissingCountryId_ShouldReturnBadRequest() throws Exception {
-        ProvinceRequest request = new ProvinceRequest();
-        request.setName("Valencia");
-        // countryId = null
+        ProvinceRequest request = new ProvinceRequest(
+                null,
+                "Valencia"
+        );
 
         mockMvc.perform(put("/api/provinces/1")
                         .contentType(MediaType.APPLICATION_JSON)

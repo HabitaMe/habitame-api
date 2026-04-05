@@ -71,13 +71,13 @@ public class ProvinceService {
     @Transactional
     public ProvinceResponse addProvince(ProvinceRequest request) {
         if (provinceRepository.existsByCountryEntity_IdAndName(
-                request.getCountryId(),
-                request.getName()
+                request.countryId(),
+                request.name()
         )) {
             throw new DuplicateResourceException("Province already exists");
         }
 
-        CountryEntity countryEntity = countryService.findEntityById(request.getCountryId());
+        CountryEntity countryEntity = countryService.findEntityById(request.countryId());
 
         ProvinceEntity provinceEntity = ProvinceMapper.toEntity(request, countryEntity);
 
@@ -89,8 +89,8 @@ public class ProvinceService {
     @Transactional
     public ProvinceResponse updateProvince(Integer provinceId, ProvinceRequest request) {
         ProvinceEntity provinceEntity = findEntityById(provinceId);
-        provinceEntity.setName(request.getName());
-        provinceEntity.setCountryEntity(countryService.findEntityById(request.getCountryId()));
+        provinceEntity.setName(request.name());
+        provinceEntity.setCountryEntity(countryService.findEntityById(request.countryId()));
         return ProvinceMapper.toResponse(provinceRepository.save(provinceEntity));
     }
 
