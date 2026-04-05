@@ -34,20 +34,18 @@ public class PropertyImageService {
         propertySecurityService.checkPropertyAccess(property);
 
         // Validación del archivo
-        if (request.getFile().isEmpty() || !isImage(request.getFile())) {
+        if (request.file().isEmpty() || !isImage(request.file())) {
             throw new IllegalArgumentException("Archivo inválido: debe ser una imagen no vacía");
         }
 
         // Si no hay imagen principal, esta pasa a serlo automáticamente
-        if (!request.isMain() && propertyImageRepository.countMainImages(propertyId) == 0) {
-            request.setMain(true);
-        }
+        boolean main = request.isMain() || propertyImageRepository.countMainImages(propertyId) == 0;
 
-        if (request.isMain()) {
+        if (main) {
             propertyImageRepository.resetMainImage(propertyId);
         }
 
-        String url = imageStorageService.store(request.getFile(), "properties");
+        String url = imageStorageService.store(request.file(), "properties");
 
         PropertyImageEntity propertyImageEntity = PropertyImageEntity.builder()
                 .property(property)
