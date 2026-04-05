@@ -3,6 +3,7 @@ package com.habitame.api.amenities.entity;
 import com.habitame.api.property.entity.PropertyEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import java.util.List;
 @Entity
 @Table(name = "amenities")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class AmenityEntity implements Serializable {

@@ -38,7 +38,7 @@ public class OwnerRoomController extends AbstractRoomController {
     @PostMapping
     public ResponseEntity<Void> addOwnerRoom(@RequestBody @Valid RoomOwnerRequest request) {
         RoomOwnerResponse response = roomService.addOwnerRoom(request);
-        URI location = URI.create("api/owner/rooms/" + response.getId());
+        URI location = URI.create("api/owner/rooms/" + response.id());
         return ResponseEntity.created(location).build();
     }
 

@@ -2,16 +2,11 @@ package com.habitame.api.amenities.dto;
 
 import com.habitame.api.amenities.entity.AmenityScope;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-@Data
-public class AmenityRequest {
-    @NotBlank
-    private String name;
-
-    @NotBlank
-    private String description;
-
-    @NotBlank
-    private AmenityScope scope;
-}
+public record AmenityRequest (
+        @NotBlank String name,
+        @NotBlank String description,
+        @NotNull AmenityScope scope
+) { }

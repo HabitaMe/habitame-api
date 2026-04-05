@@ -3,28 +3,17 @@ package com.habitame.api.room.dto;
 import com.habitame.api.room.entity.RoomStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
 
 import java.math.BigDecimal;
 
-@Data
-public class RoomAdminRequest {
-    @NotBlank
-    private String title;
-    @NotBlank
-    private String description;
-    @NotNull
-    private BigDecimal areaM2;
-    @NotNull
-    private Integer maxOccupants;
-    @NotNull
-    private BigDecimal pricePerMonth;
-    @NotNull
-    private Integer floor;
-    @NotNull
-    private Integer propertyId;
-    @NotNull
-    private RoomStatus status;
-    @NotNull
-    private Integer ownerId;
-}
+public record RoomAdminRequest (
+    @NotBlank String title,
+    @NotBlank String description,
+    @NotNull BigDecimal areaM2,
+    @NotNull Integer maxOccupants,
+    @NotNull BigDecimal pricePerMonth,
+    @NotNull Integer floor,
+    @NotNull Integer propertyId,
+    @NotNull RoomStatus status,
+    @NotNull Integer ownerId
+) { };

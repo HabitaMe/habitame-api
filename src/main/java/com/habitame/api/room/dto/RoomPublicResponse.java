@@ -4,14 +4,13 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 
-@Data
-public class RoomPublicResponse {
-    private Integer id;
-    private String title;
-    private String city;
-    private BigDecimal areaM2;
-    private Integer maxOccupants;
-    private BigDecimal pricePerMonth;
-    private Integer floor;
-    private String mainImage;
-}
+public record RoomPublicResponse (
+    Integer id,
+    String title,
+    String city,
+    BigDecimal areaM2,
+    Integer maxOccupants,
+    BigDecimal pricePerMonth,
+    Integer floor,
+    String mainImage
+) { };

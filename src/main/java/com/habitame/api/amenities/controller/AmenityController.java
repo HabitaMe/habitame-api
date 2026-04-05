@@ -35,7 +35,7 @@ public class AmenityController {
     @PostMapping
     public ResponseEntity<Void> saveAmenity(@RequestBody @Valid AmenityRequest request) {
         AmenityResponse amenityResponse = amenityService.saveAmenity(request);
-        URI location = URI.create("api/amenities/" + amenityResponse.getId());
+        URI location = URI.create("api/amenities/" + amenityResponse.id());
         return ResponseEntity.created(location).build();
     }
 

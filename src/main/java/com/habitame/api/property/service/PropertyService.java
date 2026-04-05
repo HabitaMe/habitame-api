@@ -99,7 +99,7 @@ public class PropertyService {
         PropertyEntity property = PropertyMapper.ownerToEntity(
                 request,
                 SecurityUtils.getCurrentUser(),
-                cityService.findEntityById(request.getCityId())
+                cityService.findEntityById(request.cityId())
         );
         propertyRepository.save(property);
         propertyReviewService.addReview(property);
@@ -120,12 +120,12 @@ public class PropertyService {
         PropertyEntity property = propertyRepository.findByIdAndOwnerId(ownerId, propertyId)
                 .orElseThrow(() -> new ResourceNotFoundException("Property not found: " + propertyId));
 
-        boolean requiresReview = !property.getTitle().equals(request.getTitle())
-                || !property.getDescription().equals(request.getDescription())
-                || !property.getAddress().equals(request.getAddress())
+        boolean requiresReview = !property.getTitle().equals(request.title())
+                || !property.getDescription().equals(request.description())
+                || !property.getAddress().equals(request.address())
                 || property.getStatus().equals(PropertyStatus.INACTIVE);
 
-        PropertyMapper.updateProperty(property, request, cityService.findEntityById(request.getCityId()));
+        PropertyMapper.updateProperty(property, request, cityService.findEntityById(request.cityId()));
         property.setUpdatedBy(SecurityUtils.getCurrentUser());
 
         if (requiresReview) {
@@ -171,8 +171,8 @@ public class PropertyService {
     public PropertyAdminResponse saveAdminProperty(PropertyAdminRequest request) {
         PropertyEntity property = PropertyMapper.adminToEntity(
                 request,
-                userService.findById(request.getOwnerId()),
-                cityService.findEntityById(request.getCityId())
+                userService.findById(request.ownerId()),
+                cityService.findEntityById(request.cityId())
         );
         return PropertyMapper.toAdminResponse(propertyRepository.save(property));
     }
@@ -191,8 +191,8 @@ public class PropertyService {
         PropertyMapper.updateAdminProperty(
                 property,
                 request,
-                cityService.findEntityById(request.getCityId()),
-                userService.findById(request.getOwnerId())
+                cityService.findEntityById(request.cityId()),
+                userService.findById(request.ownerId())
         );
         property.setUpdatedBy(SecurityUtils.getCurrentUser());
 
@@ -209,7 +209,7 @@ public class PropertyService {
 
         PropertyReviewResponse response = propertyReviewService.resolveReview(propertyId, request);
 
-        property.setStatus(request.getStatus() == PropertyReviewStatus.APPROVED ? PropertyStatus.ACTIVE : PropertyStatus.INACTIVE);
+        property.setStatus(request.status() == PropertyReviewStatus.APPROVED ? PropertyStatus.ACTIVE : PropertyStatus.INACTIVE);
 
         propertyRepository.save(property);
 

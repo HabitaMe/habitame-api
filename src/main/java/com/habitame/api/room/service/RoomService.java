@@ -91,7 +91,7 @@ public class RoomService {
     public RoomOwnerResponse addOwnerRoom(RoomOwnerRequest request) {
         RoomEntity room = RoomMapper.ownerToEntity(
                 request,
-                propertyService.findEntityById(request.getPropertyId())
+                propertyService.findEntityById(request.propertyId())
         );
         roomRepository.save(room);
         roomReviewService.addReview(room);
@@ -112,12 +112,12 @@ public class RoomService {
         RoomEntity room = roomRepository.findByIdAndPropertyOwnerId(roomId, ownerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Room not found: " + roomId));
 
-        boolean requiresReview = !room.getTitle().equals(request.getTitle())
-                || !room.getDescription().equals(request.getDescription())
-                || !room.getPricePerMonth().equals(request.getPricePerMonth())
+        boolean requiresReview = !room.getTitle().equals(request.title())
+                || !room.getDescription().equals(request.description())
+                || !room.getPricePerMonth().equals(request.pricePerMonth())
                 || room.getStatus().equals(RoomStatus.INACTIVE);
 
-        RoomMapper.updateOwnerRoom(room, request, propertyService.findEntityById(request.getPropertyId()));
+        RoomMapper.updateOwnerRoom(room, request, propertyService.findEntityById(request.propertyId()));
         room.setUpdatedBy(SecurityUtils.getCurrentUser());
 
         if (requiresReview) {
@@ -165,7 +165,7 @@ public class RoomService {
     public RoomAdminResponse saveAdminRoom(RoomAdminRequest request) {
         RoomEntity room = RoomMapper.adminToEntity(
                 request,
-                propertyService.findEntityById(request.getPropertyId())
+                propertyService.findEntityById(request.propertyId())
         );
         return RoomMapper.toAdminResponse(roomRepository.save(room));
     }
@@ -184,7 +184,7 @@ public class RoomService {
         RoomMapper.updateAdminRoom(
                 room,
                 request,
-                propertyService.findEntityById(request.getPropertyId())
+                propertyService.findEntityById(request.propertyId())
         );
         room.setUpdatedBy(SecurityUtils.getCurrentUser());
 
@@ -201,7 +201,7 @@ public class RoomService {
 
         RoomReviewResponse response = roomReviewService.resolveReview(roomId, request);
 
-        room.setStatus(request.getStatus() == RoomReviewStatus.APPROVED ? RoomStatus.ACTIVE : RoomStatus.INACTIVE);
+        room.setStatus(request.status() == RoomReviewStatus.APPROVED ? RoomStatus.ACTIVE : RoomStatus.INACTIVE);
 
         roomRepository.save(room);
 

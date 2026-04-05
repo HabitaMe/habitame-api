@@ -7,10 +7,7 @@ import com.habitame.api.propertyReview.entity.PropertyReviewEntity;
 import com.habitame.api.room.entity.RoomEntity;
 import com.habitame.api.user.entity.UserEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -23,6 +20,7 @@ import java.util.List;
 @Table(name = "properties")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class PropertyEntity implements Serializable {

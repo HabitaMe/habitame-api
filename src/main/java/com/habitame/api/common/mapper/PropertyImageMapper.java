@@ -6,10 +6,10 @@ import com.habitame.api.propertyImage.entity.PropertyImageEntity;
 public class PropertyImageMapper {
 
     public static PropertyImageResponse toResponse(PropertyImageEntity propertyImageEntity) {
-        PropertyImageResponse dto = new PropertyImageResponse();
-        dto.setId(propertyImageEntity.getId());
-        dto.setImageUrl(propertyImageEntity.getImageUrl());
-        dto.setMain(propertyImageEntity.isMain());
-        return dto;
+        return new PropertyImageResponse(
+                propertyImageEntity.getId(),
+                propertyImageEntity.getImageUrl(),
+                propertyImageEntity.isMain()
+        );
     }
 }

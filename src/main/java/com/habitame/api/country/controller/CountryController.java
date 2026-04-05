@@ -43,7 +43,7 @@ public class CountryController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> addCountry(@Valid @RequestBody CountryRequest request) {
         CountryResponse countryResponse = countryService.addCountry(request);
-        URI location = URI.create("/api/countries/" + countryResponse.getId());
+        URI location = URI.create("/api/countries/" + countryResponse.id());
         return ResponseEntity.created(location).build();
     }
 

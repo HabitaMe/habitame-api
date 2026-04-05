@@ -50,8 +50,8 @@ public class CountryService {
 
     @Transactional
     public CountryResponse addCountry(@Valid CountryRequest request) {
-        if (countryRepository.existsByName(request.getName())) {
-            throw new DuplicateResourceException("Country already exists: " + request.getName());
+        if (countryRepository.existsByName(request.name())) {
+            throw new DuplicateResourceException("Country already exists: " + request.name());
         }
 
         CountryEntity countryEntity = CountryMapper.toEntity(request);
@@ -64,8 +64,8 @@ public class CountryService {
     @Transactional
     public CountryResponse updateCountry(Integer countryId, CountryRequest request) {
         CountryEntity countryEntity = findEntityById(countryId);
-        countryEntity.setName(request.getName());
-        countryEntity.setIsoCode(request.getIsoCode());
+        countryEntity.setName(request.name());
+        countryEntity.setIsoCode(request.isoCode());
         countryRepository.save(countryEntity);
         return CountryMapper.toResponse(countryEntity);
     }

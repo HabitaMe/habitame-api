@@ -1,18 +1,18 @@
 package com.habitame.api.property.dto;
 
-import lombok.Data;
+import com.habitame.api.city.dto.CityResponse;
+import com.habitame.api.propertyImage.dto.PropertyImageResponse;
 
 import java.math.BigDecimal;
 
-@Data
-public class PropertyOwnerResponse {
-    private Integer id;
-    private String title;
-    private String address;
-    private String city;
-    private BigDecimal areaM2;
-    private Integer bathroomsTotal;
-    private Integer floor;
-    private String mainImage;
-    private String status;
-}
+public record PropertyOwnerResponse (
+        Integer id,
+        String title,
+        String address,
+        CityResponse city,
+        BigDecimal areaM2,
+        Integer bathroomsTotal,
+        Integer floor,
+        PropertyImageResponse mainImage,
+        String status
+) { };

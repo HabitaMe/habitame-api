@@ -43,7 +43,7 @@ public class ProvinceController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> addProvince(@Valid @RequestBody ProvinceRequest request) {
         ProvinceResponse provinceResponse = provinceService.addProvince(request);
-        URI location = URI.create("/api/provinces/" + provinceResponse.getId());
+        URI location = URI.create("/api/provinces/" + provinceResponse.id());
         return ResponseEntity.created(location).build();
     }
 

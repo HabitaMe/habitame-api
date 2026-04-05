@@ -6,26 +6,26 @@ import com.habitame.api.amenities.entity.AmenityEntity;
 
 public class AmenityMapper {
     public static AmenityResponse toResponse(AmenityEntity amenityEntity) {
-        AmenityResponse dto = new AmenityResponse();
-        dto.setId(amenityEntity.getId());
-        dto.setName(amenityEntity.getName());
-        dto.setDescription(amenityEntity.getDescription());
-        dto.setScope(amenityEntity.getScope().toString());
-        return dto;
+        return new AmenityResponse(
+                amenityEntity.getId(),
+                amenityEntity.getName(),
+                amenityEntity.getDescription(),
+                amenityEntity.getScope().toString()
+        );
     }
 
     public static AmenityEntity toEntity(AmenityRequest request) {
-        AmenityEntity amenityEntity = new AmenityEntity();
-        amenityEntity.setName(request.getName());
-        amenityEntity.setDescription(request.getDescription());
-        amenityEntity.setScope(request.getScope());
-        return amenityEntity;
+        return AmenityEntity.builder()
+                .name(request.name())
+                .description(request.description())
+                .scope(request.scope())
+                .build();
     }
 
     public static AmenityEntity toUpdate(AmenityEntity amenityEntity, AmenityRequest request) {
-        amenityEntity.setName(request.getName());
-        amenityEntity.setDescription(request.getDescription());
-        amenityEntity.setScope(request.getScope());
+        amenityEntity.setName(request.name());
+        amenityEntity.setDescription(request.description());
+        amenityEntity.setScope(request.scope());
         return amenityEntity;
     }
 }

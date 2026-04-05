@@ -10,41 +10,23 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Data
-public class PropertyAdminDetailResponse {
-    private Integer id;
-
-    private String title;
-
-    private String description;
-
-    private String type;
-
-    private String address;
-
-    private Integer floor;
-
-    private BigDecimal areaM2;
-
-    private Integer bathroomsTotal;
-
-    private boolean ownerInHouse;
-
-    private String status;
-
-    private String createdAt;
-
-    private String updatedAt;
-
-    private UserResponse updatedBy;
-
-    private UserResponse owner;
-
-    private CityResponse city;
-
-    private List<PropertyImageResponse> images;
-
-    private List<AmenityResponse> amenities;
-
-    private List<PropertyReviewResponse> reviews;
-}
+public record PropertyAdminDetailResponse (
+      Integer id,
+      String title,
+      String description,
+      String type,
+      String address,
+      Integer floor,
+      BigDecimal areaM2,
+      Integer bathroomsTotal,
+      boolean ownerInHouse,
+      String status,
+      String createdAt,
+      String updatedAt,
+      UserResponse updatedBy,
+      UserResponse owner,
+      CityResponse city,
+      List<PropertyImageResponse> images,
+      List<AmenityResponse> amenities,
+      List<PropertyReviewResponse> reviews
+) { };

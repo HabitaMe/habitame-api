@@ -43,7 +43,7 @@ public class OwnerPropertyController extends AbstractPropertyController {
     @PostMapping
     public ResponseEntity<Void> addOwnerProperty(@RequestBody @Valid PropertyOwnerRequest request) {
         PropertyOwnerResponse response = propertyService.addOwnerProperty(request);
-        URI location = URI.create("api/owner/properties/" + response.getId());
+        URI location = URI.create("api/owner/properties/" + response.id());
         return ResponseEntity.created(location).build();
     }
 
