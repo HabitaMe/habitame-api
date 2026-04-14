@@ -52,6 +52,12 @@ public class RoomService {
         return RoomMapper.toPublicDetailResponse(roomEntity);
     }
 
+    public PageResponse<RoomPublicResponse> findByPropertyIdPublic(Integer idProperty, Pageable pageable) {
+        Page<RoomEntity> page = roomRepository.findAllByPropertyId(idProperty, pageable);
+
+        return toPageResponse(page, RoomMapper::toPublicResponse);
+    }
+
 
     // -------------
     // OWNER

@@ -27,4 +27,9 @@ public class PublicRoomController {
     public ResponseEntity<RoomPublicDetailResponse> findByIdPublicRoom(@PathVariable Integer idRoom) {
         return ResponseEntity.ok(roomService.findByIdPublicRoom(idRoom));
     }
+
+    @GetMapping("/property/{idProperty}")
+    public ResponseEntity<PageResponse<RoomPublicResponse>> findByPropertyIdPublic(@PathVariable Integer idProperty, Pageable pageable) {
+        return ResponseEntity.ok(roomService.findByPropertyIdPublic(idProperty,  pageable));
+    }
 }
