@@ -11,7 +11,7 @@ public class RoomMapper {
         return new RoomPublicResponse(
                 roomEntity.getId(),
                 roomEntity.getTitle(),
-                roomEntity.getProperty().getCityEntity().toString(),
+                roomEntity.getProperty().getCityEntity().getName(),
                 roomEntity.getAreaM2(),
                 roomEntity.getMaxOccupants(),
                 roomEntity.getPricePerMonth(),
