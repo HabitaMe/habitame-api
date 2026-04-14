@@ -20,6 +20,7 @@ public class PropertyMapper {
                 propertyEntity.getAreaM2(),
                 propertyEntity.getBathroomsTotal(),
                 propertyEntity.getFloor(),
+                UserMapper.toResponse(propertyEntity.getOwner()),
                 propertyEntity.getImages().stream()
                         .filter(PropertyImageEntity::isMain)
                         .map(PropertyImageMapper::toResponse)
