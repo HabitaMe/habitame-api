@@ -12,6 +12,7 @@ public class RoomMapper {
                 roomEntity.getId(),
                 roomEntity.getTitle(),
                 roomEntity.getProperty().getCityEntity().getName(),
+                roomEntity.getProperty().getAddress() == null ? "" : roomEntity.getProperty().getAddress(),
                 roomEntity.getAreaM2(),
                 roomEntity.getMaxOccupants(),
                 roomEntity.getPricePerMonth(),

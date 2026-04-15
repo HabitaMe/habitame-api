@@ -8,6 +8,7 @@ public record RoomPublicResponse (
     Integer id,
     String title,
     String city,
+    String address,
     BigDecimal areaM2,
     Integer maxOccupants,
     BigDecimal pricePerMonth,
