@@ -53,7 +53,7 @@ public class RoomService {
     }
 
     public PageResponse<RoomPublicResponse> findByPropertyIdPublic(Integer idProperty, Pageable pageable) {
-        Page<RoomEntity> page = roomRepository.findAllByPropertyId(idProperty, pageable);
+        Page<RoomEntity> page = roomRepository.findAllByPropertyIdAndStatus(idProperty, RoomStatus.ACTIVE, pageable);
 
         return toPageResponse(page, RoomMapper::toPublicResponse);
     }

@@ -25,4 +25,6 @@ public interface RoomRepository extends JpaRepository<RoomEntity, Integer> {
     Page<RoomEntity> findAllByPropertyOwnerId(Integer ownerId, Pageable pageable);
 
     Optional<RoomEntity> findByIdAndPropertyOwnerId(Integer roomId, Integer ownerId);
+
+    Page<RoomEntity> findAllByPropertyIdAndStatus(Integer idProperty, RoomStatus status, Pageable pageable);
 }
