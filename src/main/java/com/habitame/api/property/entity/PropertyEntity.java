@@ -43,6 +43,7 @@ public class PropertyEntity implements Serializable {
     @Column(nullable = false)
     private String address;
 
+    @Builder.Default
     private Integer floor = 1;
 
     @Column(name = "area_m2", precision = 8, scale = 2)
@@ -52,10 +53,12 @@ public class PropertyEntity implements Serializable {
     private Integer bathroomsTotal;
 
     @Column(name = "owner_in_house")
+    @Builder.Default
     private boolean ownerInHouse = false;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Builder.Default
     private PropertyStatus status = PropertyStatus.IN_REVIEW;
 
     @Column(name = "created_at", updatable = false)
