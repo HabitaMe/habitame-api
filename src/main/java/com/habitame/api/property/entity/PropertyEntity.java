@@ -80,6 +80,7 @@ public class PropertyEntity implements Serializable {
     private CityEntity cityEntity;
 
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Builder.Default
     private List<PropertyImageEntity> images = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -88,12 +89,15 @@ public class PropertyEntity implements Serializable {
             joinColumns = @JoinColumn(name = "property_id"),
             inverseJoinColumns = @JoinColumn(name = "amenity_id")
     )
+    @Builder.Default
     private List<AmenityEntity> propertyAmenities = new ArrayList<>();
 
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<PropertyReviewEntity> reviews = new ArrayList<>();
 
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<RoomEntity> rooms = new ArrayList<>();
 
     @PrePersist
