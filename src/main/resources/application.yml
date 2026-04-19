@@ -1,14 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: ${SPRING_PROFILES_ACTIVE:dev}
 app:
   upload:
-    dir: C:/imagenes/uploads
-
-
-#spring:
-#  profiles:
-#    active: ${SPRING_PROFILES_ACTIVE:prod} # Por defecto prod
-#app:
-#  upload:
-#    dir: ${UPLOAD_DIR:/app/uploads} # Volumen Docker
+    dir: ${UPLOAD_DIR:C:/imagenes/uploads}
