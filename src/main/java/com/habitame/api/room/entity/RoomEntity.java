@@ -43,6 +43,7 @@ public class RoomEntity implements Serializable {
     private BigDecimal areaM2;
 
     @Column(name = "max_occupants")
+    @Builder.Default
     private Integer maxOccupants = 1;
 
     @Column(name = "price_per_month", precision = 8, scale = 2)
@@ -52,6 +53,7 @@ public class RoomEntity implements Serializable {
     private Integer floor;
 
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private RoomStatus status = RoomStatus.IN_REVIEW;
 
     @Column(name = "created_at", updatable = false)
@@ -74,12 +76,15 @@ public class RoomEntity implements Serializable {
             joinColumns = @JoinColumn(name = "room_id"),
             inverseJoinColumns = @JoinColumn(name = "amenity_id")
     )
+    @Builder.Default
     private List<AmenityEntity> roomAmenities = new ArrayList<>();
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Builder.Default
     private List<RoomImageEntity> images = new ArrayList<>();
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<RoomReviewEntity> reviews = new ArrayList<>();
 
     @PrePersist

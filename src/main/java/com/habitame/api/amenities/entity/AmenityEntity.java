@@ -35,8 +35,10 @@ public class AmenityEntity implements Serializable {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private AmenityScope scope = AmenityScope.BOTH;
 
     @ManyToMany(mappedBy = "propertyAmenities")
+    @Builder.Default
     private List<PropertyEntity> properties = new ArrayList<>();
 }
