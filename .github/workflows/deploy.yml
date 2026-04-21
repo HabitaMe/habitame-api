@@ -46,4 +46,4 @@ jobs:
           curl -f -X POST https://habitame.xyz/hooks/deploy \
             -H "X-Webhook-Token: ${{ secrets.WEBHOOK_SECRET }}" \
             -H "Content-Type: application/json" \
-            -d '{"service":"api"}'
+            -d '{"service":"api","tag":"${{ github.sha }}"}'
