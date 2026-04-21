@@ -2,6 +2,7 @@ package com.habitame.api.user.controller;
 
 import com.habitame.api.common.exception.UnauthorizedException;
 import com.habitame.api.common.mapper.UserMapper;
+import com.habitame.api.user.dto.UserRequest;
 import com.habitame.api.user.dto.UserResponse;
 import com.habitame.api.user.entity.UserEntity;
 import com.habitame.api.user.service.UserService;
@@ -34,6 +35,11 @@ public class UserController {
     @PostMapping("{idUser}/photo")
     public ResponseEntity<UserResponse> addPhoto(@PathVariable Integer idUser, @Valid MultipartFile file) throws IOException {
         return ResponseEntity.ok(userService.addPhoto(idUser, file));
+    }
+
+    @PutMapping()
+    public ResponseEntity<UserResponse> updateMe(@RequestBody @Valid UserRequest request) throws IOException {
+        return ResponseEntity.ok(userService.updateUser(request));
     }
 
     @DeleteMapping("{idUser}/photo")

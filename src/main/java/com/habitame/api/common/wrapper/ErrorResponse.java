@@ -7,6 +7,8 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+// TODO: Pasar a MAPPER
+
 @Data
 @Builder
 @AllArgsConstructor

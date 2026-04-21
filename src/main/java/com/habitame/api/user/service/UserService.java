@@ -5,6 +5,7 @@ import com.habitame.api.common.exception.ResourceNotFoundException;
 import com.habitame.api.common.exception.UnauthorizedException;
 import com.habitame.api.common.mapper.UserMapper;
 import com.habitame.api.media.service.ImageStorageService;
+import com.habitame.api.user.dto.UserRequest;
 import com.habitame.api.user.dto.UserResponse;
 import com.habitame.api.user.entity.UserEntity;
 import com.habitame.api.user.repository.UserRepository;
@@ -58,6 +59,14 @@ public class UserService {
         UserEntity user = userRepository.findById(idUser).orElseThrow(() -> new ResourceNotFoundException("User not found: " + idUser));
         imageStorageService.delete(user.getPhotoUrl());
         user.setPhotoUrl(null);
+        userRepository.save(user);
+        return UserMapper.toResponse(user);
+    }
+
+    public UserResponse updateUser(@Valid UserRequest request) {
+        UserEntity user = SecurityUtils.getCurrentUser();
+        user.setFullName(request.fullname());
+        user.setPhone(request.phone());
         userRepository.save(user);
         return UserMapper.toResponse(user);
     }
