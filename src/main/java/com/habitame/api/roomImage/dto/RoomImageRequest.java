@@ -6,5 +6,5 @@ import org.springframework.web.multipart.MultipartFile;
 
 public record RoomImageRequest (
     @NotBlank MultipartFile file,
-    @NotNull boolean isMain
+    @NotNull Boolean isMain
 ) { };

@@ -5,5 +5,5 @@ import org.springframework.web.multipart.MultipartFile;
 
 public record PropertyImageRequest (
         @NotNull MultipartFile file,
-        @NotNull boolean isMain
+        @NotNull Boolean isMain
 ) { };
