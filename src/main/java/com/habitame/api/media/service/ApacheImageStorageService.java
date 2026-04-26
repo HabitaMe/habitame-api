@@ -1,6 +1,7 @@
 package com.habitame.api.media.service;
 
 import lombok.RequiredArgsConstructor;
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,9 +25,15 @@ public class ApacheImageStorageService implements ImageStorageService {
         Path folderPath = Paths.get(uploadDir, folder);
         Files.createDirectories(folderPath);
 
-        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        String fileName = UUID.randomUUID() + ".webp";
         Path filePath = folderPath.resolve(fileName);
-        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+        Thumbnails.of(file.getInputStream())
+                .size(1200, 1200)
+                .outputFormat("webp")
+                .outputQuality(0.80)
+                .toFile(filePath.toFile());
+
         return "/uploads/" + folder + "/" + fileName;
     }
 
