@@ -35,7 +35,7 @@ jobs:
           cache: maven
 
       - name: Checkstyle
-        run: ./mvnw checkstyle:check -q
+        run: ./mvnw checkstyle:check
 
       - name: Test & Coverage
         run: ./mvnw verify -q
