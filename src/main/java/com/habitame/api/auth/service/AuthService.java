@@ -35,18 +35,18 @@ public class AuthService {
 
     @Transactional
     public UserEntity register(RegisterRequest request) {
-        if (userRepository.existsByUsername(request.getUsername())
-                || userRepository.existsByEmail(request.getEmail())) {
+        if (userRepository.existsByUsername(request.username())
+                || userRepository.existsByEmail(request.email())) {
             throw new DuplicateResourceException("Username o email ya existente");
         }
 
         UserEntity userEntity = new UserEntity();
-        userEntity.setUsername(request.getUsername());
-        userEntity.setEmail(request.getEmail());
-        userEntity.setPasswordHash(passwordEncoder.encode(request.getPassword()));
-        userEntity.setFullName(request.getFullName());
-        userEntity.setPhone(request.getPhone());
-        userEntity.setRole(request.getRole());
+        userEntity.setUsername(request.username());
+        userEntity.setEmail(request.email());
+        userEntity.setPasswordHash(passwordEncoder.encode(request.password()));
+        userEntity.setFullName(request.fullName());
+        userEntity.setPhone(request.phone());
+        userEntity.setRole(request.role());
         userEntity.setIsActive(true);
 
         return userRepository.save(userEntity);
@@ -54,72 +54,58 @@ public class AuthService {
 
     @Transactional
     public AuthResponse login(LoginRequest request) {
-
-        // Buscar usuario por username o email
         UserEntity userEntity = userRepository
-                .findByUsernameOrEmail(request.getUsernameOrEmail())
+                .findByUsernameOrEmail(request.usernameOrEmail())
                 .orElseThrow(() -> new UnauthorizedException("Credenciales incorrectas"));
 
-        // Comprobar que el usuario está activo
         if (!userEntity.getIsActive()) {
             throw new ForbiddenException("Usuario inactivo");
         }
 
-        // Verificar contraseña
-        if (!passwordEncoder.matches(request.getPassword(), userEntity.getPasswordHash())) {
+        if (!passwordEncoder.matches(request.password(), userEntity.getPasswordHash())) {
             throw new UnauthorizedException("Credenciales incorrectas");
         }
 
-        // Generar tokens usando JwtProvider
         String accessToken = jwtProvider.generateAccessToken(userEntity.getUsername());
         RefreshTokenEntity refreshTokenEntity = createRefreshToken(userEntity);
 
-        // Construir la respuesta
-        AuthResponse response = new AuthResponse();
-        response.setAccessToken(accessToken);
-        response.setRefreshToken(refreshTokenEntity.getToken());
-        response.setExpiresIn(3600); // 1 hora
-        response.setUser(UserMapper.toResponse(userEntity));
-
-        return response;
+        return new AuthResponse(
+                accessToken,
+                refreshTokenEntity.getToken(),
+                "Bearer",
+                3600,
+                UserMapper.toResponse(userEntity)
+        );
     }
 
     @Transactional
     public AuthResponse refresh(RefreshRequest request) {
-        // Buscar refresh token en BD
-        RefreshTokenEntity refreshTokenEntity = refreshTokenRepository.findByToken(request.getRefreshToken())
+        RefreshTokenEntity refreshTokenEntity = refreshTokenRepository.findByToken(request.refreshToken())
                 .orElseThrow(() -> new UnauthorizedException("Refresh token no válido"));
 
-        // Comprobar si está revocado o expirado
         if (refreshTokenEntity.getRevoked() || refreshTokenEntity.getExpiryDate().isBefore(LocalDateTime.now())) {
             throw new UnauthorizedException("Refresh token expirado o revocado");
         }
 
-        // Usuario asociado
         UserEntity user = refreshTokenEntity.getUser();
 
-        // Revocar el token antiguo
         refreshTokenEntity.setRevoked(true);
         refreshTokenRepository.save(refreshTokenEntity);
 
-        // Generar un nuevo refresh token
         RefreshTokenEntity newRefreshToken = createRefreshToken(user);
-
-        // Generar nuevo access token
         String accessToken = jwtProvider.generateAccessToken(user.getUsername());
 
-        // Construir respuesta
-        AuthResponse response = new AuthResponse();
-        response.setAccessToken(accessToken);
-        response.setRefreshToken(newRefreshToken.getToken());
-        response.setExpiresIn(3600); // 1 hora
-        response.setUser(UserMapper.toResponse(user));
-
-        return response;
+        return new AuthResponse(
+                accessToken,
+                newRefreshToken.getToken(),
+                "Bearer",
+                3600,
+                UserMapper.toResponse(user)
+        );
     }
 
     public void logout(RefreshRequest request) {
-        RefreshTokenEntity refreshTokenEntity = refreshTokenRepository.findByToken(request.getRefreshToken())
+        RefreshTokenEntity refreshTokenEntity = refreshTokenRepository.findByToken(request.refreshToken())
                 .orElseThrow(() -> new UnauthorizedException("Refresh token no válido"));
 
         refreshTokenEntity.setRevoked(true);
@@ -128,7 +114,6 @@ public class AuthService {
 
     @Transactional
     public RefreshTokenEntity createRefreshToken(UserEntity user) {
-        // Revocar todos los Refresh Tokens
         refreshTokenRepository.deleteByUser(user);
 
         RefreshTokenEntity tokenEntity = new RefreshTokenEntity();

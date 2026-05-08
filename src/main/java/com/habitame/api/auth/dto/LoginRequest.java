@@ -1,9 +1,6 @@
 package com.habitame.api.auth.dto;
 
-import lombok.Data;
-
-@Data
-public class LoginRequest {
-    private String usernameOrEmail;
-    private String password;
-}
+public record LoginRequest(
+        String usernameOrEmail,
+        String password
+) {}

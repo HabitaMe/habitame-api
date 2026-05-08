@@ -1,8 +1,12 @@
 name: Build and Deploy API
 
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: false
+        default: 'production'
 
 env:
   IMAGE: ghcr.io/habitame/habitame-api

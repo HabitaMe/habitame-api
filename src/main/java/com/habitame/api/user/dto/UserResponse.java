@@ -1,19 +1,15 @@
 package com.habitame.api.user.dto;
 
-import lombok.Data;
-
 import java.time.LocalDateTime;
 
-@Data
-public class UserResponse {
-
-    public Integer id;
-    public String username;
-    public String fullName;
-    public String phone;
-    public String photoUrl;
-    public String email;
-    public String role;
-    public Boolean isActive;
-    public LocalDateTime createdAt;
-}
+public record UserResponse(
+        Integer id,
+        String username,
+        String fullName,
+        String phone,
+        String photoUrl,
+        String email,
+        String role,
+        Boolean isActive,
+        LocalDateTime createdAt
+) {}
