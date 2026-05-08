@@ -151,7 +151,7 @@ class PropertyServiceTest {
     void updateOwnerProperty_WhenNotFound_ShouldThrow() {
         PropertyOwnerRequest request = buildRequest("Título", "Descripción", "Dirección");
 
-        when(propertyRepository.findByIdAndOwnerId(99, 1)).thenReturn(Optional.empty());
+        when(propertyRepository.findByIdAndOwnerId(1, 99)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> propertyService.updateOwnerProperty(99, request))
                 .isInstanceOf(ResourceNotFoundException.class);
