@@ -48,7 +48,7 @@ class CityControllerTest {
     @Test
     void findAll_WithoutAuth_ShouldReturn200() throws Exception {
         when(cityService.findAll(any(Pageable.class)))
-                .thenReturn(new PageResponse<>(List.of(new CityResponse(1, "Madrid", null)), 0, 10, 1, 1));
+                .thenReturn(new PageResponse<>(List.of(new CityResponse(1, "Madrid")), 0, 10, 1, 1));
 
         mockMvc.perform(get("/api/cities"))
                 .andExpect(status().isOk())
@@ -57,7 +57,7 @@ class CityControllerTest {
 
     @Test
     void findById_WithoutAuth_ShouldReturn200() throws Exception {
-        when(cityService.findById(1)).thenReturn(new CityResponse(1, "Madrid", null));
+        when(cityService.findById(1)).thenReturn(new CityResponse(1, "Madrid"));
 
         mockMvc.perform(get("/api/cities/1"))
                 .andExpect(status().isOk())
@@ -84,7 +84,7 @@ class CityControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void saveCity_ShouldReturnCreated() throws Exception {
-        when(cityService.saveCity(any())).thenReturn(new CityResponse(5, "Sevilla", null));
+        when(cityService.saveCity(any())).thenReturn(new CityResponse(5, "Sevilla"));
 
         mockMvc.perform(post("/api/cities")
                         .contentType(MediaType.APPLICATION_JSON)
