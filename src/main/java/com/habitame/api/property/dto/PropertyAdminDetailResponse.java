@@ -5,7 +5,6 @@ import com.habitame.api.city.dto.CityResponse;
 import com.habitame.api.propertyImage.dto.PropertyImageResponse;
 import com.habitame.api.propertyReview.dto.PropertyReviewResponse;
 import com.habitame.api.user.dto.UserResponse;
-import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.List;

@@ -7,7 +7,6 @@ import com.habitame.api.auth.dto.RegisterRequest;
 import com.habitame.api.auth.entity.RefreshTokenEntity;
 import com.habitame.api.auth.repository.RefreshTokenRepository;
 import com.habitame.api.auth.security.JwtProvider;
-import com.habitame.api.common.exception.ConflictException;
 import com.habitame.api.common.exception.DuplicateResourceException;
 import com.habitame.api.common.exception.ForbiddenException;
 import com.habitame.api.common.exception.UnauthorizedException;

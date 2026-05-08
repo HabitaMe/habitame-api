@@ -3,7 +3,6 @@ package com.habitame.api.property.dto;
 import com.habitame.api.amenities.dto.AmenityResponse;
 import com.habitame.api.city.dto.CityResponse;
 import com.habitame.api.propertyImage.dto.PropertyImageResponse;
-import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.List;

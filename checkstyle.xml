@@ -7,6 +7,10 @@
     <property name="charset" value="UTF-8"/>
     <property name="severity" value="error"/>
 
+    <module name="SuppressionFilter">
+        <property name="file" value="checkstyle-suppressions.xml"/>
+    </module>
+
     <!-- Sin imports con wildcard -->
     <module name="TreeWalker">
 
@@ -22,7 +26,7 @@
         <module name="MemberName"/>
         <module name="ConstantName"/>
         <module name="PackageName">
-            <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>
+            <property name="format" value="^[a-z]+(\.([a-z]|[a-zA-Z][a-zA-Z0-9]*))*$"/>
         </module>
 
         <!-- Buenas prácticas -->

@@ -1,7 +1,5 @@
 package com.habitame.api.room.dto;
 
-import lombok.Data;
-
 import java.math.BigDecimal;
 
 public record RoomPublicResponse (

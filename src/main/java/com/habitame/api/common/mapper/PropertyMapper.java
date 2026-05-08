@@ -1,7 +1,14 @@
 package com.habitame.api.common.mapper;
 
 import com.habitame.api.city.entity.CityEntity;
-import com.habitame.api.property.dto.*;
+import com.habitame.api.property.dto.PropertyAdminDetailResponse;
+import com.habitame.api.property.dto.PropertyAdminRequest;
+import com.habitame.api.property.dto.PropertyAdminResponse;
+import com.habitame.api.property.dto.PropertyOwnerDetailResponse;
+import com.habitame.api.property.dto.PropertyOwnerRequest;
+import com.habitame.api.property.dto.PropertyOwnerResponse;
+import com.habitame.api.property.dto.PropertyPublicDetailResponse;
+import com.habitame.api.property.dto.PropertyPublicResponse;
 import com.habitame.api.property.entity.PropertyEntity;
 import com.habitame.api.propertyImage.entity.PropertyImageEntity;
 import com.habitame.api.user.entity.UserEntity;

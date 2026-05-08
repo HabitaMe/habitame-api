@@ -1,7 +1,14 @@
 package com.habitame.api.common.mapper;
 
 import com.habitame.api.property.entity.PropertyEntity;
-import com.habitame.api.room.dto.*;
+import com.habitame.api.room.dto.RoomAdminDetailResponse;
+import com.habitame.api.room.dto.RoomAdminRequest;
+import com.habitame.api.room.dto.RoomAdminResponse;
+import com.habitame.api.room.dto.RoomOwnerDetailResponse;
+import com.habitame.api.room.dto.RoomOwnerRequest;
+import com.habitame.api.room.dto.RoomOwnerResponse;
+import com.habitame.api.room.dto.RoomPublicDetailResponse;
+import com.habitame.api.room.dto.RoomPublicResponse;
 import com.habitame.api.room.entity.RoomEntity;
 import com.habitame.api.roomImage.entity.RoomImageEntity;
 
