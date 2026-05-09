@@ -1,11 +1,21 @@
 package com.habitame.api.property.service;
 
+import com.habitame.api.amenities.entity.AmenityEntity;
+import com.habitame.api.amenities.entity.AmenityScope;
 import com.habitame.api.amenities.service.AmenityService;
 import com.habitame.api.auth.security.SecurityUtils;
 import com.habitame.api.city.entity.CityEntity;
 import com.habitame.api.city.service.CityService;
 import com.habitame.api.common.exception.ResourceNotFoundException;
+import com.habitame.api.common.wrapper.PageResponse;
+import com.habitame.api.property.dto.PropertyAdminDetailResponse;
+import com.habitame.api.property.dto.PropertyAdminRequest;
+import com.habitame.api.property.dto.PropertyAdminResponse;
+import com.habitame.api.property.dto.PropertyOwnerDetailResponse;
 import com.habitame.api.property.dto.PropertyOwnerRequest;
+import com.habitame.api.property.dto.PropertyOwnerResponse;
+import com.habitame.api.property.dto.PropertyPublicDetailResponse;
+import com.habitame.api.property.dto.PropertyPublicResponse;
 import com.habitame.api.property.entity.PropertyEntity;
 import com.habitame.api.property.entity.PropertyStatus;
 import com.habitame.api.property.repository.PropertyRepository;
@@ -24,9 +34,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -195,7 +209,247 @@ class PropertyServiceTest {
         assertThat(property.getStatus()).isEqualTo(PropertyStatus.INACTIVE);
     }
 
+    // ------------------- findPublicProperties -------------------
+
+    @Test
+    void findPublicProperties_ShouldReturnMappedPage() {
+        PropertyEntity property = buildProperty("Piso", "Desc", "Calle");
+        property.setStatus(PropertyStatus.ACTIVE);
+        when(propertyRepository.findAllByStatus(PropertyStatus.ACTIVE, PageRequest.of(0, 10)))
+                .thenReturn(new PageImpl<>(List.of(property)));
+
+        PageResponse<PropertyPublicResponse> result = propertyService.findPublicProperties(PageRequest.of(0, 10));
+
+        assertThat(result.content()).hasSize(1);
+    }
+
+    // ------------------- findPublicPropertyById -------------------
+
+    @Test
+    void findPublicPropertyById_WhenFound_ShouldReturn() {
+        PropertyEntity property = buildProperty("Piso", "Desc", "Calle");
+        when(propertyRepository.findByIdAndStatus(1, PropertyStatus.ACTIVE)).thenReturn(Optional.of(property));
+
+        PropertyPublicDetailResponse result = propertyService.findPublicPropertyById(1);
+
+        assertThat(result.id()).isEqualTo(1);
+    }
+
+    @Test
+    void findPublicPropertyById_WhenNotFound_ShouldThrow() {
+        when(propertyRepository.findByIdAndStatus(99, PropertyStatus.ACTIVE)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> propertyService.findPublicPropertyById(99))
+                .isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    // ------------------- findAllByOwner -------------------
+
+    @Test
+    void findAllByOwner_ShouldReturnPage() {
+        PropertyEntity property = buildProperty("Piso", "Desc", "Calle");
+        when(propertyRepository.findAllByOwnerId(1, PageRequest.of(0, 10)))
+                .thenReturn(new PageImpl<>(List.of(property)));
+
+        PageResponse<PropertyOwnerResponse> result = propertyService.findAllByOwner(PageRequest.of(0, 10));
+
+        assertThat(result.content()).hasSize(1);
+    }
+
+    // ------------------- findMyPropertyById -------------------
+
+    @Test
+    void findMyPropertyById_WhenFound_ShouldReturn() {
+        PropertyEntity property = buildProperty("Piso", "Desc", "Calle");
+        when(propertyRepository.findByIdAndOwnerId(1, 1)).thenReturn(Optional.of(property));
+
+        PropertyOwnerDetailResponse result = propertyService.findMyPropertyById(1);
+
+        assertThat(result.id()).isEqualTo(1);
+    }
+
+    @Test
+    void findMyPropertyById_WhenNotFound_ShouldThrow() {
+        when(propertyRepository.findByIdAndOwnerId(1, 99)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> propertyService.findMyPropertyById(99))
+                .isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    // ------------------- addOwnerProperty -------------------
+
+    @Test
+    void addOwnerProperty_ShouldSaveAndTriggerReview() {
+        PropertyOwnerRequest request = buildRequest("Piso nuevo", "Desc", "Calle Nueva");
+
+        when(cityService.findEntityById(10)).thenReturn(city);
+        when(propertyRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        PropertyOwnerResponse result = propertyService.addOwnerProperty(request);
+
+        assertThat(result).isNotNull();
+        verify(propertyReviewService).addReview(any());
+    }
+
+    // ------------------- findAll (admin) -------------------
+
+    @Test
+    void findAll_ShouldReturnAllProperties() {
+        PropertyEntity property = buildProperty("Piso", "Desc", "Calle");
+        when(propertyRepository.findAll(PageRequest.of(0, 10)))
+                .thenReturn(new PageImpl<>(List.of(property)));
+
+        PageResponse<PropertyAdminResponse> result = propertyService.findAll(PageRequest.of(0, 10));
+
+        assertThat(result.content()).hasSize(1);
+    }
+
+    // ------------------- findById (admin) -------------------
+
+    @Test
+    void findById_WhenFound_ShouldReturnAdminDetail() {
+        PropertyEntity property = buildPropertyWithTimestamps("Piso", "Desc", "Calle");
+        when(propertyRepository.findById(1)).thenReturn(Optional.of(property));
+
+        PropertyAdminDetailResponse result = propertyService.findById(1);
+
+        assertThat(result.id()).isEqualTo(1);
+    }
+
+    @Test
+    void findById_WhenNotFound_ShouldThrow() {
+        when(propertyRepository.findById(99)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> propertyService.findById(99))
+                .isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    // ------------------- saveAdminProperty -------------------
+
+    @Test
+    void saveAdminProperty_ShouldSaveAndReturn() {
+        PropertyAdminRequest request = new PropertyAdminRequest(
+                "Piso", "Desc", "apartamento", "Calle", 10, 1, BigDecimal.valueOf(60), 2, false, 1
+        );
+        PropertyEntity saved = buildProperty("Piso", "Desc", "Calle");
+
+        when(userService.findById(1)).thenReturn(owner);
+        when(cityService.findEntityById(10)).thenReturn(city);
+        when(propertyRepository.save(any())).thenReturn(saved);
+
+        PropertyAdminResponse result = propertyService.saveAdminProperty(request);
+
+        assertThat(result.id()).isEqualTo(1);
+    }
+
+    // ------------------- updateAdminProperty -------------------
+
+    @Test
+    void updateAdminProperty_WhenFound_ShouldUpdate() {
+        PropertyAdminRequest request = new PropertyAdminRequest(
+                "Piso", "Desc", "apartamento", "Calle", 10, 1, BigDecimal.valueOf(60), 2, false, 1
+        );
+        PropertyEntity property = buildPropertyWithTimestamps("Piso", "Desc", "Calle");
+
+        when(propertyRepository.findById(1)).thenReturn(Optional.of(property));
+        when(userService.findById(1)).thenReturn(owner);
+        when(cityService.findEntityById(10)).thenReturn(city);
+        when(propertyRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        PropertyAdminDetailResponse result = propertyService.updateAdminProperty(1, request);
+
+        assertThat(result.id()).isEqualTo(1);
+    }
+
+    @Test
+    void updateAdminProperty_WhenNotFound_ShouldThrow() {
+        PropertyAdminRequest request = new PropertyAdminRequest(
+                "Piso", "Desc", "apartamento", "Calle", 10, 1, BigDecimal.valueOf(60), 2, false, 1
+        );
+        when(propertyRepository.findById(99)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> propertyService.updateAdminProperty(99, request))
+                .isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    // ------------------- deleteProperty -------------------
+
+    @Test
+    void deleteProperty_ShouldDeleteProperty() {
+        PropertyEntity property = buildProperty("Piso", "Desc", "Calle");
+        when(propertyRepository.findById(1)).thenReturn(Optional.of(property));
+
+        propertyService.deleteProperty(1);
+
+        verify(propertySecurityService).checkPropertyAccess(property);
+        verify(propertyRepository).delete(property);
+    }
+
+    @Test
+    void deleteProperty_WhenNotFound_ShouldThrow() {
+        when(propertyRepository.findById(99)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> propertyService.deleteProperty(99))
+                .isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    // ------------------- addAmenities -------------------
+
+    @Test
+    void addAmenities_ShouldAddToPropertyAndReturn() {
+        PropertyEntity property = buildProperty("Piso", "Desc", "Calle");
+        AmenityEntity amenity = AmenityEntity.builder()
+                .id(1).name("WiFi").description("desc").scope(AmenityScope.PROPERTY).build();
+
+        when(propertyRepository.findById(1)).thenReturn(Optional.of(property));
+        when(amenityService.findAmenityById(1)).thenReturn(amenity);
+        when(propertyRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        propertyService.addAmenities(1, List.of(1));
+
+        assertThat(property.getPropertyAmenities()).contains(amenity);
+    }
+
+    // ------------------- removeAmenities -------------------
+
+    @Test
+    void removeAmenities_ShouldRemoveFromProperty() {
+        AmenityEntity amenity = AmenityEntity.builder()
+                .id(1).name("WiFi").description("desc").scope(AmenityScope.PROPERTY).build();
+        PropertyEntity property = buildProperty("Piso", "Desc", "Calle");
+        property.getPropertyAmenities().add(amenity);
+
+        when(propertyRepository.findById(1)).thenReturn(Optional.of(property));
+        when(amenityService.findAmenityById(1)).thenReturn(amenity);
+
+        propertyService.removeAmenities(1, List.of(1));
+
+        assertThat(property.getPropertyAmenities()).doesNotContain(amenity);
+    }
+
     // ------------------- helpers -------------------
+
+    private PropertyEntity buildPropertyWithTimestamps(String title, String description, String address) {
+        return PropertyEntity.builder()
+                .id(1)
+                .title(title)
+                .description(description)
+                .address(address)
+                .type("apartamento")
+                .floor(1)
+                .areaM2(BigDecimal.valueOf(60))
+                .bathroomsTotal(1)
+                .ownerInHouse(false)
+                .status(PropertyStatus.IN_REVIEW)
+                .owner(owner)
+                .cityEntity(city)
+                .createdAt(LocalDateTime.now())
+                .images(new ArrayList<>())
+                .propertyAmenities(new ArrayList<>())
+                .reviews(new ArrayList<>())
+                .rooms(new ArrayList<>())
+                .build();
+    }
 
     private PropertyEntity buildProperty(String title, String description, String address) {
         return PropertyEntity.builder()

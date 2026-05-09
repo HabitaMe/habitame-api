@@ -1,12 +1,15 @@
 package com.habitame.api.propertyReview.service;
 
 import com.habitame.api.auth.security.SecurityUtils;
+import com.habitame.api.city.entity.CityEntity;
 import com.habitame.api.common.exception.IllegalArgument;
 import com.habitame.api.common.exception.ResourceNotFoundException;
+import com.habitame.api.common.wrapper.PageResponse;
 import com.habitame.api.property.entity.PropertyEntity;
 import com.habitame.api.property.entity.PropertyStatus;
 import com.habitame.api.property.service.PropertySecurityService;
 import com.habitame.api.propertyReview.dto.PropertyReviewDecisionRequest;
+import com.habitame.api.propertyReview.dto.PropertyReviewDetailResponse;
 import com.habitame.api.propertyReview.dto.PropertyReviewResponse;
 import com.habitame.api.propertyReview.entity.PropertyReviewEntity;
 import com.habitame.api.propertyReview.entity.PropertyReviewStatus;
@@ -21,8 +24,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -128,6 +135,101 @@ class PropertyReviewServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
+    // ------------------- getReviews -------------------
+
+    @Test
+    void getReviews_ShouldReturnMappedPage() {
+        PropertyReviewEntity review = buildPendingReview();
+        when(propertyReviewRepository.findAll(PageRequest.of(0, 10)))
+                .thenReturn(new PageImpl<>(List.of(review)));
+
+        PageResponse<PropertyReviewResponse> result = propertyReviewService.getReviews(PageRequest.of(0, 10));
+
+        assertThat(result.content()).hasSize(1);
+    }
+
+    // ------------------- findById -------------------
+
+    @Test
+    void findById_WhenFound_ShouldReturnDetail() {
+        PropertyReviewEntity review = buildPendingReviewWithCity();
+        when(propertyReviewRepository.findById(1)).thenReturn(Optional.of(review));
+
+        PropertyReviewDetailResponse result = propertyReviewService.findById(1);
+
+        assertThat(result.id()).isEqualTo(1);
+    }
+
+    @Test
+    void findById_WhenNotFound_ShouldThrow() {
+        when(propertyReviewRepository.findById(99)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> propertyReviewService.findById(99))
+                .isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    // ------------------- getReviewsByStatus -------------------
+
+    @Test
+    void getReviewsByStatus_ShouldReturnFilteredPage() {
+        PropertyReviewEntity review = buildPendingReview();
+        when(propertyReviewRepository.findAllByStatus(PropertyReviewStatus.PENDING, PageRequest.of(0, 10)))
+                .thenReturn(new PageImpl<>(List.of(review)));
+
+        PageResponse<PropertyReviewResponse> result = propertyReviewService.getReviewsByStatus(
+                PropertyReviewStatus.PENDING, PageRequest.of(0, 10)
+        );
+
+        assertThat(result.content()).hasSize(1);
+    }
+
+    // ------------------- findAllByPropertyId -------------------
+
+    @Test
+    void findAllByPropertyId_ShouldReturnList() {
+        PropertyReviewEntity review = buildPendingReview();
+        when(propertyReviewRepository.findAllByPropertyId(1)).thenReturn(List.of(review));
+
+        List<PropertyReviewResponse> result = propertyReviewService.findAllByPropertyId(1);
+
+        assertThat(result).hasSize(1);
+    }
+
+    // ------------------- findLatestRejectedReview -------------------
+
+    @Test
+    void findLatestRejectedReview_WhenRejectedExists_ShouldReturnIt() {
+        PropertyReviewEntity review = buildPendingReviewWithCity();
+        review.setStatus(PropertyReviewStatus.REJECTED);
+        review.setComment("Fotos insuficientes");
+
+        when(propertyReviewRepository.findLatestByPropertyId(1)).thenReturn(Optional.of(review));
+
+        Optional<PropertyReviewDetailResponse> result = propertyReviewService.findLatestRejectedReview(1);
+
+        assertThat(result).isPresent();
+    }
+
+    @Test
+    void findLatestRejectedReview_WhenPending_ShouldReturnEmpty() {
+        PropertyReviewEntity review = buildPendingReview();
+
+        when(propertyReviewRepository.findLatestByPropertyId(1)).thenReturn(Optional.of(review));
+
+        Optional<PropertyReviewDetailResponse> result = propertyReviewService.findLatestRejectedReview(1);
+
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    void findLatestRejectedReview_WhenNone_ShouldReturnEmpty() {
+        when(propertyReviewRepository.findLatestByPropertyId(1)).thenReturn(Optional.empty());
+
+        Optional<PropertyReviewDetailResponse> result = propertyReviewService.findLatestRejectedReview(1);
+
+        assertThat(result).isEmpty();
+    }
+
     // ------------------- addReview -------------------
 
     @Test
@@ -155,6 +257,27 @@ class PropertyReviewServiceTest {
         PropertyEntity property = PropertyEntity.builder()
                 .id(1).title("Piso").description("Desc").address("Calle")
                 .status(PropertyStatus.IN_REVIEW)
+                .images(new ArrayList<>()).propertyAmenities(new ArrayList<>())
+                .reviews(new ArrayList<>()).rooms(new ArrayList<>())
+                .build();
+
+        PropertyReviewEntity review = new PropertyReviewEntity();
+        review.setId(1);
+        review.setStatus(PropertyReviewStatus.PENDING);
+        review.setProperty(property);
+        return review;
+    }
+
+    private PropertyReviewEntity buildPendingReviewWithCity() {
+        CityEntity city = new CityEntity();
+        city.setId(10);
+        city.setName("Madrid");
+
+        PropertyEntity property = PropertyEntity.builder()
+                .id(1).title("Piso").description("Desc").address("Calle")
+                .areaM2(BigDecimal.valueOf(60)).bathroomsTotal(1).floor(1)
+                .status(PropertyStatus.IN_REVIEW)
+                .cityEntity(city)
                 .images(new ArrayList<>()).propertyAmenities(new ArrayList<>())
                 .reviews(new ArrayList<>()).rooms(new ArrayList<>())
                 .build();
