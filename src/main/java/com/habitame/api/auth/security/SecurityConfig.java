@@ -32,11 +32,10 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/properties/**").permitAll()
+                        .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers(HttpMethod.GET,
                                 "/api/cities/**",
                                 "/api/countries/**",
-                                "/api/provinces/**",
                                 "/api/amenities/**").permitAll()
                         .anyRequest().authenticated()
                 )
