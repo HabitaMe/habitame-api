@@ -92,7 +92,6 @@ class PropertyImageServiceTest {
         PropertyImageRequest request = new PropertyImageRequest(file, false);
 
         when(propertyService.findEntityById(1)).thenReturn(property);
-        when(propertyImageRepository.countMainImages(1)).thenReturn(0);
 
         assertThatThrownBy(() -> propertyImageService.upload(1, request))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -106,7 +105,6 @@ class PropertyImageServiceTest {
         PropertyImageRequest request = new PropertyImageRequest(file, false);
 
         when(propertyService.findEntityById(1)).thenReturn(property);
-        when(propertyImageRepository.countMainImages(1)).thenReturn(1);
 
         assertThatThrownBy(() -> propertyImageService.upload(1, request))
                 .isInstanceOf(IllegalArgumentException.class)
