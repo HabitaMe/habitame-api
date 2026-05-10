@@ -118,7 +118,7 @@ class AdminPropertyControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(buildValidRequest())))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "api/admin/properties/42"));
+                .andExpect(header().string("Location", "v1/admin/properties/42"));
     }
 
     // ------------------- DELETE /v1/admin/properties/{id} -------------------

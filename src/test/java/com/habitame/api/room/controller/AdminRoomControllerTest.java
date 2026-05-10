@@ -118,7 +118,7 @@ class AdminRoomControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(buildValidRequest())))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "api/admin/rooms/7"));
+                .andExpect(header().string("Location", "v1/admin/rooms/7"));
     }
 
     // ------------------- DELETE /v1/admin/rooms/{id} -------------------

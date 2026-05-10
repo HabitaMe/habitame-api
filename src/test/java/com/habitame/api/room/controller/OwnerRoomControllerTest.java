@@ -106,7 +106,7 @@ class OwnerRoomControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(buildValidRequest())))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "api/owner/rooms/5"));
+                .andExpect(header().string("Location", "v1/owner/rooms/5"));
     }
 
     // ------------------- DELETE /v1/owner/rooms/{id} -------------------

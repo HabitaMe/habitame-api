@@ -105,7 +105,7 @@ class AmenityControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "api/amenities/10"));
+                .andExpect(header().string("Location", "v1/amenities/10"));
     }
 
     @Test

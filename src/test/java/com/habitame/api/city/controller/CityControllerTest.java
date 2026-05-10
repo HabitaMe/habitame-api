@@ -90,7 +90,7 @@ class CityControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CityRequest("Sevilla", 1))))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "api/cities/5"));
+                .andExpect(header().string("Location", "v1/cities/5"));
     }
 
     @Test

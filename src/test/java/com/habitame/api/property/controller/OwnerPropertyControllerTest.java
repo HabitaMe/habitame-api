@@ -141,7 +141,7 @@ class OwnerPropertyControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "api/owner/properties/42"));
+                .andExpect(header().string("Location", "v1/owner/properties/42"));
     }
 
     // ------------------- DELETE /v1/owner/properties/{id} -------------------

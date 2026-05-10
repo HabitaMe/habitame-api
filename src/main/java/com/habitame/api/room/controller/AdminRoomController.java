@@ -51,7 +51,7 @@ public class AdminRoomController extends AbstractRoomController {
     @PostMapping
     public ResponseEntity<Void> saveRoom(@RequestBody @Valid RoomAdminRequest request) {
         RoomAdminResponse response = roomService.saveAdminRoom(request);
-        URI location = URI.create("api/admin/rooms/" + response.id());
+        URI location = URI.create("v1/admin/rooms/" + response.id());
         return ResponseEntity.created(location).build();
     }
 

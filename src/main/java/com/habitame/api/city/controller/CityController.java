@@ -43,7 +43,7 @@ public class CityController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> saveCity(@Valid @RequestBody CityRequest request) {
         CityResponse cityResponse = cityService.saveCity(request);
-        URI location = URI.create("api/cities/" + cityResponse.id());
+        URI location = URI.create("v1/cities/" + cityResponse.id());
         return ResponseEntity.created(location).build();
     }
 

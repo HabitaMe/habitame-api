@@ -3,6 +3,7 @@ package com.habitame.api.property.controller;
 import com.habitame.api.auth.security.JwtProvider;
 import com.habitame.api.common.exception.ResourceNotFoundException;
 import com.habitame.api.common.wrapper.PageResponse;
+import com.habitame.api.property.dto.PropertyFilter;
 import com.habitame.api.property.dto.PropertyPublicDetailResponse;
 import com.habitame.api.property.dto.PropertyPublicResponse;
 import com.habitame.api.property.service.PropertyService;
@@ -42,7 +43,7 @@ class PublicPropertyControllerTest {
     @Test
     void getPropertyList_ShouldReturnPageWithoutAuth() throws Exception {
         PageResponse<PropertyPublicResponse> page = new PageResponse<>(List.of(), 0, 10, 0, 0);
-        when(propertyService.findPublicProperties(any(Pageable.class))).thenReturn(page);
+        when(propertyService.findPublicProperties(any(PropertyFilter.class), any(Pageable.class))).thenReturn(page);
 
         mockMvc.perform(get("/v1/public/properties"))
                 .andExpect(status().isOk())

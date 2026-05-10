@@ -54,7 +54,7 @@ public class AdminPropertyController extends AbstractPropertyController {
     @PostMapping
     public ResponseEntity<Void> saveProperty(@RequestBody @Valid PropertyAdminRequest request) {
         PropertyAdminResponse response = propertyService.saveAdminProperty(request);
-        URI location = URI.create("api/admin/properties/" + response.id());
+        URI location = URI.create("v1/admin/properties/" + response.id());
         return ResponseEntity.created(location).build();
     }
 
