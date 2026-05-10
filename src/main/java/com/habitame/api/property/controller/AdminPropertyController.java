@@ -9,6 +9,9 @@ import com.habitame.api.propertyImage.service.PropertyImageService;
 import com.habitame.api.propertyReview.dto.PropertyReviewDecisionRequest;
 import com.habitame.api.propertyReview.dto.PropertyReviewResponse;
 import com.habitame.api.propertyReview.service.PropertyReviewService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -31,6 +34,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/v1/admin/properties")
 @PreAuthorize("hasRole('ADMIN')")
+@Tag(name = "Propiedades (Admin)", description = "Gestión completa de propiedades. Incluye aprobar o rechazar las revisiones pendientes. Solo accesible para ADMIN.")
+@SecurityRequirement(name = "bearerAuth")
 public class AdminPropertyController extends AbstractPropertyController {
 
     private final PropertyReviewService propertyReviewService;
@@ -42,16 +47,19 @@ public class AdminPropertyController extends AbstractPropertyController {
     }
 
     @GetMapping
+    @Operation(summary = "Listar todas las propiedades", description = "Devuelve todas las propiedades del sistema sin filtros de estado ni de owner.")
     public ResponseEntity<PageResponse<PropertyAdminResponse>> findAll(Pageable pageable) {
         return ResponseEntity.ok(propertyService.findAll(pageable));
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Ver detalle de una propiedad", description = "Devuelve el detalle completo de cualquier propiedad, independientemente de su estado u owner.")
     public ResponseEntity<PropertyAdminDetailResponse> findById(@PathVariable Integer id) {
         return ResponseEntity.ok(propertyService.findById(id));
     }
 
     @PostMapping
+    @Operation(summary = "Crear propiedad", description = "Crea una propiedad asignándola a un owner existente. El admin puede establecer el estado directamente.")
     public ResponseEntity<Void> saveProperty(@RequestBody @Valid PropertyAdminRequest request) {
         PropertyAdminResponse response = propertyService.saveAdminProperty(request);
         URI location = URI.create("v1/admin/properties/" + response.id());
@@ -59,6 +67,7 @@ public class AdminPropertyController extends AbstractPropertyController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Actualizar propiedad", description = "Modifica cualquier campo de una propiedad, incluido el owner o la ciudad. No genera revisión automática.")
     public ResponseEntity<PropertyAdminDetailResponse> updateAdminProperty(
             @PathVariable Integer id,
             @RequestBody @Valid PropertyAdminRequest request) {
@@ -67,16 +76,22 @@ public class AdminPropertyController extends AbstractPropertyController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Eliminar propiedad")
     public void deleteAdminProperty(@PathVariable Integer id) {
         propertyService.deleteProperty(id);
     }
 
     @GetMapping("/{id}/reviews")
+    @Operation(summary = "Ver historial de revisiones de una propiedad", description = "Devuelve todas las revisiones de la propiedad, ordenadas de más reciente a más antigua.")
     public ResponseEntity<List<PropertyReviewResponse>> findReviews(@PathVariable Integer id) {
         return ResponseEntity.ok(propertyReviewService.findAllByPropertyId(id));
     }
 
     @PatchMapping("/{id}/reviews/resolve")
+    @Operation(
+            summary = "Aprobar o rechazar una propiedad",
+            description = "Resuelve la revisión pendiente de la propiedad. Si se aprueba, pasa a ACTIVE. Si se rechaza, pasa a INACTIVE y el comentario es obligatorio para que el arrendador sepa qué corregir."
+    )
     public ResponseEntity<PropertyReviewResponse> resolveReview(@PathVariable Integer id, @RequestBody @Valid PropertyReviewDecisionRequest request) {
         return ResponseEntity.ok(propertyService.resolveReview(id, request));
     }

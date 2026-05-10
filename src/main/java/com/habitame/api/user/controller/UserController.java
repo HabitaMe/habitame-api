@@ -6,6 +6,9 @@ import com.habitame.api.user.dto.UserRequest;
 import com.habitame.api.user.dto.UserResponse;
 import com.habitame.api.user.entity.UserEntity;
 import com.habitame.api.user.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,11 +28,14 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/v1/users")
 @RequiredArgsConstructor
+@Tag(name = "Mi perfil", description = "Consulta y edición de los datos del usuario autenticado")
+@SecurityRequirement(name = "bearerAuth")
 public class UserController {
 
     private final UserService userService;
 
     @GetMapping("/me")
+    @Operation(summary = "Obtener mi perfil", description = "Devuelve los datos del usuario autenticado a partir del token JWT.")
     public UserResponse getCurrentUser(Authentication authentication) {
 
         if (authentication == null || !(authentication.getPrincipal() instanceof UserEntity userEntity)) {
@@ -40,16 +46,19 @@ public class UserController {
     }
 
     @PostMapping("{id}/photo")
+    @Operation(summary = "Subir foto de perfil", description = "Sube una imagen y la asigna como foto de perfil del usuario indicado.")
     public ResponseEntity<UserResponse> addPhoto(@PathVariable Integer id, @Valid MultipartFile file) throws IOException {
         return ResponseEntity.ok(userService.addPhoto(id, file));
     }
 
     @PutMapping()
+    @Operation(summary = "Actualizar mi perfil", description = "Actualiza el nombre y el teléfono del usuario autenticado.")
     public ResponseEntity<UserResponse> updateMe(@RequestBody @Valid UserRequest request) throws IOException {
         return ResponseEntity.ok(userService.updateUser(request));
     }
 
     @DeleteMapping("{id}/photo")
+    @Operation(summary = "Eliminar foto de perfil", description = "Borra la foto de perfil del usuario indicado.")
     public ResponseEntity<UserResponse> deletePhoto(@PathVariable Integer id) throws IOException {
         return ResponseEntity.ok(userService.removePhoto(id));
     }
