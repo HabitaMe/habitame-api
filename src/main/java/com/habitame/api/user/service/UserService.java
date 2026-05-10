@@ -4,13 +4,18 @@ import com.habitame.api.auth.security.SecurityUtils;
 import com.habitame.api.common.exception.ResourceNotFoundException;
 import com.habitame.api.common.exception.UnauthorizedException;
 import com.habitame.api.common.mapper.UserMapper;
+import com.habitame.api.common.wrapper.PageResponse;
 import com.habitame.api.media.service.ImageStorageService;
+import com.habitame.api.user.dto.UserFilter;
 import com.habitame.api.user.dto.UserRequest;
 import com.habitame.api.user.dto.UserResponse;
 import com.habitame.api.user.entity.UserEntity;
 import com.habitame.api.user.repository.UserRepository;
+import com.habitame.api.user.repository.UserSpecification;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +32,28 @@ public class UserService {
     public UserEntity findById(Integer id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + id));
+    }
+
+    public PageResponse<UserResponse> findAll(UserFilter filter, Pageable pageable) {
+        Page<UserEntity> page = userRepository.findAll(UserSpecification.filter(filter), pageable);
+        return new PageResponse<>(
+                page.map(UserMapper::toResponse).getContent(),
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages()
+        );
+    }
+
+    public UserResponse findUserById(Integer id) {
+        return UserMapper.toResponse(findById(id));
+    }
+
+    @Transactional
+    public UserResponse setActive(Integer id, boolean active) {
+        UserEntity user = findById(id);
+        user.setIsActive(active);
+        return UserMapper.toResponse(userRepository.save(user));
     }
 
     public UserResponse addPhoto(Integer userId, @Valid MultipartFile file) throws IOException {
