@@ -55,16 +55,16 @@ public class ProvinceController {
         return ResponseEntity.created(location).build();
     }
 
-    @PutMapping("/{provinceId}")
+    @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ProvinceResponse> updateProvince(@PathVariable Integer provinceId, @Valid @RequestBody ProvinceRequest request) {
-        return ResponseEntity.ok(provinceService.updateProvince(provinceId, request));
+    public ResponseEntity<ProvinceResponse> updateProvince(@PathVariable Integer id, @Valid @RequestBody ProvinceRequest request) {
+        return ResponseEntity.ok(provinceService.updateProvince(id, request));
     }
 
-    @DeleteMapping("/{provinceId}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteProvince(@PathVariable Integer provinceId) {
-        provinceService.deleteProvince(provinceId);
+    public void deleteProvince(@PathVariable Integer id) {
+        provinceService.deleteProvince(id);
     }
 }

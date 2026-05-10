@@ -37,14 +37,14 @@ public class CountryController {
         return ResponseEntity.ok(countryService.findAll(pageable));
     }
 
-    @GetMapping("/{countryId}")
-    public CountryResponse findById(@PathVariable Integer countryId) {
-        return countryService.findById(countryId);
+    @GetMapping("/{id}")
+    public CountryResponse findById(@PathVariable Integer id) {
+        return countryService.findById(id);
     }
 
-    @GetMapping("/{countryId}/provinces")
-    public ResponseEntity<PageResponse<ProvinceResponse>> findByCountryId(@PathVariable Integer countryId, Pageable pageable) {
-        return ResponseEntity.ok(provinceService.findByCountry(countryId, pageable));
+    @GetMapping("/{id}/provinces")
+    public ResponseEntity<PageResponse<ProvinceResponse>> findByCountryId(@PathVariable Integer id, Pageable pageable) {
+        return ResponseEntity.ok(provinceService.findByCountry(id, pageable));
     }
 
     @PostMapping
@@ -55,16 +55,16 @@ public class CountryController {
         return ResponseEntity.created(location).build();
     }
 
-    @PutMapping("/{countryId}")
+    @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CountryResponse> updateCountry(@PathVariable Integer countryId, @Valid @RequestBody CountryRequest request) {
-        return ResponseEntity.ok(countryService.updateCountry(countryId, request));
+    public ResponseEntity<CountryResponse> updateCountry(@PathVariable Integer id, @Valid @RequestBody CountryRequest request) {
+        return ResponseEntity.ok(countryService.updateCountry(id, request));
     }
 
-    @DeleteMapping("/{countryId}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCountry(@PathVariable Integer countryId) {
-        countryService.deleteCountry(countryId);
+    public void deleteCountry(@PathVariable Integer id) {
+        countryService.deleteCountry(id);
     }
 }

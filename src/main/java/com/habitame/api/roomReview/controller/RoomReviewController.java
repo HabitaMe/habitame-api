@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/room-reviews")
+@RequestMapping("/api/admin/room-reviews")
 @PreAuthorize("hasRole('ADMIN')")
 @RequiredArgsConstructor
 public class RoomReviewController {

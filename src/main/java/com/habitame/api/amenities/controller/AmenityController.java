@@ -48,15 +48,15 @@ public class AmenityController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/{amenityId}")
-    public ResponseEntity<AmenityResponse> updateAmenity(@PathVariable Integer amenityId, @RequestBody @Valid AmenityRequest request) {
-        return ResponseEntity.ok(amenityService.updateAmenity(amenityId, request));
+    @PutMapping("/{id}")
+    public ResponseEntity<AmenityResponse> updateAmenity(@PathVariable Integer id, @RequestBody @Valid AmenityRequest request) {
+        return ResponseEntity.ok(amenityService.updateAmenity(id, request));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{amenityId}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteAmenity(@PathVariable Integer amenityId) {
-        amenityService.deleteAmenity(amenityId);
+    public void deleteAmenity(@PathVariable Integer id) {
+        amenityService.deleteAmenity(id);
     }
 }

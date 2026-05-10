@@ -40,9 +40,9 @@ public class OwnerRoomController extends AbstractRoomController {
         return ResponseEntity.ok(roomService.findAllByOwner(pageable));
     }
 
-    @GetMapping("/{idRoom}")
-    public ResponseEntity<RoomOwnerDetailResponse> findMyRoomById(@PathVariable Integer idRoom) {
-        return ResponseEntity.ok(roomService.findMyRoomById(idRoom));
+    @GetMapping("/{id}")
+    public ResponseEntity<RoomOwnerDetailResponse> findMyRoomById(@PathVariable Integer id) {
+        return ResponseEntity.ok(roomService.findMyRoomById(id));
     }
 
     @PostMapping
@@ -52,22 +52,22 @@ public class OwnerRoomController extends AbstractRoomController {
         return ResponseEntity.created(location).build();
     }
 
-    @PutMapping("/{idRoom}")
+    @PutMapping("/{id}")
     public ResponseEntity<RoomOwnerDetailResponse> updateOwnerRoom(
-            @PathVariable Integer idRoom,
+            @PathVariable Integer id,
             @RequestBody @Valid RoomOwnerRequest request) {
-        return ResponseEntity.ok(roomService.updateOwnerRoom(idRoom, request));
+        return ResponseEntity.ok(roomService.updateOwnerRoom(id, request));
     }
 
-    @DeleteMapping("/{idRoom}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteOwnerRoom(@PathVariable Integer idRoom) {
-        roomService.deleteRoom(idRoom);
+    public void deleteOwnerRoom(@PathVariable Integer id) {
+        roomService.deleteRoom(id);
     }
 
-    @GetMapping("/{idRoom}/reviews/latest")
-    public ResponseEntity<RoomReviewDetailResponse> findLatestRejectedReview(@PathVariable Integer idRoom) {
-        return roomReviewService.findLatestRejectedReview(idRoom)
+    @GetMapping("/{id}/reviews/latest")
+    public ResponseEntity<RoomReviewDetailResponse> findLatestRejectedReview(@PathVariable Integer id) {
+        return roomReviewService.findLatestRejectedReview(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.noContent().build());
     }

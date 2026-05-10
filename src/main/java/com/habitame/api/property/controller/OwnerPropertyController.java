@@ -43,9 +43,9 @@ public class OwnerPropertyController extends AbstractPropertyController {
         return ResponseEntity.ok(propertyService.findAllByOwner(pageable));
     }
 
-    @GetMapping("/{idProperty}")
-    public ResponseEntity<PropertyOwnerDetailResponse> findMyPropertyById(@PathVariable Integer idProperty) {
-        return ResponseEntity.ok(propertyService.findMyPropertyById(idProperty));
+    @GetMapping("/{id}")
+    public ResponseEntity<PropertyOwnerDetailResponse> findMyPropertyById(@PathVariable Integer id) {
+        return ResponseEntity.ok(propertyService.findMyPropertyById(id));
     }
 
     @PostMapping
@@ -55,22 +55,22 @@ public class OwnerPropertyController extends AbstractPropertyController {
         return ResponseEntity.created(location).build();
     }
 
-    @PutMapping("/{idProperty}")
+    @PutMapping("/{id}")
     public ResponseEntity<PropertyOwnerDetailResponse> updateOwnerProperty(
-            @PathVariable Integer idProperty,
+            @PathVariable Integer id,
             @RequestBody @Valid PropertyOwnerRequest request) {
-        return ResponseEntity.ok(propertyService.updateOwnerProperty(idProperty, request));
+        return ResponseEntity.ok(propertyService.updateOwnerProperty(id, request));
     }
 
-    @DeleteMapping("/{idProperty}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteOwnerProperty(@PathVariable Integer idProperty) {
-        propertyService.deleteProperty(idProperty);
+    public void deleteOwnerProperty(@PathVariable Integer id) {
+        propertyService.deleteProperty(id);
     }
 
-    @GetMapping("/{idProperty}/reviews/latest")
-    public ResponseEntity<PropertyReviewDetailResponse> findLatestRejectedReview(@PathVariable Integer idProperty) {
-        return propertyReviewService.findLatestRejectedReview(idProperty)
+    @GetMapping("/{id}/reviews/latest")
+    public ResponseEntity<PropertyReviewDetailResponse> findLatestRejectedReview(@PathVariable Integer id) {
+        return propertyReviewService.findLatestRejectedReview(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.noContent().build());
     }

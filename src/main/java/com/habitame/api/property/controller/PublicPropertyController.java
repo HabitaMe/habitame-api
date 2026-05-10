@@ -29,8 +29,8 @@ public class PublicPropertyController {
         return ResponseEntity.ok(propertyService.findPublicProperties(new PropertyFilter(cityId, type), pageable));
     }
 
-    @GetMapping("/{propertyId}")
-    public ResponseEntity<PropertyPublicDetailResponse> findById(@PathVariable Integer propertyId) {
-        return ResponseEntity.ok(propertyService.findPublicPropertyById(propertyId));
+    @GetMapping("/{id}")
+    public ResponseEntity<PropertyPublicDetailResponse> findById(@PathVariable Integer id) {
+        return ResponseEntity.ok(propertyService.findPublicPropertyById(id));
     }
 }

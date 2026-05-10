@@ -28,36 +28,36 @@ public abstract class AbstractRoomController {
     protected final RoomReviewService roomReviewService;
 
 
-    @GetMapping("/{idRoom}/images")
-    public ResponseEntity<List<RoomImageResponse>> findImages(@PathVariable Integer idRoom) {
-        return ResponseEntity.ok(roomImageService.findByRoomId(idRoom));
+    @GetMapping("/{roomId}/images")
+    public ResponseEntity<List<RoomImageResponse>> findImages(@PathVariable Integer roomId) {
+        return ResponseEntity.ok(roomImageService.findByRoomId(roomId));
     }
 
-    @PostMapping("/{idRoom}/images")
+    @PostMapping("/{roomId}/images")
     public ResponseEntity<RoomImageResponse> addImage(
-            @PathVariable Integer idRoom,
+            @PathVariable Integer roomId,
             @Valid RoomImageRequest request) throws IOException {
-        return ResponseEntity.ok(roomImageService.upload(idRoom, request));
+        return ResponseEntity.ok(roomImageService.upload(roomId, request));
     }
 
-    @DeleteMapping("/images/{idImage}")
+    @DeleteMapping("/images/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteImage(@PathVariable Integer idImage) throws IOException {
-        roomImageService.delete(idImage);
+    public void deleteImage(@PathVariable Integer id) throws IOException {
+        roomImageService.delete(id);
     }
 
-    @PostMapping("/{idRoom}/amenities")
+    @PostMapping("/{roomId}/amenities")
     public ResponseEntity<RoomOwnerResponse> addAmenities(
-            @PathVariable Integer idRoom,
+            @PathVariable Integer roomId,
             @RequestBody List<Integer> amenities) {
-        return ResponseEntity.ok(roomService.addAmenities(idRoom, amenities));
+        return ResponseEntity.ok(roomService.addAmenities(roomId, amenities));
     }
 
-    @DeleteMapping("/{idRoom}/amenities")
+    @DeleteMapping("/{roomId}/amenities")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeAmenities(
-            @PathVariable Integer idRoom,
+            @PathVariable Integer roomId,
             @RequestBody List<Integer> amenities) {
-        roomService.removeAmenities(idRoom, amenities);
+        roomService.removeAmenities(roomId, amenities);
     }
 }

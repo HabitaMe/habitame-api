@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 
 @RestController
-@RequestMapping("/api/rooms")
+@RequestMapping("/api/public/rooms")
 @RequiredArgsConstructor
 public class PublicRoomController {
     private final RoomService roomService;
@@ -33,19 +33,19 @@ public class PublicRoomController {
                 new RoomFilter(cityId, minPrice, maxPrice, minOccupants), pageable));
     }
 
-    @GetMapping("/{idRoom}")
-    public ResponseEntity<RoomPublicDetailResponse> findByIdPublicRoom(@PathVariable Integer idRoom) {
-        return ResponseEntity.ok(roomService.findByIdPublicRoom(idRoom));
+    @GetMapping("/{id}")
+    public ResponseEntity<RoomPublicDetailResponse> findByIdPublicRoom(@PathVariable Integer id) {
+        return ResponseEntity.ok(roomService.findByIdPublicRoom(id));
     }
 
-    @GetMapping("/property/{idProperty}")
+    @GetMapping("/property/{propertyId}")
     public ResponseEntity<PageResponse<RoomPublicResponse>> findByPropertyIdPublic(
-            @PathVariable Integer idProperty,
+            @PathVariable Integer propertyId,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) Integer minOccupants,
             Pageable pageable) {
         return ResponseEntity.ok(roomService.findByPropertyIdPublic(
-                idProperty, new RoomFilter(null, minPrice, maxPrice, minOccupants), pageable));
+                propertyId, new RoomFilter(null, minPrice, maxPrice, minOccupants), pageable));
     }
 }

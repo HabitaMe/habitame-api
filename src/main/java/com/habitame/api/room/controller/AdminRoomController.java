@@ -43,9 +43,9 @@ public class AdminRoomController extends AbstractRoomController {
         return ResponseEntity.ok(roomService.findAll(pageable));
     }
 
-    @GetMapping("/{idRoom}")
-    public ResponseEntity<RoomAdminDetailResponse> findById(@PathVariable Integer idRoom) {
-        return ResponseEntity.ok(roomService.findById(idRoom));
+    @GetMapping("/{id}")
+    public ResponseEntity<RoomAdminDetailResponse> findById(@PathVariable Integer id) {
+        return ResponseEntity.ok(roomService.findById(id));
     }
 
     @PostMapping
@@ -55,26 +55,26 @@ public class AdminRoomController extends AbstractRoomController {
         return ResponseEntity.created(location).build();
     }
 
-    @PutMapping("/{idRoom}")
+    @PutMapping("/{id}")
     public ResponseEntity<RoomAdminDetailResponse> updateAdminRoom(
-            @PathVariable Integer idRoom,
+            @PathVariable Integer id,
             @RequestBody @Valid RoomAdminRequest request) {
-        return ResponseEntity.ok(roomService.updateAdminRoom(idRoom, request));
+        return ResponseEntity.ok(roomService.updateAdminRoom(id, request));
     }
 
-    @DeleteMapping("/{idRoom}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteAdminRoom(@PathVariable Integer idRoom) {
-        roomService.deleteRoom(idRoom);
+    public void deleteAdminRoom(@PathVariable Integer id) {
+        roomService.deleteRoom(id);
     }
 
-    @GetMapping("/{idRoom}/reviews")
-    public ResponseEntity<List<RoomReviewResponse>> findReviews(@PathVariable Integer idRoom) {
-        return ResponseEntity.ok(roomReviewService.findAllByRoomId(idRoom));
+    @GetMapping("/{id}/reviews")
+    public ResponseEntity<List<RoomReviewResponse>> findReviews(@PathVariable Integer id) {
+        return ResponseEntity.ok(roomReviewService.findAllByRoomId(id));
     }
 
-    @PatchMapping("{idRoom}/reviews/resolve")
-    public ResponseEntity<RoomReviewResponse> resolveReview(@PathVariable Integer idRoom, @RequestBody @Valid RoomReviewDecisionRequest request) {
-        return ResponseEntity.ok(roomService.resolveReview(idRoom, request));
+    @PatchMapping("/{id}/reviews/resolve")
+    public ResponseEntity<RoomReviewResponse> resolveReview(@PathVariable Integer id, @RequestBody @Valid RoomReviewDecisionRequest request) {
+        return ResponseEntity.ok(roomService.resolveReview(id, request));
     }
 }

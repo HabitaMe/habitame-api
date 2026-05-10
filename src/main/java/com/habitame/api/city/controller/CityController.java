@@ -34,9 +34,9 @@ public class CityController {
         return ResponseEntity.ok(cityService.findAll(pageable));
     }
 
-    @GetMapping("/{cityId}")
-    public ResponseEntity<CityResponse> findById(@PathVariable Integer cityId) {
-        return ResponseEntity.ok(cityService.findById(cityId));
+    @GetMapping("/{id}")
+    public ResponseEntity<CityResponse> findById(@PathVariable Integer id) {
+        return ResponseEntity.ok(cityService.findById(id));
     }
 
     @PostMapping
@@ -47,16 +47,16 @@ public class CityController {
         return ResponseEntity.created(location).build();
     }
 
-    @PutMapping("/{cityId}")
+    @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CityResponse> updateCity(@PathVariable Integer cityId, @Valid @RequestBody CityRequest request) {
-        return ResponseEntity.ok(cityService.updateCity(cityId, request));
+    public ResponseEntity<CityResponse> updateCity(@PathVariable Integer id, @Valid @RequestBody CityRequest request) {
+        return ResponseEntity.ok(cityService.updateCity(id, request));
     }
 
-    @DeleteMapping("/{cityId}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCity(@PathVariable Integer cityId) {
-        cityService.deleteCity(cityId);
+    public void deleteCity(@PathVariable Integer id) {
+        cityService.deleteCity(id);
     }
 }

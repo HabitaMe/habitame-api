@@ -25,36 +25,36 @@ public abstract class AbstractPropertyController {
     protected final PropertyImageService propertyImageService;
     protected final PropertyService propertyService;
 
-    @GetMapping("/{idProperty}/images")
-    public ResponseEntity<List<PropertyImageResponse>> findImages(@PathVariable Integer idProperty) {
-        return ResponseEntity.ok(propertyImageService.findByPropertyId(idProperty));
+    @GetMapping("/{propertyId}/images")
+    public ResponseEntity<List<PropertyImageResponse>> findImages(@PathVariable Integer propertyId) {
+        return ResponseEntity.ok(propertyImageService.findByPropertyId(propertyId));
     }
 
-    @PostMapping("/{idProperty}/images")
+    @PostMapping("/{propertyId}/images")
     public ResponseEntity<PropertyImageResponse> addImage(
-            @PathVariable Integer idProperty,
+            @PathVariable Integer propertyId,
             @Valid PropertyImageRequest request) throws IOException {
-        return ResponseEntity.ok(propertyImageService.upload(idProperty, request));
+        return ResponseEntity.ok(propertyImageService.upload(propertyId, request));
     }
 
-    @DeleteMapping("/images/{idImage}")
+    @DeleteMapping("/images/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteImage(@PathVariable Integer idImage) throws IOException {
-        propertyImageService.delete(idImage);
+    public void deleteImage(@PathVariable Integer id) throws IOException {
+        propertyImageService.delete(id);
     }
 
-    @PostMapping("/{idProperty}/amenities")
+    @PostMapping("/{propertyId}/amenities")
     public ResponseEntity<PropertyOwnerResponse> addAmenities(
-            @PathVariable Integer idProperty,
+            @PathVariable Integer propertyId,
             @RequestBody List<Integer> amenities) {
-        return ResponseEntity.ok(propertyService.addAmenities(idProperty, amenities));
+        return ResponseEntity.ok(propertyService.addAmenities(propertyId, amenities));
     }
 
-    @DeleteMapping("/{idProperty}/amenities")
+    @DeleteMapping("/{propertyId}/amenities")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeAmenities(
-            @PathVariable Integer idProperty,
+            @PathVariable Integer propertyId,
             @RequestBody List<Integer> amenities) {
-        propertyService.removeAmenities(idProperty, amenities);
+        propertyService.removeAmenities(propertyId, amenities);
     }
 }

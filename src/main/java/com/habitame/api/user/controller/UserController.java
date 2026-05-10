@@ -23,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -39,9 +39,9 @@ public class UserController {
         return UserMapper.toResponse(userEntity);
     }
 
-    @PostMapping("{idUser}/photo")
-    public ResponseEntity<UserResponse> addPhoto(@PathVariable Integer idUser, @Valid MultipartFile file) throws IOException {
-        return ResponseEntity.ok(userService.addPhoto(idUser, file));
+    @PostMapping("{id}/photo")
+    public ResponseEntity<UserResponse> addPhoto(@PathVariable Integer id, @Valid MultipartFile file) throws IOException {
+        return ResponseEntity.ok(userService.addPhoto(id, file));
     }
 
     @PutMapping()
@@ -49,8 +49,8 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(request));
     }
 
-    @DeleteMapping("{idUser}/photo")
-    public ResponseEntity<UserResponse> deletePhoto(@PathVariable Integer idUser) throws IOException {
-        return ResponseEntity.ok(userService.removePhoto(idUser));
+    @DeleteMapping("{id}/photo")
+    public ResponseEntity<UserResponse> deletePhoto(@PathVariable Integer id) throws IOException {
+        return ResponseEntity.ok(userService.removePhoto(id));
     }
 }

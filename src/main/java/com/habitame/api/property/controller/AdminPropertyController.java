@@ -46,9 +46,9 @@ public class AdminPropertyController extends AbstractPropertyController {
         return ResponseEntity.ok(propertyService.findAll(pageable));
     }
 
-    @GetMapping("/{idProperty}")
-    public ResponseEntity<PropertyAdminDetailResponse> findById(@PathVariable Integer idProperty) {
-        return ResponseEntity.ok(propertyService.findById(idProperty));
+    @GetMapping("/{id}")
+    public ResponseEntity<PropertyAdminDetailResponse> findById(@PathVariable Integer id) {
+        return ResponseEntity.ok(propertyService.findById(id));
     }
 
     @PostMapping
@@ -58,26 +58,26 @@ public class AdminPropertyController extends AbstractPropertyController {
         return ResponseEntity.created(location).build();
     }
 
-    @PutMapping("/{idProperty}")
+    @PutMapping("/{id}")
     public ResponseEntity<PropertyAdminDetailResponse> updateAdminProperty(
-            @PathVariable Integer idProperty,
+            @PathVariable Integer id,
             @RequestBody @Valid PropertyAdminRequest request) {
-        return ResponseEntity.ok(propertyService.updateAdminProperty(idProperty, request));
+        return ResponseEntity.ok(propertyService.updateAdminProperty(id, request));
     }
 
-    @DeleteMapping("/{idProperty}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteAdminProperty(@PathVariable Integer idProperty) {
-        propertyService.deleteProperty(idProperty);
+    public void deleteAdminProperty(@PathVariable Integer id) {
+        propertyService.deleteProperty(id);
     }
 
-    @GetMapping("/{idProperty}/reviews")
-    public ResponseEntity<List<PropertyReviewResponse>> findReviews(@PathVariable Integer idProperty) {
-        return ResponseEntity.ok(propertyReviewService.findAllByPropertyId(idProperty));
+    @GetMapping("/{id}/reviews")
+    public ResponseEntity<List<PropertyReviewResponse>> findReviews(@PathVariable Integer id) {
+        return ResponseEntity.ok(propertyReviewService.findAllByPropertyId(id));
     }
 
-    @PatchMapping("{idProperty}/reviews/resolve")
-    public ResponseEntity<PropertyReviewResponse> resolveReview(@PathVariable Integer idProperty, @RequestBody @Valid PropertyReviewDecisionRequest request) {
-        return ResponseEntity.ok(propertyService.resolveReview(idProperty, request));
+    @PatchMapping("/{id}/reviews/resolve")
+    public ResponseEntity<PropertyReviewResponse> resolveReview(@PathVariable Integer id, @RequestBody @Valid PropertyReviewDecisionRequest request) {
+        return ResponseEntity.ok(propertyService.resolveReview(id, request));
     }
 }

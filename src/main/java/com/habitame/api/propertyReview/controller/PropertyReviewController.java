@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/property-reviews")
+@RequestMapping("/api/admin/property-reviews")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('ADMIN')")
 public class PropertyReviewController {
