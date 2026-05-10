@@ -52,11 +52,11 @@ class OwnerRoomControllerTest {
     @MockBean
     private UserRepository userRepository;
 
-    // ------------------- GET /api/owner/rooms -------------------
+    // ------------------- GET /v1/owner/rooms -------------------
 
     @Test
     void findMyRooms_WithoutAuth_ShouldReturn401() throws Exception {
-        mockMvc.perform(get("/api/owner/rooms"))
+        mockMvc.perform(get("/v1/owner/rooms"))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -66,16 +66,16 @@ class OwnerRoomControllerTest {
         when(roomService.findAllByOwner(any(Pageable.class)))
                 .thenReturn(new PageResponse<>(List.of(), 0, 10, 0, 0));
 
-        mockMvc.perform(get("/api/owner/rooms"))
+        mockMvc.perform(get("/v1/owner/rooms"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isArray());
     }
 
-    // ------------------- POST /api/owner/rooms -------------------
+    // ------------------- POST /v1/owner/rooms -------------------
 
     @Test
     void addOwnerRoom_WithoutAuth_ShouldReturn401() throws Exception {
-        mockMvc.perform(post("/api/owner/rooms")
+        mockMvc.perform(post("/v1/owner/rooms")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(buildValidRequest())))
                 .andExpect(status().isUnauthorized());
@@ -88,7 +88,7 @@ class OwnerRoomControllerTest {
                 "", "Descripción", BigDecimal.valueOf(20), 1, BigDecimal.valueOf(400), 1, 1
         );
 
-        mockMvc.perform(post("/api/owner/rooms")
+        mockMvc.perform(post("/v1/owner/rooms")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
@@ -102,25 +102,25 @@ class OwnerRoomControllerTest {
         );
         when(roomService.addOwnerRoom(any())).thenReturn(response);
 
-        mockMvc.perform(post("/api/owner/rooms")
+        mockMvc.perform(post("/v1/owner/rooms")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(buildValidRequest())))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "api/owner/rooms/5"));
     }
 
-    // ------------------- DELETE /api/owner/rooms/{id} -------------------
+    // ------------------- DELETE /v1/owner/rooms/{id} -------------------
 
     @Test
     void deleteOwnerRoom_WithoutAuth_ShouldReturn401() throws Exception {
-        mockMvc.perform(delete("/api/owner/rooms/1"))
+        mockMvc.perform(delete("/v1/owner/rooms/1"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     @WithMockUser(roles = "ARRENDADOR")
     void deleteOwnerRoom_ShouldReturnNoContent() throws Exception {
-        mockMvc.perform(delete("/api/owner/rooms/1"))
+        mockMvc.perform(delete("/v1/owner/rooms/1"))
                 .andExpect(status().isNoContent());
     }
 

@@ -51,7 +51,7 @@ class ProvinceControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    // ------------------- GET /api/provinces -------------------
+    // ------------------- GET /v1/provinces -------------------
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void findAll_ShouldReturnProvinces() throws Exception {
@@ -62,7 +62,7 @@ class ProvinceControllerTest {
 
         when(provinceService.findAll(any(Pageable.class))).thenReturn(mockPage);
 
-        mockMvc.perform(get("/api/provinces")
+        mockMvc.perform(get("/v1/provinces")
                         .param("page", "0")
                         .param("size", "10")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -74,13 +74,13 @@ class ProvinceControllerTest {
 
     @Test
     void findAll_WithoutAuth_ShouldReturnUnauthorized() throws Exception {
-        mockMvc.perform(get("/api/provinces")
+        mockMvc.perform(get("/v1/provinces")
                         .param("page", "0")
                         .param("size", "10"))
                 .andExpect(status().isUnauthorized());
     }
 
-    // ------------------- GET /api/provinces/{id} -------------------
+    // ------------------- GET /v1/provinces/{id} -------------------
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void findById_ShouldReturnProvince() throws Exception {
@@ -88,7 +88,7 @@ class ProvinceControllerTest {
 
         when(provinceService.findById(1)).thenReturn(province);
 
-        mockMvc.perform(get("/api/provinces/1"))
+        mockMvc.perform(get("/v1/provinces/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("Madrid"));
@@ -99,25 +99,25 @@ class ProvinceControllerTest {
     void findById_NotFound_ShouldReturn404() throws Exception {
         when(provinceService.findById(99)).thenThrow(new ResourceNotFoundException("Province not found"));
 
-        mockMvc.perform(get("/api/provinces/99")
+        mockMvc.perform(get("/v1/provinces/99")
                         .with(user("testuser").roles("USER")))
                 .andExpect(status().isNotFound());
     }
 
-    // ------------------- GET /api/provinces/{id}/cities -------------------
+    // ------------------- GET /v1/provinces/{id}/cities -------------------
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void findCitiesByProvince_ShouldReturnCities() throws Exception {
         when(cityService.findByProvince(eq(1), any(Pageable.class)))
                 .thenReturn(new PageResponse<>(List.of(), 0, 0, 0, 0));
 
-        mockMvc.perform(get("/api/provinces/1/cities")
+        mockMvc.perform(get("/v1/provinces/1/cities")
                         .param("page", "0")
                         .param("size", "10"))
                 .andExpect(status().isOk());
     }
 
-    // ------------------- POST /api/provinces -------------------
+    // ------------------- POST /v1/provinces -------------------
     @Test
     @WithMockUser(roles = "ADMIN")
     void addProvince_ShouldReturnCreated() throws Exception {
@@ -130,11 +130,11 @@ class ProvinceControllerTest {
 
         when(provinceService.addProvince(any(ProvinceRequest.class))).thenReturn(response);
 
-        mockMvc.perform(post("/api/provinces")
+        mockMvc.perform(post("/v1/provinces")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "/api/provinces/3"));
+                .andExpect(header().string("Location", "/v1/provinces/3"));
     }
 
     @Test
@@ -144,7 +144,7 @@ class ProvinceControllerTest {
                 "Sevilla"
         );
 
-        mockMvc.perform(post("/api/provinces")
+        mockMvc.perform(post("/v1/provinces")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isUnauthorized());
@@ -158,7 +158,7 @@ class ProvinceControllerTest {
                 1,
                 "Sevilla"
         );
-        mockMvc.perform(post("/api/provinces")
+        mockMvc.perform(post("/v1/provinces")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(json)))
                 .andExpect(status().isForbidden());
@@ -172,14 +172,14 @@ class ProvinceControllerTest {
                 "Sevilla"
         );
 
-        mockMvc.perform(post("/api/provinces")
+        mockMvc.perform(post("/v1/provinces")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("countryId: must not be null"));
     }
 
-    // ------------------- PUT /api/provinces/{id} -------------------
+    // ------------------- PUT /v1/provinces/{id} -------------------
     @Test
     @WithMockUser(roles = "ADMIN")
     void updateProvince_ShouldReturnUpdated() throws Exception {
@@ -192,7 +192,7 @@ class ProvinceControllerTest {
 
         when(provinceService.updateProvince(eq(1), any(ProvinceRequest.class))).thenReturn(response);
 
-        mockMvc.perform(put("/api/provinces/1")
+        mockMvc.perform(put("/v1/provinces/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -207,7 +207,7 @@ class ProvinceControllerTest {
                 "Valencia"
         );
 
-        mockMvc.perform(put("/api/provinces/1")
+        mockMvc.perform(put("/v1/provinces/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isUnauthorized());
@@ -221,7 +221,7 @@ class ProvinceControllerTest {
                 "Valencia"
         );
 
-        mockMvc.perform(put("/api/provinces/1")
+        mockMvc.perform(put("/v1/provinces/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isForbidden());
@@ -235,33 +235,33 @@ class ProvinceControllerTest {
                 "Valencia"
         );
 
-        mockMvc.perform(put("/api/provinces/1")
+        mockMvc.perform(put("/v1/provinces/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("countryId: must not be null"));
     }
 
-    // ------------------- DELETE /api/provinces/{id} -------------------
+    // ------------------- DELETE /v1/provinces/{id} -------------------
     @Test
     @WithMockUser(roles = "ADMIN")
     void deleteProvince_ShouldReturnNoContent() throws Exception {
         doNothing().when(provinceService).deleteProvince(1);
 
-        mockMvc.perform(delete("/api/provinces/1"))
+        mockMvc.perform(delete("/v1/provinces/1"))
                 .andExpect(status().isNoContent());
     }
 
     @Test
     void deleteProvince_WithoutAuth_ShouldReturnUnauthorized() throws Exception {
-        mockMvc.perform(delete("/api/provinces/1"))
+        mockMvc.perform(delete("/v1/provinces/1"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     @WithMockUser(roles = "ARRENDADOR")
     void deleteProvince_WithWrongRole_ShouldReturnForbidden() throws Exception {
-        mockMvc.perform(delete("/api/provinces/1"))
+        mockMvc.perform(delete("/v1/provinces/1"))
                 .andExpect(status().isForbidden());
     }
 }

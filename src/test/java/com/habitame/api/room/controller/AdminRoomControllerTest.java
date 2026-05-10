@@ -58,18 +58,18 @@ class AdminRoomControllerTest {
     @MockBean
     private UserRepository userRepository;
 
-    // ------------------- GET /api/admin/rooms -------------------
+    // ------------------- GET /v1/admin/rooms -------------------
 
     @Test
     void findAll_WithoutAuth_ShouldReturn401() throws Exception {
-        mockMvc.perform(get("/api/admin/rooms"))
+        mockMvc.perform(get("/v1/admin/rooms"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     @WithMockUser(roles = "ARRENDADOR")
     void findAll_WithWrongRole_ShouldReturn403() throws Exception {
-        mockMvc.perform(get("/api/admin/rooms"))
+        mockMvc.perform(get("/v1/admin/rooms"))
                 .andExpect(status().isForbidden());
     }
 
@@ -79,17 +79,17 @@ class AdminRoomControllerTest {
         when(roomService.findAll(any(Pageable.class)))
                 .thenReturn(new PageResponse<>(List.of(), 0, 10, 0, 0));
 
-        mockMvc.perform(get("/api/admin/rooms"))
+        mockMvc.perform(get("/v1/admin/rooms"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isArray());
     }
 
-    // ------------------- POST /api/admin/rooms -------------------
+    // ------------------- POST /v1/admin/rooms -------------------
 
     @Test
     @WithMockUser(roles = "ARRENDADOR")
     void saveRoom_WithWrongRole_ShouldReturn403() throws Exception {
-        mockMvc.perform(post("/api/admin/rooms")
+        mockMvc.perform(post("/v1/admin/rooms")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(buildValidRequest())))
                 .andExpect(status().isForbidden());
@@ -102,7 +102,7 @@ class AdminRoomControllerTest {
                 "", "Desc", BigDecimal.valueOf(20), 1, BigDecimal.valueOf(400), 1, 1, RoomStatus.ACTIVE, 1
         );
 
-        mockMvc.perform(post("/api/admin/rooms")
+        mockMvc.perform(post("/v1/admin/rooms")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
@@ -114,25 +114,25 @@ class AdminRoomControllerTest {
         RoomAdminResponse response = new RoomAdminResponse(7, "Hab. doble", null, "ACTIVE", null);
         when(roomService.saveAdminRoom(any())).thenReturn(response);
 
-        mockMvc.perform(post("/api/admin/rooms")
+        mockMvc.perform(post("/v1/admin/rooms")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(buildValidRequest())))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "api/admin/rooms/7"));
     }
 
-    // ------------------- DELETE /api/admin/rooms/{id} -------------------
+    // ------------------- DELETE /v1/admin/rooms/{id} -------------------
 
     @Test
     @WithMockUser(roles = "ADMIN")
     void deleteRoom_ShouldReturnNoContent() throws Exception {
         doNothing().when(roomService).deleteRoom(1);
 
-        mockMvc.perform(delete("/api/admin/rooms/1"))
+        mockMvc.perform(delete("/v1/admin/rooms/1"))
                 .andExpect(status().isNoContent());
     }
 
-    // ------------------- PATCH /api/admin/rooms/{id}/reviews/resolve -------------------
+    // ------------------- PATCH /v1/admin/rooms/{id}/reviews/resolve -------------------
 
     @Test
     @WithMockUser(roles = "ADMIN")
@@ -142,7 +142,7 @@ class AdminRoomControllerTest {
 
         when(roomService.resolveReview(eq(1), any())).thenReturn(response);
 
-        mockMvc.perform(patch("/api/admin/rooms/1/reviews/resolve")
+        mockMvc.perform(patch("/v1/admin/rooms/1/reviews/resolve")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -154,7 +154,7 @@ class AdminRoomControllerTest {
     void resolveReview_WithWrongRole_ShouldReturn403() throws Exception {
         RoomReviewDecisionRequest request = new RoomReviewDecisionRequest(RoomReviewStatus.APPROVED, null);
 
-        mockMvc.perform(patch("/api/admin/rooms/1/reviews/resolve")
+        mockMvc.perform(patch("/v1/admin/rooms/1/reviews/resolve")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isForbidden());

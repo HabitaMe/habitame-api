@@ -52,18 +52,18 @@ class OwnerPropertyControllerTest {
     @MockBean
     private UserRepository userRepository;
 
-    // ------------------- GET /api/owner/properties -------------------
+    // ------------------- GET /v1/owner/properties -------------------
 
     @Test
     void findMyProperties_WithoutAuth_ShouldReturn401() throws Exception {
-        mockMvc.perform(get("/api/owner/properties"))
+        mockMvc.perform(get("/v1/owner/properties"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     @WithMockUser(roles = "ADMIN")
     void findMyProperties_WithAdminRole_ShouldReturn403() throws Exception {
-        mockMvc.perform(get("/api/owner/properties"))
+        mockMvc.perform(get("/v1/owner/properties"))
                 .andExpect(status().isForbidden());
     }
 
@@ -73,16 +73,16 @@ class OwnerPropertyControllerTest {
         PageResponse<PropertyOwnerResponse> page = new PageResponse<>(List.of(), 0, 10, 0, 0);
         when(propertyService.findAllByOwner(any(Pageable.class))).thenReturn(page);
 
-        mockMvc.perform(get("/api/owner/properties"))
+        mockMvc.perform(get("/v1/owner/properties"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isArray());
     }
 
-    // ------------------- POST /api/owner/properties -------------------
+    // ------------------- POST /v1/owner/properties -------------------
 
     @Test
     void addOwnerProperty_WithoutAuth_ShouldReturn401() throws Exception {
-        mockMvc.perform(post("/api/owner/properties")
+        mockMvc.perform(post("/v1/owner/properties")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{}"))
                 .andExpect(status().isUnauthorized());
@@ -93,7 +93,7 @@ class OwnerPropertyControllerTest {
     void addOwnerProperty_WithAdminRole_ShouldReturn403() throws Exception {
         PropertyOwnerRequest request = buildValidRequest();
 
-        mockMvc.perform(post("/api/owner/properties")
+        mockMvc.perform(post("/v1/owner/properties")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isForbidden());
@@ -107,7 +107,7 @@ class OwnerPropertyControllerTest {
                 1, 1, BigDecimal.valueOf(60), 1, false
         );
 
-        mockMvc.perform(post("/api/owner/properties")
+        mockMvc.perform(post("/v1/owner/properties")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
@@ -121,7 +121,7 @@ class OwnerPropertyControllerTest {
                 null, 1, BigDecimal.valueOf(60), 1, false
         );
 
-        mockMvc.perform(post("/api/owner/properties")
+        mockMvc.perform(post("/v1/owner/properties")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
@@ -137,32 +137,32 @@ class OwnerPropertyControllerTest {
 
         when(propertyService.addOwnerProperty(any(PropertyOwnerRequest.class))).thenReturn(response);
 
-        mockMvc.perform(post("/api/owner/properties")
+        mockMvc.perform(post("/v1/owner/properties")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "api/owner/properties/42"));
     }
 
-    // ------------------- DELETE /api/owner/properties/{id} -------------------
+    // ------------------- DELETE /v1/owner/properties/{id} -------------------
 
     @Test
     void deleteOwnerProperty_WithoutAuth_ShouldReturn401() throws Exception {
-        mockMvc.perform(delete("/api/owner/properties/1"))
+        mockMvc.perform(delete("/v1/owner/properties/1"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     @WithMockUser(roles = "ARRENDATARIO")
     void deleteOwnerProperty_WithArrendatarioRole_ShouldReturn403() throws Exception {
-        mockMvc.perform(delete("/api/owner/properties/1"))
+        mockMvc.perform(delete("/v1/owner/properties/1"))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     @WithMockUser(roles = "ARRENDADOR")
     void deleteOwnerProperty_ShouldReturnNoContent() throws Exception {
-        mockMvc.perform(delete("/api/owner/properties/1"))
+        mockMvc.perform(delete("/v1/owner/properties/1"))
                 .andExpect(status().isNoContent());
     }
 

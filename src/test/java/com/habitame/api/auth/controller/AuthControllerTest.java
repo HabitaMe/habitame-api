@@ -49,7 +49,7 @@ class AuthControllerTest {
     @MockBean
     private UserRepository userRepository;
 
-    // ------------------- POST /api/auth/register -------------------
+    // ------------------- POST /v1/auth/register -------------------
 
     @Test
     void register_ShouldReturnCreatedUser() throws Exception {
@@ -68,7 +68,7 @@ class AuthControllerTest {
 
         when(authService.register(any(RegisterRequest.class))).thenReturn(savedUser);
 
-        mockMvc.perform(post("/api/auth/register")
+        mockMvc.perform(post("/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
@@ -83,7 +83,7 @@ class AuthControllerTest {
                 "", "juan@mail.com", "password123", "Juan García", null, Role.ARRENDADOR
         );
 
-        mockMvc.perform(post("/api/auth/register")
+        mockMvc.perform(post("/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
@@ -95,7 +95,7 @@ class AuthControllerTest {
                 "juanito", "juan@mail.com", "corta", "Juan García", null, Role.ARRENDADOR
         );
 
-        mockMvc.perform(post("/api/auth/register")
+        mockMvc.perform(post("/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
@@ -109,13 +109,13 @@ class AuthControllerTest {
 
         when(authService.register(any())).thenThrow(new DuplicateResourceException("Username o email ya existente"));
 
-        mockMvc.perform(post("/api/auth/register")
+        mockMvc.perform(post("/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isConflict());
     }
 
-    // ------------------- POST /api/auth/login -------------------
+    // ------------------- POST /v1/auth/login -------------------
 
     @Test
     void login_ShouldReturnTokens() throws Exception {
@@ -128,7 +128,7 @@ class AuthControllerTest {
 
         when(authService.login(any(LoginRequest.class))).thenReturn(response);
 
-        mockMvc.perform(post("/api/auth/login")
+        mockMvc.perform(post("/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -143,14 +143,14 @@ class AuthControllerTest {
 
         when(authService.login(any())).thenThrow(new UnauthorizedException("Credenciales incorrectas"));
 
-        mockMvc.perform(post("/api/auth/login")
+        mockMvc.perform(post("/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.message").value("Credenciales incorrectas"));
     }
 
-    // ------------------- POST /api/auth/logout -------------------
+    // ------------------- POST /v1/auth/logout -------------------
 
     @Test
     void logout_ShouldReturnNoContent() throws Exception {
@@ -158,7 +158,7 @@ class AuthControllerTest {
 
         doNothing().when(authService).logout(any(RefreshRequest.class));
 
-        mockMvc.perform(post("/api/auth/logout")
+        mockMvc.perform(post("/v1/auth/logout")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isNoContent());
@@ -170,7 +170,7 @@ class AuthControllerTest {
 
         doThrow(new UnauthorizedException("Refresh token no válido")).when(authService).logout(any());
 
-        mockMvc.perform(post("/api/auth/logout")
+        mockMvc.perform(post("/v1/auth/logout")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isUnauthorized());

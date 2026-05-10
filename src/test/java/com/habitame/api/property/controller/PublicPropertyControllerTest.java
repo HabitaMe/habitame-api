@@ -44,7 +44,7 @@ class PublicPropertyControllerTest {
         PageResponse<PropertyPublicResponse> page = new PageResponse<>(List.of(), 0, 10, 0, 0);
         when(propertyService.findPublicProperties(any(Pageable.class))).thenReturn(page);
 
-        mockMvc.perform(get("/api/public/properties"))
+        mockMvc.perform(get("/v1/public/properties"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isArray());
     }
@@ -57,7 +57,7 @@ class PublicPropertyControllerTest {
         );
         when(propertyService.findPublicPropertyById(1)).thenReturn(detail);
 
-        mockMvc.perform(get("/api/public/properties/1"))
+        mockMvc.perform(get("/v1/public/properties/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.title").value("Piso en Madrid"));
@@ -68,7 +68,7 @@ class PublicPropertyControllerTest {
         when(propertyService.findPublicPropertyById(99))
                 .thenThrow(new ResourceNotFoundException("Property not found: 99"));
 
-        mockMvc.perform(get("/api/public/properties/99"))
+        mockMvc.perform(get("/v1/public/properties/99"))
                 .andExpect(status().isNotFound());
     }
 }

@@ -31,12 +31,12 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html").permitAll()
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/public/**").permitAll()
+                        .requestMatchers("/v1/auth/**").permitAll()
+                        .requestMatchers("/v1/public/**").permitAll()
                         .requestMatchers(HttpMethod.GET,
-                                "/api/cities/**",
-                                "/api/countries/**",
-                                "/api/amenities/**").permitAll()
+                                "/v1/cities/**",
+                                "/v1/countries/**",
+                                "/v1/amenities/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

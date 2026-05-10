@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/public/properties")
+@RequestMapping("/v1/public/properties")
 @RequiredArgsConstructor
 public class PublicPropertyController {
 

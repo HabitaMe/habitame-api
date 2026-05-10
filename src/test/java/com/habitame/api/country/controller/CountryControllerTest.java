@@ -53,7 +53,7 @@ class CountryControllerTest {
         when(countryService.findAll(any(Pageable.class)))
                 .thenReturn(new PageResponse<>(List.of(new CountryResponse(1, "España", "ES")), 0, 10, 1, 1));
 
-        mockMvc.perform(get("/api/countries"))
+        mockMvc.perform(get("/v1/countries"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].name").value("España"));
     }
@@ -62,14 +62,14 @@ class CountryControllerTest {
     void findById_WithoutAuth_ShouldReturn200() throws Exception {
         when(countryService.findById(1)).thenReturn(new CountryResponse(1, "España", "ES"));
 
-        mockMvc.perform(get("/api/countries/1"))
+        mockMvc.perform(get("/v1/countries/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.isoCode").value("ES"));
     }
 
     @Test
     void addCountry_WithoutAuth_ShouldReturn401() throws Exception {
-        mockMvc.perform(post("/api/countries")
+        mockMvc.perform(post("/v1/countries")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CountryRequest("Francia", "FR"))))
                 .andExpect(status().isUnauthorized());
@@ -78,7 +78,7 @@ class CountryControllerTest {
     @Test
     @WithMockUser(roles = "ARRENDADOR")
     void addCountry_WithWrongRole_ShouldReturn403() throws Exception {
-        mockMvc.perform(post("/api/countries")
+        mockMvc.perform(post("/v1/countries")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CountryRequest("Francia", "FR"))))
                 .andExpect(status().isForbidden());
@@ -89,17 +89,17 @@ class CountryControllerTest {
     void addCountry_ShouldReturnCreated() throws Exception {
         when(countryService.addCountry(any())).thenReturn(new CountryResponse(3, "Francia", "FR"));
 
-        mockMvc.perform(post("/api/countries")
+        mockMvc.perform(post("/v1/countries")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CountryRequest("Francia", "FR"))))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "/api/countries/3"));
+                .andExpect(header().string("Location", "/v1/countries/3"));
     }
 
     @Test
     @WithMockUser(roles = "ADMIN")
     void addCountry_WithMissingIsoCode_ShouldReturn400() throws Exception {
-        mockMvc.perform(post("/api/countries")
+        mockMvc.perform(post("/v1/countries")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CountryRequest("Francia", ""))))
                 .andExpect(status().isBadRequest());
@@ -110,14 +110,14 @@ class CountryControllerTest {
     void deleteCountry_ShouldReturnNoContent() throws Exception {
         doNothing().when(countryService).deleteCountry(1);
 
-        mockMvc.perform(delete("/api/countries/1"))
+        mockMvc.perform(delete("/v1/countries/1"))
                 .andExpect(status().isNoContent());
     }
 
     @Test
     @WithMockUser(roles = "ARRENDADOR")
     void deleteCountry_WithWrongRole_ShouldReturn403() throws Exception {
-        mockMvc.perform(delete("/api/countries/1"))
+        mockMvc.perform(delete("/v1/countries/1"))
                 .andExpect(status().isForbidden());
     }
 }

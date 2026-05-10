@@ -23,7 +23,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/amenities")
+@RequestMapping("/v1/amenities")
 @RequiredArgsConstructor
 public class AmenityController {
 

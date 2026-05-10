@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/api/owner/rooms")
+@RequestMapping("/v1/owner/rooms")
 @PreAuthorize("hasRole('ARRENDADOR')")
 public class OwnerRoomController extends AbstractRoomController {
 

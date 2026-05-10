@@ -29,7 +29,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin/properties")
+@RequestMapping("/v1/admin/properties")
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminPropertyController extends AbstractPropertyController {
 

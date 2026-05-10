@@ -44,7 +44,7 @@ class AmenityControllerTest {
     @MockBean
     private UserRepository userRepository;
 
-    // ------------------- GET /api/amenities (público) -------------------
+    // ------------------- GET /v1/amenities (público) -------------------
 
     @Test
     void findAmenities_WithoutAuth_ShouldReturn200() throws Exception {
@@ -53,7 +53,7 @@ class AmenityControllerTest {
                 new AmenityResponse(2, "Parking", "Plaza de aparcamiento", "PROPERTY")
         ));
 
-        mockMvc.perform(get("/api/amenities"))
+        mockMvc.perform(get("/v1/amenities"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
                 .andExpect(jsonPath("$[0].name").value("WiFi"));
@@ -65,18 +65,18 @@ class AmenityControllerTest {
                 new AmenityResponse(3, "Armario", "Armario empotrado", "ROOM")
         ));
 
-        mockMvc.perform(get("/api/amenities/scope/ROOM"))
+        mockMvc.perform(get("/v1/amenities/scope/ROOM"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].scope").value("ROOM"));
     }
 
-    // ------------------- POST /api/amenities (solo ADMIN) -------------------
+    // ------------------- POST /v1/amenities (solo ADMIN) -------------------
 
     @Test
     void saveAmenity_WithoutAuth_ShouldReturn401() throws Exception {
         AmenityRequest request = new AmenityRequest("WiFi", "Conexión", AmenityScope.PROPERTY);
 
-        mockMvc.perform(post("/api/amenities")
+        mockMvc.perform(post("/v1/amenities")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isUnauthorized());
@@ -87,7 +87,7 @@ class AmenityControllerTest {
     void saveAmenity_WithWrongRole_ShouldReturn403() throws Exception {
         AmenityRequest request = new AmenityRequest("WiFi", "Conexión", AmenityScope.PROPERTY);
 
-        mockMvc.perform(post("/api/amenities")
+        mockMvc.perform(post("/v1/amenities")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isForbidden());
@@ -101,7 +101,7 @@ class AmenityControllerTest {
 
         when(amenityService.saveAmenity(any())).thenReturn(response);
 
-        mockMvc.perform(post("/api/amenities")
+        mockMvc.perform(post("/v1/amenities")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
@@ -113,27 +113,27 @@ class AmenityControllerTest {
     void saveAmenity_WithMissingName_ShouldReturn400() throws Exception {
         AmenityRequest request = new AmenityRequest("", "Descripción", AmenityScope.PROPERTY);
 
-        mockMvc.perform(post("/api/amenities")
+        mockMvc.perform(post("/v1/amenities")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
     }
 
-    // ------------------- DELETE /api/amenities/{id} -------------------
+    // ------------------- DELETE /v1/amenities/{id} -------------------
 
     @Test
     @WithMockUser(roles = "ADMIN")
     void deleteAmenity_ShouldReturnNoContent() throws Exception {
         doNothing().when(amenityService).deleteAmenity(1);
 
-        mockMvc.perform(delete("/api/amenities/1"))
+        mockMvc.perform(delete("/v1/amenities/1"))
                 .andExpect(status().isNoContent());
     }
 
     @Test
     @WithMockUser(roles = "ARRENDADOR")
     void deleteAmenity_WithWrongRole_ShouldReturn403() throws Exception {
-        mockMvc.perform(delete("/api/amenities/1"))
+        mockMvc.perform(delete("/v1/amenities/1"))
                 .andExpect(status().isForbidden());
     }
 }

@@ -41,14 +41,14 @@ class RoomReviewControllerTest {
 
     @Test
     void getReviews_WithoutAuth_ShouldReturn401() throws Exception {
-        mockMvc.perform(get("/api/room-reviews"))
+        mockMvc.perform(get("/v1/room-reviews"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     @WithMockUser(roles = "ARRENDADOR")
     void getReviews_WithWrongRole_ShouldReturn403() throws Exception {
-        mockMvc.perform(get("/api/room-reviews"))
+        mockMvc.perform(get("/v1/room-reviews"))
                 .andExpect(status().isForbidden());
     }
 
@@ -61,7 +61,7 @@ class RoomReviewControllerTest {
         );
         when(roomReviewService.getReviews(any(Pageable.class))).thenReturn(page);
 
-        mockMvc.perform(get("/api/room-reviews"))
+        mockMvc.perform(get("/v1/room-reviews"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].status").value("PENDING"));
     }
@@ -76,7 +76,7 @@ class RoomReviewControllerTest {
         when(roomReviewService.getReviewsByStatus(eq(RoomReviewStatus.APPROVED), any(Pageable.class)))
                 .thenReturn(page);
 
-        mockMvc.perform(get("/api/room-reviews/status/APPROVED"))
+        mockMvc.perform(get("/v1/room-reviews/status/APPROVED"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].status").value("APPROVED"));
     }

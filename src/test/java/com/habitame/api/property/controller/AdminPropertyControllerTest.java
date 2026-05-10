@@ -58,18 +58,18 @@ class AdminPropertyControllerTest {
     @MockBean
     private UserRepository userRepository;
 
-    // ------------------- GET /api/admin/properties -------------------
+    // ------------------- GET /v1/admin/properties -------------------
 
     @Test
     void findAll_WithoutAuth_ShouldReturn401() throws Exception {
-        mockMvc.perform(get("/api/admin/properties"))
+        mockMvc.perform(get("/v1/admin/properties"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     @WithMockUser(roles = "ARRENDADOR")
     void findAll_WithWrongRole_ShouldReturn403() throws Exception {
-        mockMvc.perform(get("/api/admin/properties"))
+        mockMvc.perform(get("/v1/admin/properties"))
                 .andExpect(status().isForbidden());
     }
 
@@ -79,17 +79,17 @@ class AdminPropertyControllerTest {
         when(propertyService.findAll(any(Pageable.class)))
                 .thenReturn(new PageResponse<>(List.of(), 0, 10, 0, 0));
 
-        mockMvc.perform(get("/api/admin/properties"))
+        mockMvc.perform(get("/v1/admin/properties"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isArray());
     }
 
-    // ------------------- POST /api/admin/properties -------------------
+    // ------------------- POST /v1/admin/properties -------------------
 
     @Test
     @WithMockUser(roles = "ARRENDADOR")
     void saveProperty_WithWrongRole_ShouldReturn403() throws Exception {
-        mockMvc.perform(post("/api/admin/properties")
+        mockMvc.perform(post("/v1/admin/properties")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(buildValidRequest())))
                 .andExpect(status().isForbidden());
@@ -102,7 +102,7 @@ class AdminPropertyControllerTest {
                 "", "Descripción", "apartamento", "Calle Mayor", 1, 1, BigDecimal.valueOf(60), 1, false, 1
         );
 
-        mockMvc.perform(post("/api/admin/properties")
+        mockMvc.perform(post("/v1/admin/properties")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
@@ -114,19 +114,19 @@ class AdminPropertyControllerTest {
         PropertyAdminResponse response = new PropertyAdminResponse(42, "Piso", null, "ACTIVE", null);
         when(propertyService.saveAdminProperty(any())).thenReturn(response);
 
-        mockMvc.perform(post("/api/admin/properties")
+        mockMvc.perform(post("/v1/admin/properties")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(buildValidRequest())))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "api/admin/properties/42"));
     }
 
-    // ------------------- DELETE /api/admin/properties/{id} -------------------
+    // ------------------- DELETE /v1/admin/properties/{id} -------------------
 
     @Test
     @WithMockUser(roles = "ARRENDADOR")
     void deleteProperty_WithWrongRole_ShouldReturn403() throws Exception {
-        mockMvc.perform(delete("/api/admin/properties/1"))
+        mockMvc.perform(delete("/v1/admin/properties/1"))
                 .andExpect(status().isForbidden());
     }
 
@@ -135,7 +135,7 @@ class AdminPropertyControllerTest {
     void deleteProperty_ShouldReturnNoContent() throws Exception {
         doNothing().when(propertyService).deleteProperty(1);
 
-        mockMvc.perform(delete("/api/admin/properties/1"))
+        mockMvc.perform(delete("/v1/admin/properties/1"))
                 .andExpect(status().isNoContent());
     }
 
@@ -144,11 +144,11 @@ class AdminPropertyControllerTest {
     void deleteProperty_WhenNotFound_ShouldReturn404() throws Exception {
         when(propertyService.findById(99)).thenThrow(new ResourceNotFoundException("Property not found: 99"));
 
-        mockMvc.perform(get("/api/admin/properties/99"))
+        mockMvc.perform(get("/v1/admin/properties/99"))
                 .andExpect(status().isNotFound());
     }
 
-    // ------------------- PATCH /api/admin/properties/{id}/reviews/resolve -------------------
+    // ------------------- PATCH /v1/admin/properties/{id}/reviews/resolve -------------------
 
     @Test
     @WithMockUser(roles = "ADMIN")
@@ -158,7 +158,7 @@ class AdminPropertyControllerTest {
 
         when(propertyService.resolveReview(eq(1), any())).thenReturn(response);
 
-        mockMvc.perform(patch("/api/admin/properties/1/reviews/resolve")
+        mockMvc.perform(patch("/v1/admin/properties/1/reviews/resolve")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -170,7 +170,7 @@ class AdminPropertyControllerTest {
     void resolveReview_WithWrongRole_ShouldReturn403() throws Exception {
         PropertyReviewDecisionRequest request = new PropertyReviewDecisionRequest(PropertyReviewStatus.APPROVED, null);
 
-        mockMvc.perform(patch("/api/admin/properties/1/reviews/resolve")
+        mockMvc.perform(patch("/v1/admin/properties/1/reviews/resolve")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isForbidden());

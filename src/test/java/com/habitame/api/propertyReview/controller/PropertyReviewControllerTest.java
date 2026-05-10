@@ -41,14 +41,14 @@ class PropertyReviewControllerTest {
 
     @Test
     void getReviews_WithoutAuth_ShouldReturn401() throws Exception {
-        mockMvc.perform(get("/api/property-reviews"))
+        mockMvc.perform(get("/v1/property-reviews"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     @WithMockUser(roles = "ARRENDADOR")
     void getReviews_WithWrongRole_ShouldReturn403() throws Exception {
-        mockMvc.perform(get("/api/property-reviews"))
+        mockMvc.perform(get("/v1/property-reviews"))
                 .andExpect(status().isForbidden());
     }
 
@@ -61,7 +61,7 @@ class PropertyReviewControllerTest {
         );
         when(propertyReviewService.getReviews(any(Pageable.class))).thenReturn(page);
 
-        mockMvc.perform(get("/api/property-reviews"))
+        mockMvc.perform(get("/v1/property-reviews"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].Status").value("PENDING"));
     }
@@ -76,7 +76,7 @@ class PropertyReviewControllerTest {
         when(propertyReviewService.getReviewsByStatus(eq(PropertyReviewStatus.REJECTED), any(Pageable.class)))
                 .thenReturn(page);
 
-        mockMvc.perform(get("/api/property-reviews/status/REJECTED"))
+        mockMvc.perform(get("/v1/property-reviews/status/REJECTED"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].Status").value("REJECTED"));
     }

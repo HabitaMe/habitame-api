@@ -29,7 +29,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin/rooms")
+@RequestMapping("/v1/admin/rooms")
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminRoomController extends AbstractRoomController {
 

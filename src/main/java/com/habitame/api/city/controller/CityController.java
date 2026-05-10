@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/api/cities")
+@RequestMapping("/v1/cities")
 @RequiredArgsConstructor
 public class CityController {
 

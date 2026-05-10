@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/api/provinces")
+@RequestMapping("/v1/provinces")
 @RequiredArgsConstructor
 public class ProvinceController {
 
@@ -51,7 +51,7 @@ public class ProvinceController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> addProvince(@Valid @RequestBody ProvinceRequest request) {
         ProvinceResponse provinceResponse = provinceService.addProvince(request);
-        URI location = URI.create("/api/provinces/" + provinceResponse.id());
+        URI location = URI.create("/v1/provinces/" + provinceResponse.id());
         return ResponseEntity.created(location).build();
     }
 

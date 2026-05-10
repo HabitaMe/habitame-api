@@ -50,7 +50,7 @@ class CityControllerTest {
         when(cityService.findAll(any(Pageable.class)))
                 .thenReturn(new PageResponse<>(List.of(new CityResponse(1, "Madrid")), 0, 10, 1, 1));
 
-        mockMvc.perform(get("/api/cities"))
+        mockMvc.perform(get("/v1/cities"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].name").value("Madrid"));
     }
@@ -59,14 +59,14 @@ class CityControllerTest {
     void findById_WithoutAuth_ShouldReturn200() throws Exception {
         when(cityService.findById(1)).thenReturn(new CityResponse(1, "Madrid"));
 
-        mockMvc.perform(get("/api/cities/1"))
+        mockMvc.perform(get("/v1/cities/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1));
     }
 
     @Test
     void saveCity_WithoutAuth_ShouldReturn401() throws Exception {
-        mockMvc.perform(post("/api/cities")
+        mockMvc.perform(post("/v1/cities")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CityRequest("Sevilla", 1))))
                 .andExpect(status().isUnauthorized());
@@ -75,7 +75,7 @@ class CityControllerTest {
     @Test
     @WithMockUser(roles = "ARRENDADOR")
     void saveCity_WithWrongRole_ShouldReturn403() throws Exception {
-        mockMvc.perform(post("/api/cities")
+        mockMvc.perform(post("/v1/cities")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CityRequest("Sevilla", 1))))
                 .andExpect(status().isForbidden());
@@ -86,7 +86,7 @@ class CityControllerTest {
     void saveCity_ShouldReturnCreated() throws Exception {
         when(cityService.saveCity(any())).thenReturn(new CityResponse(5, "Sevilla"));
 
-        mockMvc.perform(post("/api/cities")
+        mockMvc.perform(post("/v1/cities")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CityRequest("Sevilla", 1))))
                 .andExpect(status().isCreated())
@@ -96,7 +96,7 @@ class CityControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void saveCity_WithMissingName_ShouldReturn400() throws Exception {
-        mockMvc.perform(post("/api/cities")
+        mockMvc.perform(post("/v1/cities")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CityRequest("", 1))))
                 .andExpect(status().isBadRequest());
@@ -107,14 +107,14 @@ class CityControllerTest {
     void deleteCity_ShouldReturnNoContent() throws Exception {
         doNothing().when(cityService).deleteCity(1);
 
-        mockMvc.perform(delete("/api/cities/1"))
+        mockMvc.perform(delete("/v1/cities/1"))
                 .andExpect(status().isNoContent());
     }
 
     @Test
     @WithMockUser(roles = "ARRENDADOR")
     void deleteCity_WithWrongRole_ShouldReturn403() throws Exception {
-        mockMvc.perform(delete("/api/cities/1"))
+        mockMvc.perform(delete("/v1/cities/1"))
                 .andExpect(status().isForbidden());
     }
 }

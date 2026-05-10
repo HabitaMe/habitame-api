@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 
 @RestController
-@RequestMapping("/api/public/rooms")
+@RequestMapping("/v1/public/rooms")
 @RequiredArgsConstructor
 public class PublicRoomController {
     private final RoomService roomService;
