@@ -45,7 +45,7 @@ class UserControllerTest {
 
     @Test
     void getCurrentUser_WithoutAuth_ShouldReturn401() throws Exception {
-        mockMvc.perform(get("/v1/user/me"))
+        mockMvc.perform(get("/v1/users/me"))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -55,7 +55,7 @@ class UserControllerTest {
         // El endpoint usa el principal de Spring Security directamente
         // WithMockUser crea un User de Spring (no UserEntity), por lo que el cast falla
         // y lanza UnauthorizedException — comportamiento correcto en integración real
-        mockMvc.perform(get("/v1/user/me"))
+        mockMvc.perform(get("/v1/users/me"))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -64,7 +64,7 @@ class UserControllerTest {
     void updateMe_WithoutAuth_ShouldReturn401() throws Exception {
         UserRequest request = new UserRequest("Juan García", "611000000");
 
-        mockMvc.perform(put("/v1/user")
+        mockMvc.perform(put("/v1/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isUnauthorized());
@@ -81,7 +81,7 @@ class UserControllerTest {
 
         when(userService.updateUser(any(UserRequest.class))).thenReturn(response);
 
-        mockMvc.perform(put("/v1/user")
+        mockMvc.perform(put("/v1/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())

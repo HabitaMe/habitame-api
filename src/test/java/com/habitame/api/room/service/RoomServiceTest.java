@@ -18,6 +18,7 @@ import com.habitame.api.room.dto.RoomOwnerResponse;
 import com.habitame.api.room.dto.RoomPublicDetailResponse;
 import com.habitame.api.room.dto.RoomPublicResponse;
 import com.habitame.api.room.entity.RoomEntity;
+import com.habitame.api.room.dto.RoomFilter;
 import com.habitame.api.room.entity.RoomStatus;
 import com.habitame.api.room.repository.RoomRepository;
 import com.habitame.api.roomReview.dto.RoomReviewDecisionRequest;
@@ -36,6 +37,8 @@ import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -220,10 +223,11 @@ class RoomServiceTest {
     @Test
     void findAllPublicRooms_ShouldReturnMappedPage() {
         RoomEntity room = buildRoom("Habitación doble", "Desc", BigDecimal.valueOf(400));
-        when(roomRepository.findAllByStatus(RoomStatus.ACTIVE, PageRequest.of(0, 10)))
+        when(roomRepository.findAll(any(Specification.class), any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(room)));
 
-        PageResponse<RoomPublicResponse> result = roomService.findAllPublicRooms(PageRequest.of(0, 10));
+        PageResponse<RoomPublicResponse> result = roomService.findAllPublicRooms(
+                new RoomFilter(null, null, null, null), PageRequest.of(0, 10));
 
         assertThat(result.content()).hasSize(1);
     }
@@ -251,10 +255,11 @@ class RoomServiceTest {
     @Test
     void findByPropertyIdPublic_ShouldReturnPage() {
         RoomEntity room = buildRoom("Habitación doble", "Desc", BigDecimal.valueOf(400));
-        when(roomRepository.findAllByPropertyIdAndStatus(10, RoomStatus.ACTIVE, PageRequest.of(0, 10)))
+        when(roomRepository.findAll(any(Specification.class), any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(room)));
 
-        PageResponse<RoomPublicResponse> result = roomService.findByPropertyIdPublic(10, PageRequest.of(0, 10));
+        PageResponse<RoomPublicResponse> result = roomService.findByPropertyIdPublic(
+                10, new RoomFilter(null, null, null, null), PageRequest.of(0, 10));
 
         assertThat(result.content()).hasSize(1);
     }

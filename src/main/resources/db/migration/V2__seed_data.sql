@@ -1,6 +1,3 @@
--- ==========================
--- Amenities
--- ==========================
 INSERT INTO amenities (name, description, scope) VALUES
 ('Ascensor', 'Edificio equipado con ascensor', 'PROPERTY'),
 ('Garaje', 'Plaza de aparcamiento disponible', 'PROPERTY'),
@@ -37,15 +34,9 @@ INSERT INTO amenities (name, description, scope) VALUES
 ('Vistas exteriores', 'Vistas al exterior', 'BOTH'),
 ('Terraza', 'Espacio exterior disponible', 'BOTH');
 
--- ==========================
--- Countries
--- ==========================
 INSERT INTO countries (name, iso_code)
 VALUES ('España', 'ESP');
 
--- ==========================
--- Provinces
--- ==========================
 INSERT INTO provinces (country_id, name) VALUES
 ((SELECT id FROM countries WHERE iso_code = 'ESP'), 'Andalucía'),
 ((SELECT id FROM countries WHERE iso_code = 'ESP'), 'Aragón'),
@@ -67,9 +58,6 @@ INSERT INTO provinces (country_id, name) VALUES
 ((SELECT id FROM countries WHERE iso_code = 'ESP'), 'Ceuta'),
 ((SELECT id FROM countries WHERE iso_code = 'ESP'), 'Melilla');
 
--- ==========================
--- Cities
--- ==========================
 INSERT INTO cities (province_id, name) VALUES
 ((SELECT p.id FROM provinces p WHERE p.name='Andalucía'), 'Sevilla'),
 ((SELECT p.id FROM provinces p WHERE p.name='Andalucía'), 'Málaga'),
