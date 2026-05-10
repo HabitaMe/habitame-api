@@ -51,7 +51,6 @@ class ProvinceControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    // ------------------- GET /v1/provinces -------------------
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void findAll_ShouldReturnProvinces() throws Exception {
@@ -80,7 +79,6 @@ class ProvinceControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    // ------------------- GET /v1/provinces/{id} -------------------
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void findById_ShouldReturnProvince() throws Exception {
@@ -104,7 +102,6 @@ class ProvinceControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-    // ------------------- GET /v1/provinces/{id}/cities -------------------
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void findCitiesByProvince_ShouldReturnCities() throws Exception {
@@ -117,7 +114,6 @@ class ProvinceControllerTest {
                 .andExpect(status().isOk());
     }
 
-    // ------------------- POST /v1/provinces -------------------
     @Test
     @WithMockUser(roles = "ADMIN")
     void addProvince_ShouldReturnCreated() throws Exception {
@@ -179,7 +175,6 @@ class ProvinceControllerTest {
                 .andExpect(jsonPath("$.message").value("countryId: must not be null"));
     }
 
-    // ------------------- PUT /v1/provinces/{id} -------------------
     @Test
     @WithMockUser(roles = "ADMIN")
     void updateProvince_ShouldReturnUpdated() throws Exception {
@@ -242,7 +237,6 @@ class ProvinceControllerTest {
                 .andExpect(jsonPath("$.message").value("countryId: must not be null"));
     }
 
-    // ------------------- DELETE /v1/provinces/{id} -------------------
     @Test
     @WithMockUser(roles = "ADMIN")
     void deleteProvince_ShouldReturnNoContent() throws Exception {

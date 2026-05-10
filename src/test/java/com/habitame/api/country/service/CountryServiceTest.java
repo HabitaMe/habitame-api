@@ -34,7 +34,6 @@ class CountryServiceTest {
     @InjectMocks
     private CountryService countryService;
 
-    // ------------------- findAll -------------------
 
     @Test
     void findAll_ShouldReturnPageResponse() {
@@ -50,7 +49,6 @@ class CountryServiceTest {
         assertThat(result.totalElements()).isEqualTo(1);
     }
 
-    // ------------------- findById -------------------
 
     @Test
     void findById_WhenFound_ShouldReturnResponse() {
@@ -72,7 +70,6 @@ class CountryServiceTest {
                 .hasMessageContaining("Country not found: 99");
     }
 
-    // ------------------- addCountry -------------------
 
     @Test
     void addCountry_WhenNameIsNew_ShouldSaveAndReturn() {
@@ -99,7 +96,6 @@ class CountryServiceTest {
                 .hasMessageContaining("España");
     }
 
-    // ------------------- updateCountry -------------------
 
     @Test
     void updateCountry_WhenFound_ShouldUpdateFields() {
@@ -126,7 +122,6 @@ class CountryServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
-    // ------------------- deleteCountry -------------------
 
     @Test
     void deleteCountry_WhenFound_ShouldDelete() {
@@ -139,7 +134,6 @@ class CountryServiceTest {
         verify(countryRepository).delete(entity);
     }
 
-    // ------------------- helpers -------------------
 
     private CountryEntity buildCountry(Integer id, String name, String isoCode) {
         return CountryEntity.builder()

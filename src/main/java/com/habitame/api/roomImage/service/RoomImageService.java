@@ -34,7 +34,6 @@ public class RoomImageService {
 
         roomSecurityService.checkRoomAccess(room);
 
-        // Validación del archivo
         if (request.file().isEmpty() || !isImage(request.file())) {
             throw new IllegalArgumentException("Invalid file: must be a non-empty image");
         }
@@ -64,7 +63,6 @@ public class RoomImageService {
 
         roomSecurityService.checkImageAccess(image);
 
-        // Separamos el error de storage del error de lógica
         imageStorageService.delete(image.getImageUrl());
 
         roomImageRepository.deleteById(imageId);

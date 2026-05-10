@@ -78,7 +78,6 @@ class PropertySecurityServiceTest {
                 .isInstanceOf(ForbiddenException.class);
     }
 
-    // ------------------- helpers -------------------
 
     private UserEntity buildUser(Integer id, Role role) {
         UserEntity user = new UserEntity();

@@ -43,7 +43,6 @@ class RoomSecurityServiceTest {
         securityUtils.close();
     }
 
-    // ------------------- checkRoomAccess(RoomEntity) -------------------
 
     @Test
     void checkRoomAccess_WhenAdmin_ShouldPass() {
@@ -85,7 +84,6 @@ class RoomSecurityServiceTest {
                 .isInstanceOf(ForbiddenException.class);
     }
 
-    // ------------------- checkRoomAccess(Integer roomId) -------------------
 
     @Test
     void checkRoomAccess_ById_WhenNotFound_ShouldThrow() {
@@ -98,7 +96,6 @@ class RoomSecurityServiceTest {
                 .hasMessageContaining("Room not found: 99");
     }
 
-    // ------------------- checkImageAccess -------------------
 
     @Test
     void checkImageAccess_WhenAdmin_ShouldPass() {
@@ -126,7 +123,6 @@ class RoomSecurityServiceTest {
                 .isInstanceOf(ForbiddenException.class);
     }
 
-    // ------------------- helpers -------------------
 
     private UserEntity buildUser(Integer id, Role role) {
         UserEntity user = new UserEntity();

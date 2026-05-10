@@ -101,7 +101,6 @@ class RoomServiceTest {
         securityUtils.close();
     }
 
-    // ------------------- updateOwnerRoom -------------------
 
     @Test
     void updateOwnerRoom_WhenTitleChanges_ShouldTriggerReview() {
@@ -180,7 +179,6 @@ class RoomServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
-    // ------------------- resolveReview -------------------
 
     @Test
     void resolveReview_WhenApproved_ShouldSetRoomActive() {
@@ -218,7 +216,6 @@ class RoomServiceTest {
         assertThat(room.getStatus()).isEqualTo(RoomStatus.INACTIVE);
     }
 
-    // ------------------- findAllPublicRooms -------------------
 
     @Test
     void findAllPublicRooms_ShouldReturnMappedPage() {
@@ -231,7 +228,6 @@ class RoomServiceTest {
         assertThat(result.content()).hasSize(1);
     }
 
-    // ------------------- findByIdPublicRoom -------------------
 
     @Test
     void findByIdPublicRoom_WhenFound_ShouldReturn() {
@@ -251,7 +247,6 @@ class RoomServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
-    // ------------------- findByPropertyIdPublic -------------------
 
     @Test
     void findByPropertyIdPublic_ShouldReturnPage() {
@@ -264,7 +259,6 @@ class RoomServiceTest {
         assertThat(result.content()).hasSize(1);
     }
 
-    // ------------------- findAllByOwner -------------------
 
     @Test
     void findAllByOwner_ShouldReturnPage() {
@@ -277,7 +271,6 @@ class RoomServiceTest {
         assertThat(result.content()).hasSize(1);
     }
 
-    // ------------------- findMyRoomById -------------------
 
     @Test
     void findMyRoomById_WhenFound_ShouldReturn() {
@@ -297,7 +290,6 @@ class RoomServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
-    // ------------------- addOwnerRoom -------------------
 
     @Test
     void addOwnerRoom_ShouldSaveAndTriggerReview() {
@@ -312,7 +304,6 @@ class RoomServiceTest {
         verify(roomReviewService).addReview(any());
     }
 
-    // ------------------- findAll (admin) -------------------
 
     @Test
     void findAll_ShouldReturnAllRooms() {
@@ -325,7 +316,6 @@ class RoomServiceTest {
         assertThat(result.content()).hasSize(1);
     }
 
-    // ------------------- findById (admin) -------------------
 
     @Test
     void findById_WhenFound_ShouldReturnAdminDetail() {
@@ -345,7 +335,6 @@ class RoomServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
-    // ------------------- saveAdminRoom -------------------
 
     @Test
     void saveAdminRoom_ShouldSaveAndReturn() {
@@ -362,7 +351,6 @@ class RoomServiceTest {
         assertThat(result).isNotNull();
     }
 
-    // ------------------- updateAdminRoom -------------------
 
     @Test
     void updateAdminRoom_WhenFound_ShouldUpdate() {
@@ -393,7 +381,6 @@ class RoomServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
-    // ------------------- deleteRoom -------------------
 
     @Test
     void deleteRoom_ShouldDelete() {
@@ -414,7 +401,6 @@ class RoomServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
-    // ------------------- addAmenities -------------------
 
     @Test
     void addAmenities_ShouldAddToRoom() {
@@ -431,7 +417,6 @@ class RoomServiceTest {
         assertThat(room.getRoomAmenities()).contains(amenity);
     }
 
-    // ------------------- removeAmenities -------------------
 
     @Test
     void removeAmenities_ShouldRemoveFromRoom() {
@@ -448,7 +433,6 @@ class RoomServiceTest {
         assertThat(room.getRoomAmenities()).doesNotContain(amenity);
     }
 
-    // ------------------- helpers -------------------
 
     private RoomEntity buildRoomWithTimestamps(String title, String description, BigDecimal price) {
         return RoomEntity.builder()

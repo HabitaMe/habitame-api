@@ -91,7 +91,6 @@ class PropertyServiceTest {
         securityUtils.close();
     }
 
-    // ------------------- updateOwnerProperty -------------------
 
     @Test
     void updateOwnerProperty_WhenTitleChanges_ShouldTriggerReview() {
@@ -171,7 +170,6 @@ class PropertyServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
-    // ------------------- resolveReview -------------------
 
     @Test
     void resolveReview_WhenApproved_ShouldSetPropertyActive() {
@@ -209,7 +207,6 @@ class PropertyServiceTest {
         assertThat(property.getStatus()).isEqualTo(PropertyStatus.INACTIVE);
     }
 
-    // ------------------- findPublicProperties -------------------
 
     @Test
     void findPublicProperties_ShouldReturnMappedPage() {
@@ -223,7 +220,6 @@ class PropertyServiceTest {
         assertThat(result.content()).hasSize(1);
     }
 
-    // ------------------- findPublicPropertyById -------------------
 
     @Test
     void findPublicPropertyById_WhenFound_ShouldReturn() {
@@ -243,7 +239,6 @@ class PropertyServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
-    // ------------------- findAllByOwner -------------------
 
     @Test
     void findAllByOwner_ShouldReturnPage() {
@@ -256,7 +251,6 @@ class PropertyServiceTest {
         assertThat(result.content()).hasSize(1);
     }
 
-    // ------------------- findMyPropertyById -------------------
 
     @Test
     void findMyPropertyById_WhenFound_ShouldReturn() {
@@ -276,7 +270,6 @@ class PropertyServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
-    // ------------------- addOwnerProperty -------------------
 
     @Test
     void addOwnerProperty_ShouldSaveAndTriggerReview() {
@@ -291,7 +284,6 @@ class PropertyServiceTest {
         verify(propertyReviewService).addReview(any());
     }
 
-    // ------------------- findAll (admin) -------------------
 
     @Test
     void findAll_ShouldReturnAllProperties() {
@@ -304,7 +296,6 @@ class PropertyServiceTest {
         assertThat(result.content()).hasSize(1);
     }
 
-    // ------------------- findById (admin) -------------------
 
     @Test
     void findById_WhenFound_ShouldReturnAdminDetail() {
@@ -324,7 +315,6 @@ class PropertyServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
-    // ------------------- saveAdminProperty -------------------
 
     @Test
     void saveAdminProperty_ShouldSaveAndReturn() {
@@ -342,7 +332,6 @@ class PropertyServiceTest {
         assertThat(result.id()).isEqualTo(1);
     }
 
-    // ------------------- updateAdminProperty -------------------
 
     @Test
     void updateAdminProperty_WhenFound_ShouldUpdate() {
@@ -372,7 +361,6 @@ class PropertyServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
-    // ------------------- deleteProperty -------------------
 
     @Test
     void deleteProperty_ShouldDeleteProperty() {
@@ -393,7 +381,6 @@ class PropertyServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
-    // ------------------- addAmenities -------------------
 
     @Test
     void addAmenities_ShouldAddToPropertyAndReturn() {
@@ -410,7 +397,6 @@ class PropertyServiceTest {
         assertThat(property.getPropertyAmenities()).contains(amenity);
     }
 
-    // ------------------- removeAmenities -------------------
 
     @Test
     void removeAmenities_ShouldRemoveFromProperty() {
@@ -427,7 +413,6 @@ class PropertyServiceTest {
         assertThat(property.getPropertyAmenities()).doesNotContain(amenity);
     }
 
-    // ------------------- helpers -------------------
 
     private PropertyEntity buildPropertyWithTimestamps(String title, String description, String address) {
         return PropertyEntity.builder()

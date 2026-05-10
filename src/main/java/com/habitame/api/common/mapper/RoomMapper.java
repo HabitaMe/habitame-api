@@ -67,8 +67,6 @@ public class RoomMapper {
                 roomEntity.getStatus().toString()
         );
     }
-    // TODO: Revisar por que owner esta en ownerResponse y no en publicResponse
-    // TODO: Revisar por que se pone address
     public static RoomOwnerDetailResponse toOwnerDetailResponse(RoomEntity room) {return new RoomOwnerDetailResponse(
                 room.getId(),
                 room.getTitle(),
@@ -132,7 +130,6 @@ public class RoomMapper {
         );
     }
 
-    // TODO: Revisar por que aqui va la adress
     public static RoomAdminDetailResponse toAdminDetailResponse(RoomEntity room) {
         return new RoomAdminDetailResponse(
                 room.getId(),

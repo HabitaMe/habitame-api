@@ -15,10 +15,6 @@ public interface RoomReviewRepository extends JpaRepository<RoomReviewEntity, In
 
     Page<RoomReviewEntity> findAllByStatus(RoomReviewStatus status, Pageable pageable);
 
-
-    /**
-     * Historial completo ordenado de más reciente a más antiguo
-     */
     @Query("""
             SELECT r FROM RoomReviewEntity r
             LEFT JOIN FETCH r.admin
@@ -26,10 +22,6 @@ public interface RoomReviewRepository extends JpaRepository<RoomReviewEntity, In
             ORDER BY r.createdAt DESC
             """)
     List<RoomReviewEntity> findAllByRoomId(@Param("roomId") Integer roomId);
-
-    /**
-     * La review más reciente para mostrársela al owner si fue rechazada
-     */
 
     @Query("""
             SELECT r FROM RoomReviewEntity r
@@ -40,8 +32,6 @@ public interface RoomReviewRepository extends JpaRepository<RoomReviewEntity, In
             """)
     Optional<RoomReviewEntity> findLatestByRoomId(@Param("roomId") Integer roomId);
 
-    /**
-     * La review pendiente activa — solo debería haber una a la vez
-     */
+    // only one pending review per room at a time
     Optional<RoomReviewEntity> findByRoomIdAndStatus(Integer roomId, RoomReviewStatus status);
 }

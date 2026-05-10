@@ -66,7 +66,6 @@ class PropertyReviewServiceTest {
         securityUtils.close();
     }
 
-    // ------------------- resolveReview -------------------
 
     @Test
     void resolveReview_WhenApproved_ShouldUpdateReviewStatus() {
@@ -135,7 +134,6 @@ class PropertyReviewServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
-    // ------------------- getReviews -------------------
 
     @Test
     void getReviews_ShouldReturnMappedPage() {
@@ -148,7 +146,6 @@ class PropertyReviewServiceTest {
         assertThat(result.content()).hasSize(1);
     }
 
-    // ------------------- findById -------------------
 
     @Test
     void findById_WhenFound_ShouldReturnDetail() {
@@ -168,7 +165,6 @@ class PropertyReviewServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
-    // ------------------- getReviewsByStatus -------------------
 
     @Test
     void getReviewsByStatus_ShouldReturnFilteredPage() {
@@ -183,7 +179,6 @@ class PropertyReviewServiceTest {
         assertThat(result.content()).hasSize(1);
     }
 
-    // ------------------- findAllByPropertyId -------------------
 
     @Test
     void findAllByPropertyId_ShouldReturnList() {
@@ -195,7 +190,6 @@ class PropertyReviewServiceTest {
         assertThat(result).hasSize(1);
     }
 
-    // ------------------- findLatestRejectedReview -------------------
 
     @Test
     void findLatestRejectedReview_WhenRejectedExists_ShouldReturnIt() {
@@ -230,7 +224,6 @@ class PropertyReviewServiceTest {
         assertThat(result).isEmpty();
     }
 
-    // ------------------- addReview -------------------
 
     @Test
     void addReview_ShouldCreatePendingReview() {
@@ -251,7 +244,6 @@ class PropertyReviewServiceTest {
         ));
     }
 
-    // ------------------- helpers -------------------
 
     private PropertyReviewEntity buildPendingReview() {
         PropertyEntity property = PropertyEntity.builder()

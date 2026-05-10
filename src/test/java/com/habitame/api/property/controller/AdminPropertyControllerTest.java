@@ -58,7 +58,6 @@ class AdminPropertyControllerTest {
     @MockBean
     private UserRepository userRepository;
 
-    // ------------------- GET /v1/admin/properties -------------------
 
     @Test
     void findAll_WithoutAuth_ShouldReturn401() throws Exception {
@@ -84,7 +83,6 @@ class AdminPropertyControllerTest {
                 .andExpect(jsonPath("$.content").isArray());
     }
 
-    // ------------------- POST /v1/admin/properties -------------------
 
     @Test
     @WithMockUser(roles = "ARRENDADOR")
@@ -121,7 +119,6 @@ class AdminPropertyControllerTest {
                 .andExpect(header().string("Location", "v1/admin/properties/42"));
     }
 
-    // ------------------- DELETE /v1/admin/properties/{id} -------------------
 
     @Test
     @WithMockUser(roles = "ARRENDADOR")
@@ -148,7 +145,6 @@ class AdminPropertyControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-    // ------------------- PATCH /v1/admin/properties/{id}/reviews/resolve -------------------
 
     @Test
     @WithMockUser(roles = "ADMIN")

@@ -14,10 +14,6 @@ import java.util.Optional;
 public interface PropertyReviewRepository extends JpaRepository<PropertyReviewEntity, Integer> {
     Page<PropertyReviewEntity> findAllByStatus(PropertyReviewStatus status, Pageable pageable);
 
-
-    /**
-     * Historial completo ordenado de más reciente a más antiguo
-     */
     @Query("""
             SELECT r FROM PropertyReviewEntity r
             LEFT JOIN FETCH r.admin
@@ -25,10 +21,6 @@ public interface PropertyReviewRepository extends JpaRepository<PropertyReviewEn
             ORDER BY r.createdAt DESC
             """)
     List<PropertyReviewEntity> findAllByPropertyId(@Param("propertyId") Integer propertyId);
-
-    /**
-     * La review más reciente para mostrársela al owner si fue rechazada
-     */
 
     @Query("""
             SELECT r FROM PropertyReviewEntity r
@@ -39,8 +31,6 @@ public interface PropertyReviewRepository extends JpaRepository<PropertyReviewEn
             """)
     Optional<PropertyReviewEntity> findLatestByPropertyId(@Param("propertyId") Integer propertyId);
 
-    /**
-     * La review pendiente activa — solo debería haber una a la vez
-     */
+    // only one pending review per property at a time
     Optional<PropertyReviewEntity> findByPropertyIdAndStatus(Integer propertyId, PropertyReviewStatus status);
 }

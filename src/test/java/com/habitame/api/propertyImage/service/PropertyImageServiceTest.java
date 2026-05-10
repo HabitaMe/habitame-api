@@ -44,7 +44,6 @@ class PropertyImageServiceTest {
     @InjectMocks
     private PropertyImageService propertyImageService;
 
-    // ------------------- upload -------------------
 
     @Test
     void upload_ShouldStoreAndPersistImage() throws IOException {
@@ -111,7 +110,6 @@ class PropertyImageServiceTest {
                 .hasMessageContaining("Archivo inválido");
     }
 
-    // ------------------- delete -------------------
 
     @Test
     void delete_ShouldDeleteImageAndStorage() throws IOException {
@@ -136,7 +134,6 @@ class PropertyImageServiceTest {
                 .hasMessageContaining("99");
     }
 
-    // ------------------- findByPropertyId -------------------
 
     @Test
     void findByPropertyId_ShouldReturnMappedList() {
@@ -152,7 +149,6 @@ class PropertyImageServiceTest {
         assertThat(result.get(0).imageUrl()).isEqualTo("https://example.com/photo.jpg");
     }
 
-    // ------------------- helpers -------------------
 
     private PropertyEntity buildProperty() {
         return PropertyEntity.builder()

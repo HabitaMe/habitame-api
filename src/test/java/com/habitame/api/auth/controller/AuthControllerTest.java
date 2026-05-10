@@ -49,7 +49,6 @@ class AuthControllerTest {
     @MockBean
     private UserRepository userRepository;
 
-    // ------------------- POST /v1/auth/register -------------------
 
     @Test
     void register_ShouldReturnCreatedUser() throws Exception {
@@ -115,7 +114,6 @@ class AuthControllerTest {
                 .andExpect(status().isConflict());
     }
 
-    // ------------------- POST /v1/auth/login -------------------
 
     @Test
     void login_ShouldReturnTokens() throws Exception {
@@ -150,7 +148,6 @@ class AuthControllerTest {
                 .andExpect(jsonPath("$.message").value("Credenciales incorrectas"));
     }
 
-    // ------------------- POST /v1/auth/logout -------------------
 
     @Test
     void logout_ShouldReturnNoContent() throws Exception {

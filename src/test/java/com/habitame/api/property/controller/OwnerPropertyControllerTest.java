@@ -52,7 +52,6 @@ class OwnerPropertyControllerTest {
     @MockBean
     private UserRepository userRepository;
 
-    // ------------------- GET /v1/owner/properties -------------------
 
     @Test
     void findMyProperties_WithoutAuth_ShouldReturn401() throws Exception {
@@ -78,7 +77,6 @@ class OwnerPropertyControllerTest {
                 .andExpect(jsonPath("$.content").isArray());
     }
 
-    // ------------------- POST /v1/owner/properties -------------------
 
     @Test
     void addOwnerProperty_WithoutAuth_ShouldReturn401() throws Exception {
@@ -144,7 +142,6 @@ class OwnerPropertyControllerTest {
                 .andExpect(header().string("Location", "v1/owner/properties/42"));
     }
 
-    // ------------------- DELETE /v1/owner/properties/{id} -------------------
 
     @Test
     void deleteOwnerProperty_WithoutAuth_ShouldReturn401() throws Exception {
@@ -166,7 +163,6 @@ class OwnerPropertyControllerTest {
                 .andExpect(status().isNoContent());
     }
 
-    // ------------------- helpers -------------------
 
     private PropertyOwnerRequest buildValidRequest() {
         return new PropertyOwnerRequest(

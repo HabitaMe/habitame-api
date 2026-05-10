@@ -45,7 +45,6 @@ class AuthServiceTest {
     @InjectMocks
     private AuthService authService;
 
-    // ------------------- register -------------------
 
     @Test
     void register_ShouldSaveUserWithHashedPassword() {
@@ -81,7 +80,6 @@ class AuthServiceTest {
         verify(userRepository, never()).save(any());
     }
 
-    // ------------------- login -------------------
 
     @Test
     void login_ShouldReturnAuthResponseWithBearerType() {
@@ -140,7 +138,6 @@ class AuthServiceTest {
                 .isInstanceOf(UnauthorizedException.class);
     }
 
-    // ------------------- refresh -------------------
 
     @Test
     void refresh_ShouldRevokeOldTokenAndReturnNew() {
@@ -173,7 +170,6 @@ class AuthServiceTest {
                 .hasMessageContaining("expirado");
     }
 
-    // ------------------- logout -------------------
 
     @Test
     void logout_ShouldRevokeToken() {
@@ -189,7 +185,6 @@ class AuthServiceTest {
         verify(refreshTokenRepository).save(token);
     }
 
-    // ------------------- helpers -------------------
 
     private UserEntity buildActiveUser() {
         UserEntity user = new UserEntity();

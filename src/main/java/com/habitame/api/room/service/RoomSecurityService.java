@@ -14,12 +14,6 @@ import org.springframework.stereotype.Service;
 public class RoomSecurityService {
     private final RoomRepository roomRepository;
 
-    /**
-     * Verifica que el usuario actual sea el owner de la habitación o un ADMIN.
-     *
-     * @param roomId id de la habitación.
-     * @throws ForbiddenException si no tiene permiso.
-     */
     public void checkRoomAccess(Integer roomId) {
         RoomEntity room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new ResourceNotFoundException("Room not found: " + roomId));
@@ -33,9 +27,6 @@ public class RoomSecurityService {
         }
     }
 
-    /**
-     * Verifica que el usuario actual sea el owner de la imagen (a través de la room) o un ADMIN.
-     */
     public void checkImageAccess(RoomImageEntity image) {
         if (!SecurityUtils.isAdmin() && !SecurityUtils.isOwnerOf(image.getRoom().getProperty().getOwner())) {
             throw new ForbiddenException("Don't have permission to access this image");

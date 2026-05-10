@@ -63,7 +63,6 @@ class RoomReviewServiceTest {
         securityUtils.close();
     }
 
-    // ------------------- addReview -------------------
 
     @Test
     void addReview_ShouldCreatePendingReview() {
@@ -78,7 +77,6 @@ class RoomReviewServiceTest {
         ));
     }
 
-    // ------------------- findById -------------------
 
     @Test
     void findById_WhenFound_ShouldReturnDetailResponse() {
@@ -101,7 +99,6 @@ class RoomReviewServiceTest {
                 .hasMessageContaining("Review not found: 99");
     }
 
-    // ------------------- resolveReview -------------------
 
     @Test
     void resolveReview_WhenApproved_ShouldSetStatusAndAdmin() {
@@ -168,7 +165,6 @@ class RoomReviewServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
-    // ------------------- findLatestRejectedReview -------------------
 
     @Test
     void findLatestRejectedReview_WhenRejected_ShouldReturnPresent() {
@@ -195,7 +191,6 @@ class RoomReviewServiceTest {
         assertThat(result).isEmpty();
     }
 
-    // ------------------- helpers -------------------
 
     private RoomEntity buildRoom(Integer id) {
         return RoomEntity.builder()

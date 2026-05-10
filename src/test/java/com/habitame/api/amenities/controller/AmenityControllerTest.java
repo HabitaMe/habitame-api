@@ -44,7 +44,6 @@ class AmenityControllerTest {
     @MockBean
     private UserRepository userRepository;
 
-    // ------------------- GET /v1/amenities (público) -------------------
 
     @Test
     void findAmenities_WithoutAuth_ShouldReturn200() throws Exception {
@@ -70,7 +69,6 @@ class AmenityControllerTest {
                 .andExpect(jsonPath("$[0].scope").value("ROOM"));
     }
 
-    // ------------------- POST /v1/amenities (solo ADMIN) -------------------
 
     @Test
     void saveAmenity_WithoutAuth_ShouldReturn401() throws Exception {
@@ -119,7 +117,6 @@ class AmenityControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-    // ------------------- DELETE /v1/amenities/{id} -------------------
 
     @Test
     @WithMockUser(roles = "ADMIN")

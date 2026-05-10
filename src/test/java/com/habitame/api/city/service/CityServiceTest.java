@@ -38,7 +38,6 @@ class CityServiceTest {
     @InjectMocks
     private CityService cityService;
 
-    // ------------------- findAll -------------------
 
     @Test
     void findAll_ShouldReturnPageResponse() {
@@ -54,7 +53,6 @@ class CityServiceTest {
         assertThat(result.totalElements()).isEqualTo(1);
     }
 
-    // ------------------- findEntityById -------------------
 
     @Test
     void findEntityById_WhenFound_ShouldReturnEntity() {
@@ -76,7 +74,6 @@ class CityServiceTest {
                 .hasMessageContaining("City not found: 99");
     }
 
-    // ------------------- findByProvince -------------------
 
     @Test
     void findByProvince_ShouldReturnFilteredPage() {
@@ -92,7 +89,6 @@ class CityServiceTest {
         verify(cityRepository).findByProvinceEntity_Id(2, pageable);
     }
 
-    // ------------------- saveCity -------------------
 
     @Test
     void saveCity_WhenNew_ShouldSaveAndReturn() {
@@ -121,7 +117,6 @@ class CityServiceTest {
                 .hasMessageContaining("City already exists");
     }
 
-    // ------------------- updateCity -------------------
 
     @Test
     void updateCity_WhenFound_ShouldUpdateNameAndSave() {
@@ -155,7 +150,6 @@ class CityServiceTest {
         verify(provinceService).findEntityById(2);
     }
 
-    // ------------------- deleteCity -------------------
 
     @Test
     void deleteCity_WhenFound_ShouldDelete() {
@@ -169,7 +163,6 @@ class CityServiceTest {
         verify(cityRepository).delete(entity);
     }
 
-    // ------------------- helpers -------------------
 
     private ProvinceEntity buildProvince(Integer id, String name) {
         return ProvinceEntity.builder()

@@ -32,9 +32,6 @@ public class RoomReviewService {
     private final RoomReviewRepository roomReviewRepository;
     private final RoomSecurityService roomSecurityService;
 
-    /**
-     * Crea una review pendiente para una habitacion.
-     */
     @Transactional
     public void addReview(RoomEntity roomEntity) {
         RoomReviewEntity roomReviewEntity = new RoomReviewEntity();
@@ -43,9 +40,6 @@ public class RoomReviewService {
         roomReviewRepository.save(roomReviewEntity);
     }
 
-    /**
-     * Historial completo de reviews.
-     */
     public PageResponse<RoomReviewResponse> getReviews(Pageable pageable) {
         Page<RoomReviewEntity> page = roomReviewRepository.findAll(pageable);
 
@@ -66,9 +60,6 @@ public class RoomReviewService {
         return RoomReviewMapper.toDetailResponse(roomReviewRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Review not found: " + id)));
     }
 
-    /**
-     * Historial completo de reviews filtrado por {@link PropertyReviewStatus}.
-     */
     public PageResponse<RoomReviewResponse> getReviewsByStatus(RoomReviewStatus status, Pageable pageable) {
         Page<RoomReviewEntity> page = roomReviewRepository.findAllByStatus(status, pageable);
 
@@ -85,9 +76,6 @@ public class RoomReviewService {
         );
     }
 
-    /**
-     * Historial completo de reviews de una habitacion.
-     */
     public List<RoomReviewResponse> findAllByRoomId(Integer roomId) {
         return roomReviewRepository.findAllByRoomId(roomId)
                 .stream()
@@ -95,14 +83,6 @@ public class RoomReviewService {
                 .toList();
     }
 
-    /**
-     * El admin aprueba o rechaza la review pendiente de una habitacion.
-     * Actualiza el status de la review y el de la habitacion en la misma transacción.
-     * Si se rechaza sin comentario se lanza excepción — el owner necesita saber qué corregir.
-     *
-     * @throws ResourceNotFoundException si no hay review pendiente para esa habitacion
-     * @throws IllegalArgumentException  si se rechaza sin comentario
-     */
     @Transactional
     public RoomReviewResponse resolveReview(Integer roomId, RoomReviewDecisionRequest request) {
         if (request.status() == RoomReviewStatus.REJECTED && (request.comment() == null || request.comment().isBlank())) {
@@ -112,7 +92,6 @@ public class RoomReviewService {
         RoomReviewEntity review = roomReviewRepository.findByRoomIdAndStatus(roomId, RoomReviewStatus.PENDING)
                 .orElseThrow(() -> new ResourceNotFoundException("Review not found for room: " + roomId));
 
-
         review.setStatus(request.status());
         review.setComment(request.comment());
         review.setAdmin(SecurityUtils.getCurrentUser());
@@ -121,14 +100,10 @@ public class RoomReviewService {
         return RoomReviewMapper.toResponse(roomReviewRepository.save(review));
     }
 
-    /**
-     * Encontrar la última review rechazada de la propiedad.
-     */
     public Optional<RoomReviewDetailResponse> findLatestRejectedReview(Integer roomId) {
         roomSecurityService.checkRoomAccess(roomId);
         return roomReviewRepository.findLatestByRoomId(roomId)
                 .filter(r -> r.getStatus() == RoomReviewStatus.REJECTED)
                 .map(RoomReviewMapper::toDetailResponse);
     }
-
 }

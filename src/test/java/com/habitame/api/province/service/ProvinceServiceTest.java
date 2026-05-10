@@ -38,7 +38,6 @@ class ProvinceServiceTest {
     @InjectMocks
     private ProvinceService provinceService;
 
-    // ------------------- findAll -------------------
 
     @Test
     void findAll_ShouldReturnPageResponse() {
@@ -54,7 +53,6 @@ class ProvinceServiceTest {
         assertThat(result.totalElements()).isEqualTo(1);
     }
 
-    // ------------------- findEntityById -------------------
 
     @Test
     void findEntityById_WhenFound_ShouldReturnEntity() {
@@ -76,7 +74,6 @@ class ProvinceServiceTest {
                 .hasMessageContaining("Province not found: 99");
     }
 
-    // ------------------- findByCountry -------------------
 
     @Test
     void findByCountry_ShouldReturnFilteredPage() {
@@ -92,7 +89,6 @@ class ProvinceServiceTest {
         verify(provinceRepository).findByCountryEntity_Id(1, pageable);
     }
 
-    // ------------------- addProvince -------------------
 
     @Test
     void addProvince_WhenNew_ShouldSaveAndReturn() {
@@ -121,7 +117,6 @@ class ProvinceServiceTest {
                 .hasMessageContaining("Province already exists");
     }
 
-    // ------------------- updateProvince -------------------
 
     @Test
     void updateProvince_WhenFound_ShouldUpdateFieldsAndSave() {
@@ -139,7 +134,6 @@ class ProvinceServiceTest {
         verify(provinceRepository).save(entity);
     }
 
-    // ------------------- deleteProvince -------------------
 
     @Test
     void deleteProvince_WhenFound_ShouldDelete() {
@@ -152,7 +146,6 @@ class ProvinceServiceTest {
         verify(provinceRepository).delete(entity);
     }
 
-    // ------------------- helpers -------------------
 
     private CountryEntity buildCountry(Integer id, String name) {
         return CountryEntity.builder()

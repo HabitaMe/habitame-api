@@ -30,9 +30,6 @@ public class JwtProvider {
         this.refreshExpirationMillis = refreshExpirationMillis;
     }
 
-    /**
-     * Genera un token de acceso de corta duración (default 1h).
-     */
     public String generateAccessToken(String subject) {
         Date now = new Date();
         return Jwts.builder()
@@ -43,10 +40,6 @@ public class JwtProvider {
                 .compact();
     }
 
-    /**
-     * Genera un refresh token de larga duración (default 24h).
-     * Configurar jwt.refresh-expiration en application.yml para cambiarlo.
-     */
     public String generateRefreshToken(String subject) {
         Date now = new Date();
         return Jwts.builder()
@@ -57,11 +50,6 @@ public class JwtProvider {
                 .compact();
     }
 
-    /**
-     * Valida la firma y expiración del token.
-     *
-     * @throws UnauthorizedException si el token expiró o es inválido
-     */
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
@@ -76,11 +64,6 @@ public class JwtProvider {
         }
     }
 
-    /**
-     * Extrae el subject del token.
-     *
-     * @throws UnauthorizedException si el token no puede ser parseado
-     */
     public String getSubjectFromToken(String token) {
         try {
             return Jwts.parserBuilder()

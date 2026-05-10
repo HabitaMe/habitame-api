@@ -52,7 +52,6 @@ class OwnerRoomControllerTest {
     @MockBean
     private UserRepository userRepository;
 
-    // ------------------- GET /v1/owner/rooms -------------------
 
     @Test
     void findMyRooms_WithoutAuth_ShouldReturn401() throws Exception {
@@ -71,7 +70,6 @@ class OwnerRoomControllerTest {
                 .andExpect(jsonPath("$.content").isArray());
     }
 
-    // ------------------- POST /v1/owner/rooms -------------------
 
     @Test
     void addOwnerRoom_WithoutAuth_ShouldReturn401() throws Exception {
@@ -109,7 +107,6 @@ class OwnerRoomControllerTest {
                 .andExpect(header().string("Location", "v1/owner/rooms/5"));
     }
 
-    // ------------------- DELETE /v1/owner/rooms/{id} -------------------
 
     @Test
     void deleteOwnerRoom_WithoutAuth_ShouldReturn401() throws Exception {

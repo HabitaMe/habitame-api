@@ -42,7 +42,6 @@ class UserControllerTest {
     @MockBean
     private UserRepository userRepository;
 
-    // ------------------- GET /v1/user/me -------------------
 
     @Test
     void getCurrentUser_WithoutAuth_ShouldReturn401() throws Exception {
@@ -60,7 +59,6 @@ class UserControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    // ------------------- PUT /v1/user -------------------
 
     @Test
     void updateMe_WithoutAuth_ShouldReturn401() throws Exception {

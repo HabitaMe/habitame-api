@@ -29,7 +29,6 @@ class AmenityServiceTest {
     @InjectMocks
     private AmenityService amenityService;
 
-    // ------------------- findAmenities -------------------
 
     @Test
     void findAmenities_ShouldReturnMappedList() {
@@ -43,7 +42,6 @@ class AmenityServiceTest {
         assertThat(result.get(0).name()).isEqualTo("WiFi");
     }
 
-    // ------------------- findAmenitiesByScope -------------------
 
     @Test
     void findAmenitiesByScope_ShouldQueryWithScopeAndBoth() {
@@ -59,7 +57,6 @@ class AmenityServiceTest {
         verify(amenityRepository).findAllByScopeIn(List.of(AmenityScope.PROPERTY, AmenityScope.BOTH));
     }
 
-    // ------------------- findAmenityById -------------------
 
     @Test
     void findAmenityById_WhenFound_ShouldReturnEntity() {
@@ -81,7 +78,6 @@ class AmenityServiceTest {
                 .hasMessageContaining("Amenity not found: 99");
     }
 
-    // ------------------- saveAmenity -------------------
 
     @Test
     void saveAmenity_ShouldPersistAndReturnMappedResponse() {
@@ -97,7 +93,6 @@ class AmenityServiceTest {
         verify(amenityRepository).save(any());
     }
 
-    // ------------------- updateAmenity -------------------
 
     @Test
     void updateAmenity_WhenFound_ShouldUpdateAndReturn() {
@@ -125,7 +120,6 @@ class AmenityServiceTest {
                 .hasMessageContaining("Amenity not found: 99");
     }
 
-    // ------------------- deleteAmenity -------------------
 
     @Test
     void deleteAmenity_ShouldCallDeleteById() {
@@ -134,7 +128,6 @@ class AmenityServiceTest {
         verify(amenityRepository).deleteById(7);
     }
 
-    // ------------------- helpers -------------------
 
     private AmenityEntity buildAmenity(Integer id, String name, AmenityScope scope) {
         return AmenityEntity.builder()

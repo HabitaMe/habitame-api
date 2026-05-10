@@ -33,7 +33,6 @@ public class PropertyImageService {
 
         propertySecurityService.checkPropertyAccess(property);
 
-        // Validación del archivo
         if (request.file().isEmpty() || !isImage(request.file())) {
             throw new IllegalArgumentException("Archivo inválido: debe ser una imagen no vacía");
         }
@@ -63,7 +62,6 @@ public class PropertyImageService {
 
         propertySecurityService.checkImageAccess(image);
 
-        // Separamos el error de storage del error de lógica
         imageStorageService.delete(image.getImageUrl());
 
         propertyImageRepository.deleteById(imageId);

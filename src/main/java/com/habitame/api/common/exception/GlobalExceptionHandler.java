@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    // 400 - Validation Errors
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(
             MethodArgumentNotValidException ex,
@@ -37,7 +36,6 @@ public class GlobalExceptionHandler {
         );
     }
 
-    // 401 - Unauthorized
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ErrorResponse> handleUnauthorized(
             UnauthorizedException ex,
@@ -51,7 +49,6 @@ public class GlobalExceptionHandler {
         );
     }
 
-    // 403 - Forbidden
     @ExceptionHandler(ForbiddenException.class)
     public ResponseEntity<ErrorResponse> handleForbidden(
             ForbiddenException ex,
@@ -65,7 +62,6 @@ public class GlobalExceptionHandler {
         );
     }
 
-    // 403 - Spring Security (@PreAuthorize, etc.)
     @ExceptionHandler(AuthorizationDeniedException.class)
     public ResponseEntity<ErrorResponse> handleAuthorizationDenied(
             AuthorizationDeniedException ex,
@@ -79,7 +75,6 @@ public class GlobalExceptionHandler {
         );
     }
 
-    // 404 - Not Found
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFound(
             ResourceNotFoundException ex,
@@ -93,7 +88,6 @@ public class GlobalExceptionHandler {
         );
     }
 
-    // 409 - Conflict
     @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<ErrorResponse> handleDuplicate(
             DuplicateResourceException ex,
@@ -107,7 +101,6 @@ public class GlobalExceptionHandler {
         );
     }
 
-    // 500 - Fallback
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(
             Exception ex,

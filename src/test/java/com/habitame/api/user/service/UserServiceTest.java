@@ -57,7 +57,6 @@ class UserServiceTest {
         securityUtils.close();
     }
 
-    // ------------------- addPhoto -------------------
 
     @Test
     void addPhoto_ShouldStoreAndUpdateUrl() throws IOException {
@@ -129,7 +128,6 @@ class UserServiceTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
-    // ------------------- removePhoto -------------------
 
     @Test
     void removePhoto_ShouldClearPhotoUrl() throws IOException {
@@ -150,7 +148,6 @@ class UserServiceTest {
                 .isInstanceOf(UnauthorizedException.class);
     }
 
-    // ------------------- updateUser -------------------
 
     @Test
     void updateUser_ShouldUpdateOnlyFullNameAndPhone() {
@@ -165,7 +162,6 @@ class UserServiceTest {
         assertThat(response.username()).isEqualTo(currentUser.getUsername());
     }
 
-    // ------------------- helpers -------------------
 
     private UserEntity buildUser(Integer id, Role role) {
         UserEntity user = new UserEntity();
