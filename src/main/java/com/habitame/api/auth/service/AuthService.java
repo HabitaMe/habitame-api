@@ -14,6 +14,7 @@ import com.habitame.api.common.mapper.UserMapper;
 import com.habitame.api.user.entity.UserEntity;
 import com.habitame.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +31,11 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 
-    private final long refreshTokenDurationMinutes = 60 * 24; // 24 horas
+    @Value("${jwt.expiration:3600000}")
+    private long accessExpirationMillis;
+
+    @Value("${jwt.refresh-expiration:86400000}")
+    private long refreshExpirationMillis;
 
     @Transactional
     public UserEntity register(RegisterRequest request) {
@@ -72,7 +77,7 @@ public class AuthService {
                 accessToken,
                 refreshTokenEntity.getToken(),
                 "Bearer",
-                3600,
+                (int) (accessExpirationMillis / 1000),
                 UserMapper.toResponse(userEntity)
         );
     }
@@ -98,7 +103,7 @@ public class AuthService {
                 accessToken,
                 newRefreshToken.getToken(),
                 "Bearer",
-                3600,
+                (int) (accessExpirationMillis / 1000),
                 UserMapper.toResponse(user)
         );
     }
@@ -118,7 +123,7 @@ public class AuthService {
         RefreshTokenEntity tokenEntity = new RefreshTokenEntity();
         tokenEntity.setUser(user);
         tokenEntity.setToken(UUID.randomUUID().toString());
-        tokenEntity.setExpiryDate(LocalDateTime.now().plusMinutes(refreshTokenDurationMinutes));
+        tokenEntity.setExpiryDate(LocalDateTime.now().plusMinutes(refreshExpirationMillis / 1000 / 60));
         tokenEntity.setRevoked(false);
         return refreshTokenRepository.save(tokenEntity);
     }

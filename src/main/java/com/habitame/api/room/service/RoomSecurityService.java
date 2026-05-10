@@ -12,12 +12,12 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class RoomSecurityService {
-    private RoomRepository roomRepository;
+    private final RoomRepository roomRepository;
 
     /**
      * Verifica que el usuario actual sea el owner de la habitación o un ADMIN.
      *
-     * @param propertyId id de la propiedad.
+     * @param roomId id de la habitación.
      * @throws ForbiddenException si no tiene permiso.
      */
     public void checkRoomAccess(Integer roomId) {

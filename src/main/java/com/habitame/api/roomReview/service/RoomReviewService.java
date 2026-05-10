@@ -96,11 +96,11 @@ public class RoomReviewService {
     }
 
     /**
-     * El admin aprueba o rechaza la review pendiente de una propiedad.
-     * Actualiza el status de la review y el de la propiedad en la misma transacción.
+     * El admin aprueba o rechaza la review pendiente de una habitacion.
+     * Actualiza el status de la review y el de la habitacion en la misma transacción.
      * Si se rechaza sin comentario se lanza excepción — el owner necesita saber qué corregir.
      *
-     * @throws ResourceNotFoundException si no hay review pendiente para esa propiedad
+     * @throws ResourceNotFoundException si no hay review pendiente para esa habitacion
      * @throws IllegalArgumentException  si se rechaza sin comentario
      */
     @Transactional
@@ -110,7 +110,7 @@ public class RoomReviewService {
         }
 
         RoomReviewEntity review = roomReviewRepository.findByRoomIdAndStatus(roomId, RoomReviewStatus.PENDING)
-                .orElseThrow(() -> new ResourceNotFoundException("Review not found for property: " + roomId));
+                .orElseThrow(() -> new ResourceNotFoundException("Review not found for room: " + roomId));
 
 
         review.setStatus(request.status());

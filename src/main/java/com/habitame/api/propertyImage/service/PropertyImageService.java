@@ -50,7 +50,7 @@ public class PropertyImageService {
         PropertyImageEntity propertyImageEntity = PropertyImageEntity.builder()
                 .property(property)
                 .imageUrl(url)
-                .isMain(request.isMain())
+                .isMain(main)
                 .build();
 
         return PropertyImageMapper.toResponse(propertyImageRepository.save(propertyImageEntity));

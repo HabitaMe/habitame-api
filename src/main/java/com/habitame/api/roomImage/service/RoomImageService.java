@@ -51,7 +51,7 @@ public class RoomImageService {
         RoomImageEntity roomImageEntity = RoomImageEntity.builder()
                 .room(room)
                 .imageUrl(url)
-                .isMain(request.isMain())
+                .isMain(main)
                 .build();
 
         return RoomImageMapper.toResponse(roomImageRepository.save(roomImageEntity));
