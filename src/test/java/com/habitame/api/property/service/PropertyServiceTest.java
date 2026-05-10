@@ -14,11 +14,13 @@ import com.habitame.api.property.dto.PropertyAdminResponse;
 import com.habitame.api.property.dto.PropertyOwnerDetailResponse;
 import com.habitame.api.property.dto.PropertyOwnerRequest;
 import com.habitame.api.property.dto.PropertyOwnerResponse;
+import com.habitame.api.property.dto.PropertyFilter;
 import com.habitame.api.property.dto.PropertyPublicDetailResponse;
 import com.habitame.api.property.dto.PropertyPublicResponse;
 import com.habitame.api.property.entity.PropertyEntity;
 import com.habitame.api.property.entity.PropertyStatus;
 import com.habitame.api.property.repository.PropertyRepository;
+import org.springframework.data.jpa.domain.Specification;
 import com.habitame.api.propertyReview.dto.PropertyReviewDecisionRequest;
 import com.habitame.api.propertyReview.dto.PropertyReviewResponse;
 import com.habitame.api.propertyReview.entity.PropertyReviewStatus;
@@ -36,6 +38,7 @@ import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -212,10 +215,11 @@ class PropertyServiceTest {
     void findPublicProperties_ShouldReturnMappedPage() {
         PropertyEntity property = buildProperty("Piso", "Desc", "Calle");
         property.setStatus(PropertyStatus.ACTIVE);
-        when(propertyRepository.findAllByStatus(PropertyStatus.ACTIVE, PageRequest.of(0, 10)))
+        when(propertyRepository.findAll(any(Specification.class), any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(property)));
 
-        PageResponse<PropertyPublicResponse> result = propertyService.findPublicProperties(PageRequest.of(0, 10));
+        PageResponse<PropertyPublicResponse> result = propertyService.findPublicProperties(
+                new PropertyFilter(null, null), PageRequest.of(0, 10));
 
         assertThat(result.content()).hasSize(1);
     }
