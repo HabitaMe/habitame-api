@@ -1,6 +1,7 @@
 package com.habitame.api.room.controller;
 
 import com.habitame.api.common.wrapper.PageResponse;
+import com.habitame.api.room.dto.RoomFilter;
 import com.habitame.api.room.dto.RoomPublicDetailResponse;
 import com.habitame.api.room.dto.RoomPublicResponse;
 import com.habitame.api.room.service.RoomService;
@@ -10,7 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api/rooms")
@@ -19,8 +23,14 @@ public class PublicRoomController {
     private final RoomService roomService;
 
     @GetMapping
-    public ResponseEntity<PageResponse<RoomPublicResponse>> findAllPublicRooms(Pageable pageable) {
-        return ResponseEntity.ok(roomService.findAllPublicRooms(pageable));
+    public ResponseEntity<PageResponse<RoomPublicResponse>> findAllPublicRooms(
+            @RequestParam(required = false) Integer cityId,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) Integer minOccupants,
+            Pageable pageable) {
+        return ResponseEntity.ok(roomService.findAllPublicRooms(
+                new RoomFilter(cityId, minPrice, maxPrice, minOccupants), pageable));
     }
 
     @GetMapping("/{idRoom}")
@@ -29,7 +39,13 @@ public class PublicRoomController {
     }
 
     @GetMapping("/property/{idProperty}")
-    public ResponseEntity<PageResponse<RoomPublicResponse>> findByPropertyIdPublic(@PathVariable Integer idProperty, Pageable pageable) {
-        return ResponseEntity.ok(roomService.findByPropertyIdPublic(idProperty,  pageable));
+    public ResponseEntity<PageResponse<RoomPublicResponse>> findByPropertyIdPublic(
+            @PathVariable Integer idProperty,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) Integer minOccupants,
+            Pageable pageable) {
+        return ResponseEntity.ok(roomService.findByPropertyIdPublic(
+                idProperty, new RoomFilter(null, minPrice, maxPrice, minOccupants), pageable));
     }
 }

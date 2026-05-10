@@ -11,11 +11,13 @@ import com.habitame.api.common.wrapper.PageResponse;
 import com.habitame.api.property.dto.PropertyAdminDetailResponse;
 import com.habitame.api.property.dto.PropertyAdminRequest;
 import com.habitame.api.property.dto.PropertyAdminResponse;
+import com.habitame.api.property.dto.PropertyFilter;
 import com.habitame.api.property.dto.PropertyOwnerDetailResponse;
 import com.habitame.api.property.dto.PropertyOwnerRequest;
 import com.habitame.api.property.dto.PropertyOwnerResponse;
 import com.habitame.api.property.dto.PropertyPublicDetailResponse;
 import com.habitame.api.property.dto.PropertyPublicResponse;
+import com.habitame.api.property.repository.PropertySpecification;
 import com.habitame.api.property.entity.PropertyEntity;
 import com.habitame.api.property.entity.PropertyStatus;
 import com.habitame.api.property.repository.PropertyRepository;
@@ -53,8 +55,8 @@ public class PropertyService {
      * Devuelve todas las propiedades con estado {@link PropertyStatus#ACTIVE}, paginadas.
      * Este endpoint es público — no requiere autenticación.
      */
-    public PageResponse<PropertyPublicResponse> findPublicProperties(Pageable pageable) {
-        Page<PropertyEntity> page = propertyRepository.findAllByStatus(PropertyStatus.ACTIVE, pageable);
+    public PageResponse<PropertyPublicResponse> findPublicProperties(PropertyFilter filter, Pageable pageable) {
+        Page<PropertyEntity> page = propertyRepository.findAll(PropertySpecification.activeWith(filter), pageable);
         return toPageResponse(page, PropertyMapper::toPublicResponse);
     }
 

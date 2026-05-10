@@ -11,11 +11,13 @@ import com.habitame.api.property.service.PropertyService;
 import com.habitame.api.room.dto.RoomAdminDetailResponse;
 import com.habitame.api.room.dto.RoomAdminRequest;
 import com.habitame.api.room.dto.RoomAdminResponse;
+import com.habitame.api.room.dto.RoomFilter;
 import com.habitame.api.room.dto.RoomOwnerDetailResponse;
 import com.habitame.api.room.dto.RoomOwnerRequest;
 import com.habitame.api.room.dto.RoomOwnerResponse;
 import com.habitame.api.room.dto.RoomPublicDetailResponse;
 import com.habitame.api.room.dto.RoomPublicResponse;
+import com.habitame.api.room.repository.RoomSpecification;
 import com.habitame.api.room.entity.RoomEntity;
 import com.habitame.api.room.entity.RoomStatus;
 import com.habitame.api.room.repository.RoomRepository;
@@ -48,9 +50,8 @@ public class RoomService {
     // PÚBLICO
     // -------------
 
-    public PageResponse<RoomPublicResponse> findAllPublicRooms(Pageable pageable) {
-        Page<RoomEntity> page = roomRepository.findAllByStatus(RoomStatus.ACTIVE, pageable);
-
+    public PageResponse<RoomPublicResponse> findAllPublicRooms(RoomFilter filter, Pageable pageable) {
+        Page<RoomEntity> page = roomRepository.findAll(RoomSpecification.activeWith(filter, null), pageable);
         return toPageResponse(page, RoomMapper::toPublicResponse);
     }
 
@@ -59,9 +60,8 @@ public class RoomService {
         return RoomMapper.toPublicDetailResponse(roomEntity);
     }
 
-    public PageResponse<RoomPublicResponse> findByPropertyIdPublic(Integer idProperty, Pageable pageable) {
-        Page<RoomEntity> page = roomRepository.findAllByPropertyIdAndStatus(idProperty, RoomStatus.ACTIVE, pageable);
-
+    public PageResponse<RoomPublicResponse> findByPropertyIdPublic(Integer idProperty, RoomFilter filter, Pageable pageable) {
+        Page<RoomEntity> page = roomRepository.findAll(RoomSpecification.activeWith(filter, idProperty), pageable);
         return toPageResponse(page, RoomMapper::toPublicResponse);
     }
 
