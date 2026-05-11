@@ -93,6 +93,7 @@ public class UserService {
         return UserMapper.toResponse(user);
     }
 
+    @Transactional
     public UserResponse updateUser(@Valid UserRequest request) {
         UserEntity user = SecurityUtils.getCurrentUser();
         user.setFullName(request.fullname());
