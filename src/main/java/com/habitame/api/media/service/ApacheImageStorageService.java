@@ -33,12 +33,12 @@ public class ApacheImageStorageService implements ImageStorageService {
                 .outputQuality(0.80)
                 .toFile(filePath.toFile());
 
-        return "/uploads/" + folder + "/" + fileName;
+        return folder + "/" + fileName;
     }
 
     @Override
     public void delete(String path) throws IOException {
-        Path filePath = Paths.get(uploadDir, path.replace("/uploads/", ""));
+        Path filePath = Paths.get(uploadDir, path);
         Files.deleteIfExists(filePath);
     }
 }
