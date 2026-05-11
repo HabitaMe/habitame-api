@@ -1,0 +1,15 @@
+package com.habitame.api.room.dto;
+
+import java.math.BigDecimal;
+
+public record RoomPublicResponse (
+    Integer id,
+    String title,
+    String city,
+    String address,
+    BigDecimal areaM2,
+    Integer maxOccupants,
+    BigDecimal pricePerMonth,
+    Integer floor,
+    String mainImage
+) { };

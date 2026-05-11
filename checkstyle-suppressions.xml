@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+        "-//Checkstyle//DTD SuppressionFilter Configuration 1.0//EN"
+        "https://checkstyle.org/dtds/suppressions_1_0.dtd">
+<suppressions>
+    <!-- jakarta.persistence.* and lombok.* are standard in JPA entities -->
+    <suppress checks="AvoidStarImport" files=".*Entity\.java$"/>
+    <!-- Spring Data JPA derived query names use underscores for path navigation -->
+    <suppress checks="MethodName" files=".*Repository\.java$"/>
+</suppressions>
