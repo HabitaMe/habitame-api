@@ -107,8 +107,10 @@ public class RoomService {
         return RoomMapper.toOwnerDetailResponse(roomRepository.save(room));
     }
 
-    public PageResponse<RoomAdminResponse> findAll(Pageable pageable) {
-        Page<RoomEntity> page = roomRepository.findAll(pageable);
+    public PageResponse<RoomAdminResponse> findAll(RoomStatus status, Pageable pageable) {
+        Page<RoomEntity> page = status != null
+                ? roomRepository.findAllByStatus(status, pageable)
+                : roomRepository.findAll(pageable);
         return toPageResponse(page, RoomMapper::toAdminResponse);
     }
 
