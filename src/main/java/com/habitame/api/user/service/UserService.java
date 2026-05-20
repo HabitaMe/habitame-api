@@ -56,6 +56,7 @@ public class UserService {
         return UserMapper.toResponse(userRepository.save(user));
     }
 
+    @Transactional
     public UserResponse addPhoto(Integer userId, @Valid MultipartFile file) throws IOException {
 
         if (!userId.equals(SecurityUtils.getCurrentUserId()) && !SecurityUtils.isAdmin()) {
@@ -82,6 +83,7 @@ public class UserService {
         return contentType != null && contentType.startsWith("image/");
     }
 
+    @Transactional
     public UserResponse removePhoto(Integer idUser) throws IOException {
         if (!idUser.equals(SecurityUtils.getCurrentUserId()) && !SecurityUtils.isAdmin()) {
             throw new UnauthorizedException("No tienes permiso para eliminar la foto de este usuario");
