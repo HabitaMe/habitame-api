@@ -295,7 +295,7 @@ class PropertyServiceTest {
         when(propertyRepository.findAll(PageRequest.of(0, 10)))
                 .thenReturn(new PageImpl<>(List.of(property)));
 
-        PageResponse<PropertyAdminResponse> result = propertyService.findAll(PageRequest.of(0, 10));
+        PageResponse<PropertyAdminResponse> result = propertyService.findAll(null, PageRequest.of(0, 10));
 
         assertThat(result.content()).hasSize(1);
     }

@@ -75,7 +75,7 @@ class AdminRoomControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     void findAll_ShouldReturnPage() throws Exception {
-        when(roomService.findAll(any(Pageable.class)))
+        when(roomService.findAll(any(), any(Pageable.class)))
                 .thenReturn(new PageResponse<>(List.of(), 0, 10, 0, 0));
 
         mockMvc.perform(get("/v1/admin/rooms"))
