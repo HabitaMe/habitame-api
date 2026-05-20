@@ -59,7 +59,7 @@ public class UserService {
     public UserResponse addPhoto(Integer userId, @Valid MultipartFile file) throws IOException {
 
         if (!userId.equals(SecurityUtils.getCurrentUserId()) && !SecurityUtils.isAdmin()) {
-            throw new UnauthorizedException("You are not authorized to add a photo to this user");
+            throw new UnauthorizedException("No tienes permiso para añadir una foto a este usuario");
         }
 
         UserEntity user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
@@ -84,7 +84,7 @@ public class UserService {
 
     public UserResponse removePhoto(Integer idUser) throws IOException {
         if (!idUser.equals(SecurityUtils.getCurrentUserId()) && !SecurityUtils.isAdmin()) {
-            throw new UnauthorizedException("You are not authorized to remove a photo from this user");
+            throw new UnauthorizedException("No tienes permiso para eliminar la foto de este usuario");
         }
         UserEntity user = userRepository.findById(idUser).orElseThrow(() -> new ResourceNotFoundException("User not found: " + idUser));
         imageStorageService.delete(user.getPhotoUrl());

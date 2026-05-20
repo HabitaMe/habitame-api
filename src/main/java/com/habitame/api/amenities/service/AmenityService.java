@@ -5,6 +5,7 @@ import com.habitame.api.amenities.dto.AmenityResponse;
 import com.habitame.api.amenities.entity.AmenityEntity;
 import com.habitame.api.amenities.entity.AmenityScope;
 import com.habitame.api.amenities.repository.AmenityRepository;
+import com.habitame.api.common.exception.ResourceNotFoundException;
 import com.habitame.api.common.mapper.AmenityMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class AmenityService {
 
     public AmenityEntity findAmenityById(Integer amenityId) {
         return amenityRepository.findById(amenityId)
-                .orElseThrow(() -> new RuntimeException("Amenity not found: " + amenityId));
+                .orElseThrow(() -> new ResourceNotFoundException("Amenity not found: " + amenityId));
     }
 
     @Transactional
@@ -41,7 +42,7 @@ public class AmenityService {
 
     @Transactional
     public AmenityResponse updateAmenity(Integer amenityId, AmenityRequest request) {
-        AmenityEntity amenityEntity = amenityRepository.findById(amenityId).orElseThrow(() -> new RuntimeException("Amenity not found: " + amenityId));
+        AmenityEntity amenityEntity = amenityRepository.findById(amenityId).orElseThrow(() -> new ResourceNotFoundException("Amenity not found: " + amenityId));
         AmenityEntity amenityUpdated = amenityRepository.save(AmenityMapper.toUpdate(amenityEntity, request));
         return AmenityMapper.toResponse(amenityUpdated);
     }

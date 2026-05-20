@@ -58,9 +58,9 @@ public class JwtProvider {
                     .parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException ex) {
-            throw new UnauthorizedException("Expired token");
+            throw new UnauthorizedException("Token expirado");
         } catch (JwtException ex) {
-            throw new UnauthorizedException("Invalid token");
+            throw new UnauthorizedException("Token inválido");
         }
     }
 
@@ -73,7 +73,7 @@ public class JwtProvider {
                     .getBody()
                     .getSubject();
         } catch (JwtException ex) {
-            throw new UnauthorizedException("The token could not be read");
+            throw new UnauthorizedException("El token no pudo ser leído");
         }
     }
 }
