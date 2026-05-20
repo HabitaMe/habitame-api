@@ -47,7 +47,7 @@ public class UserController {
 
     @PostMapping("{id}/photo")
     @Operation(summary = "Subir foto de perfil", description = "Sube una imagen y la asigna como foto de perfil del usuario indicado.")
-    public ResponseEntity<UserResponse> addPhoto(@PathVariable Integer id, @Valid MultipartFile file) throws IOException {
+    public ResponseEntity<UserResponse> addPhoto(@PathVariable Integer id, @RequestParam("file") MultipartFile file) throws IOException {
         return ResponseEntity.ok(userService.addPhoto(id, file));
     }
 

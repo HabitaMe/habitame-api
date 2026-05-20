@@ -31,6 +31,5 @@ public interface PropertyReviewRepository extends JpaRepository<PropertyReviewEn
             """)
     Optional<PropertyReviewEntity> findLatestByPropertyId(@Param("propertyId") Integer propertyId);
 
-    // only one pending review per property at a time
-    Optional<PropertyReviewEntity> findByPropertyIdAndStatus(Integer propertyId, PropertyReviewStatus status);
+    Optional<PropertyReviewEntity> findFirstByPropertyIdAndStatusOrderByCreatedAtDesc(Integer propertyId, PropertyReviewStatus status);
 }

@@ -106,7 +106,7 @@ class RoomReviewServiceTest {
         RoomReviewEntity review = buildReview(1, RoomReviewStatus.PENDING, room);
         RoomReviewDecisionRequest request = new RoomReviewDecisionRequest(RoomReviewStatus.APPROVED, null);
 
-        when(roomReviewRepository.findByRoomIdAndStatus(1, RoomReviewStatus.PENDING))
+        when(roomReviewRepository.findFirstByRoomIdAndStatusOrderByCreatedAtDesc(1, RoomReviewStatus.PENDING))
                 .thenReturn(Optional.of(review));
         when(roomReviewRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
@@ -125,7 +125,7 @@ class RoomReviewServiceTest {
                 RoomReviewStatus.REJECTED, "Fotos insuficientes"
         );
 
-        when(roomReviewRepository.findByRoomIdAndStatus(1, RoomReviewStatus.PENDING))
+        when(roomReviewRepository.findFirstByRoomIdAndStatusOrderByCreatedAtDesc(1, RoomReviewStatus.PENDING))
                 .thenReturn(Optional.of(review));
         when(roomReviewRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
@@ -158,7 +158,7 @@ class RoomReviewServiceTest {
     void resolveReview_WhenNoPendingReview_ShouldThrow() {
         RoomReviewDecisionRequest request = new RoomReviewDecisionRequest(RoomReviewStatus.APPROVED, null);
 
-        when(roomReviewRepository.findByRoomIdAndStatus(99, RoomReviewStatus.PENDING))
+        when(roomReviewRepository.findFirstByRoomIdAndStatusOrderByCreatedAtDesc(99, RoomReviewStatus.PENDING))
                 .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> roomReviewService.resolveReview(99, request))

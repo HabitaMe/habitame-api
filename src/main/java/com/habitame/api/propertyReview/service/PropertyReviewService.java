@@ -87,7 +87,7 @@ public class PropertyReviewService {
             throw new IllegalArgument("Comment is required when rejecting a review");
         }
 
-        PropertyReviewEntity review = propertyReviewRepository.findByPropertyIdAndStatus(propertyId, PropertyReviewStatus.PENDING)
+        PropertyReviewEntity review = propertyReviewRepository.findFirstByPropertyIdAndStatusOrderByCreatedAtDesc(propertyId, PropertyReviewStatus.PENDING)
                 .orElseThrow(() -> new ResourceNotFoundException("Review not found for property: " + propertyId));
 
         review.setStatus(request.status());

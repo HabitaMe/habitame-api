@@ -11,5 +11,6 @@ public record RoomPublicResponse (
     Integer maxOccupants,
     BigDecimal pricePerMonth,
     Integer floor,
-    String mainImage
+    String mainImage,
+    Boolean ownerInHouse
 ) { };

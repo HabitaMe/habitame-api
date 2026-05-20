@@ -72,7 +72,7 @@ class PropertyReviewServiceTest {
         PropertyReviewEntity review = buildPendingReview();
         PropertyReviewDecisionRequest request = new PropertyReviewDecisionRequest(PropertyReviewStatus.APPROVED, null);
 
-        when(propertyReviewRepository.findByPropertyIdAndStatus(1, PropertyReviewStatus.PENDING))
+        when(propertyReviewRepository.findFirstByPropertyIdAndStatusOrderByCreatedAtDesc(1, PropertyReviewStatus.PENDING))
                 .thenReturn(Optional.of(review));
         when(propertyReviewRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
@@ -90,7 +90,7 @@ class PropertyReviewServiceTest {
                 PropertyReviewStatus.REJECTED, "Imágenes de baja calidad"
         );
 
-        when(propertyReviewRepository.findByPropertyIdAndStatus(1, PropertyReviewStatus.PENDING))
+        when(propertyReviewRepository.findFirstByPropertyIdAndStatusOrderByCreatedAtDesc(1, PropertyReviewStatus.PENDING))
                 .thenReturn(Optional.of(review));
         when(propertyReviewRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
@@ -127,7 +127,7 @@ class PropertyReviewServiceTest {
     void resolveReview_WhenNoPendingReview_ShouldThrow() {
         PropertyReviewDecisionRequest request = new PropertyReviewDecisionRequest(PropertyReviewStatus.APPROVED, null);
 
-        when(propertyReviewRepository.findByPropertyIdAndStatus(99, PropertyReviewStatus.PENDING))
+        when(propertyReviewRepository.findFirstByPropertyIdAndStatusOrderByCreatedAtDesc(99, PropertyReviewStatus.PENDING))
                 .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> propertyReviewService.resolveReview(99, request))

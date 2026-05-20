@@ -32,6 +32,5 @@ public interface RoomReviewRepository extends JpaRepository<RoomReviewEntity, In
             """)
     Optional<RoomReviewEntity> findLatestByRoomId(@Param("roomId") Integer roomId);
 
-    // only one pending review per room at a time
-    Optional<RoomReviewEntity> findByRoomIdAndStatus(Integer roomId, RoomReviewStatus status);
+    Optional<RoomReviewEntity> findFirstByRoomIdAndStatusOrderByCreatedAtDesc(Integer roomId, RoomReviewStatus status);
 }
