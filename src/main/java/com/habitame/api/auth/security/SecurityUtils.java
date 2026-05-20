@@ -19,14 +19,14 @@ public class SecurityUtils {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth == null || !auth.isAuthenticated()) {
-            throw new UnauthorizedException("There is no authenticated user");
+            throw new UnauthorizedException("No hay ningún usuario autenticado");
         }
 
         if (auth.getPrincipal() instanceof UserEntity userEntity) {
             return userEntity;
         }
 
-        throw new UnauthorizedException("The current user could not be obtained");
+        throw new UnauthorizedException("No se pudo obtener el usuario actual");
     }
 
     public static boolean isAdmin() {

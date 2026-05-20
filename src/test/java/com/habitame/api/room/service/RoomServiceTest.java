@@ -316,7 +316,7 @@ class RoomServiceTest {
         when(roomRepository.findAll(PageRequest.of(0, 10)))
                 .thenReturn(new PageImpl<>(List.of(room)));
 
-        PageResponse<RoomAdminResponse> result = roomService.findAll(PageRequest.of(0, 10));
+        PageResponse<RoomAdminResponse> result = roomService.findAll(null, PageRequest.of(0, 10));
 
         assertThat(result.content()).hasSize(1);
     }

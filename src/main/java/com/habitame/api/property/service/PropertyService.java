@@ -104,8 +104,10 @@ public class PropertyService {
         return PropertyMapper.toOwnerDetailResponse(propertyRepository.save(property));
     }
 
-    public PageResponse<PropertyAdminResponse> findAll(Pageable pageable) {
-        Page<PropertyEntity> page = propertyRepository.findAll(pageable);
+    public PageResponse<PropertyAdminResponse> findAll(PropertyStatus status, Pageable pageable) {
+        Page<PropertyEntity> page = status != null
+                ? propertyRepository.findAllByStatus(status, pageable)
+                : propertyRepository.findAll(pageable);
         return toPageResponse(page, PropertyMapper::toAdminResponse);
     }
 

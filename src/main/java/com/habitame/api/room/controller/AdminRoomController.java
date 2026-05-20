@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import com.habitame.api.room.entity.RoomStatus;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -44,9 +46,11 @@ public class AdminRoomController extends AbstractRoomController {
     }
 
     @GetMapping
-    @Operation(summary = "Listar todas las habitaciones", description = "Devuelve todas las habitaciones del sistema sin filtros de estado ni de owner.")
-    public ResponseEntity<PageResponse<RoomAdminResponse>> findAll(Pageable pageable) {
-        return ResponseEntity.ok(roomService.findAll(pageable));
+    @Operation(summary = "Listar todas las habitaciones", description = "Devuelve todas las habitaciones del sistema. Opcionalmente filtrar por status (ACTIVE, INACTIVE, IN_REVIEW).")
+    public ResponseEntity<PageResponse<RoomAdminResponse>> findAll(
+            @RequestParam(required = false) RoomStatus status,
+            Pageable pageable) {
+        return ResponseEntity.ok(roomService.findAll(status, pageable));
     }
 
     @GetMapping("/{id}")
