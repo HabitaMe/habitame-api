@@ -88,7 +88,7 @@ public class RoomReviewService {
             throw new IllegalArgument("Comment is required when rejecting a review");
         }
 
-        RoomReviewEntity review = roomReviewRepository.findByRoomIdAndStatus(roomId, RoomReviewStatus.PENDING)
+        RoomReviewEntity review = roomReviewRepository.findFirstByRoomIdAndStatusOrderByCreatedAtDesc(roomId, RoomReviewStatus.PENDING)
                 .orElseThrow(() -> new ResourceNotFoundException("Review not found for room: " + roomId));
 
         review.setStatus(request.status());

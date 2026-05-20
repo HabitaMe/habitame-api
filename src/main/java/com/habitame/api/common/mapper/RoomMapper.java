@@ -28,7 +28,8 @@ public class RoomMapper {
                         .filter(RoomImageEntity::isMain)
                         .map(RoomImageEntity::getImageUrl)
                         .findFirst()
-                        .orElse(null)
+                        .orElse(null),
+                roomEntity.getProperty().getOwnerInHouse()
         );
     }
 
