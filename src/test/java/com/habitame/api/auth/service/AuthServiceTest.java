@@ -13,12 +13,14 @@ import com.habitame.api.common.exception.UnauthorizedException;
 import com.habitame.api.user.entity.Role;
 import com.habitame.api.user.entity.UserEntity;
 import com.habitame.api.user.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -44,6 +46,14 @@ class AuthServiceTest {
 
     @InjectMocks
     private AuthService authService;
+
+    @BeforeEach
+    void setUp() {
+        // Los campos @Value no los inyecta Mockito en un test unitario puro,
+        // así que replicamos aquí los valores de jwt.expiration / jwt.refresh-expiration.
+        ReflectionTestUtils.setField(authService, "accessExpirationMillis", 3600000L);
+        ReflectionTestUtils.setField(authService, "refreshExpirationMillis", 86400000L);
+    }
 
 
     @Test
