@@ -50,7 +50,7 @@ class JwtProviderTest {
 
         assertThatThrownBy(() -> jwtProvider.validateToken(tampered))
                 .isInstanceOf(UnauthorizedException.class)
-                .hasMessageContaining("Invalid token");
+                .hasMessageContaining("Token inválido");
     }
 
     @Test
@@ -64,7 +64,7 @@ class JwtProviderTest {
 
         assertThatThrownBy(() -> jwtProvider.validateToken(token))
                 .isInstanceOf(UnauthorizedException.class)
-                .hasMessageContaining("Expired token");
+                .hasMessageContaining("Token expirado");
     }
 
     @Test
