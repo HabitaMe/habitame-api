@@ -7,7 +7,7 @@ RUN mvn dependency:go-offline -B
 COPY src ./src
 RUN mvn package -DskipTests -B
 
-FROM eclipse-temurin:21-jre-alpine AS runtime
+FROM eclipse-temurin:24-jre-alpine AS runtime
 WORKDIR /app
 RUN mkdir -p /uploads
 COPY --from=builder /app/target/habitame-api-*.jar app.jar
