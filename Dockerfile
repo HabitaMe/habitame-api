@@ -1,4 +1,4 @@
-FROM maven:3.9.6-eclipse-temurin-21-alpine AS builder
+FROM maven:3-eclipse-temurin-24-alpine AS builder
 WORKDIR /app
 COPY pom.xml .
 COPY checkstyle.xml .
